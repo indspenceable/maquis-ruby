@@ -1,0 +1,28 @@
+class Screen
+  attr_reader :map, :messages, :info
+  def self.open
+    Curses::init_screen
+    begin
+      Curses::cbreak
+      Curses::noecho
+      Curses::refresh
+      Curses::start_color
+
+      # INIT colors
+      Curses::init_pair(BLUE,Curses::COLOR_BLUE,Curses::COLOR_BLACK)
+      Curses::init_pair(RED,Curses::COLOR_RED,Curses::COLOR_BLACK)
+      Curses::init_pair(GREEN,Curses::COLOR_GREEN,Curses::COLOR_BLACK)
+
+      yield Screen.new
+    ensure
+      Curses::close_screen
+    end
+  end
+  def initialize
+      @map      = Region.new(0, 0, MAP_SIZE_X, MAP_SIZE_Y)
+      @info     = Region.new(MAP_SIZE_X + 1, 0,
+        Curses::cols-MAP_SIZE_X-1, MAP_SIZE_Y)
+      @messages = Region.new(0, MAP_SIZE_Y+1,
+        Curses::cols, Curses::lines-MAP_SIZE_Y+1)
+  end
+end
