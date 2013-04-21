@@ -1,9 +1,11 @@
 require 'curses'
 require './lib/display/region'
 require './lib/display/screen'
+require './lib/actions/menu'
 require './lib/actions/map_select'
 require './lib/actions/move'
 require './lib/actions/confirm_move'
+require './lib/actions/enemy_turn'
 
 class Object
   def self.attrs *attr_list
@@ -24,6 +26,9 @@ MAP_SIZE_Y = 20
 BLUE = 1
 RED = 2
 GREEN = 3
+
+PLAYER_TEAM = 0
+COMPUTER_TEAM = 1
 
 TEAM_TO_COLOR = {
   0 => BLUE,
@@ -77,7 +82,9 @@ class PlayerTurn
       when 2
         Cavalier
       end
-      @level.units << kl.new(rand(2), "char#{x}", rand(40), rand(20))
+      u = kl.new(rand(2), "char#{x}", rand(40), rand(20))
+      @level.map[u.x][u.y] = '.'
+      @level.units << u
     end
     @x, @y = 1, 1
     @current_action = MapSelect.new(3, 3, @level)
@@ -102,7 +109,7 @@ class PlayerTurn
   end
 
   def display_character_info_for(screen, unit, i, vs=nil)
-    x = i*10
+    x = i*20
 
     #name
     screen.info.set_xy(x, 0)

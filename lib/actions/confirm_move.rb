@@ -1,30 +1,3 @@
-class MenuAction
-  def initialize choices
-    @choices = choices
-    @index = 0
-  end
-  def key(c)
-    if c == 'j'
-      @index += 1
-    elsif c == 'k'
-      @index -=1
-    elsif c == 'a'
-      return send @choices[@index]
-    end
-    @index = @index % @choices.length
-    self
-  end
-  def draw(screen)
-    @choices.each_with_index do |choice, i|
-      screen.info.set_xy(0, 13+i)
-      screen.info.draw_str *string_and_color[choice]
-    end
-  end
-  def set_cursor(screen)
-    screen.info.set_xy(0, 13+@index)
-  end
-end
-
 class MoveAndAttackAttack
   def initialize unit, target, level, path
     @unit = unit

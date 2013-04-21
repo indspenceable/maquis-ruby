@@ -28,7 +28,12 @@ class MapSelect < MapAction
     @x, @y = x, y
   end
   def activate
-    Move.new(@x, @y, @level) if current_unit && current_unit.action_available
+    if current_unit && current_unit.action_available &&
+      current_unit.team == PLAYER_TEAM
+      Move.new(@x, @y, @level)
+    else
+      TurnMenu.new(@level, self)
+    end
   end
   def cancel
     exit
