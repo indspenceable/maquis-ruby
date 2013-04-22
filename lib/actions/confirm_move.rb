@@ -46,7 +46,6 @@ class MoveAndAttackAttack
         @messages << "#{@target.name} attacks #{@unit.name}, for #{hit} damage."
         check_life
       end
-      @unit.action_available = false
       raise StopIteration
     end
 
@@ -54,6 +53,7 @@ class MoveAndAttackAttack
     begin
       @generator.next
     rescue StopIteration
+      @unit.action_available = false
       @finished = true
     end
     self

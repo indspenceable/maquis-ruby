@@ -31,7 +31,7 @@ class Move < MapAction
       @path.trim_to(x,y)
       @valid = true
     elsif @level.map[x][y] == '.'
-      if @path.length < @unit.movement &&
+      if @path.length <= @unit.movement &&
         adjacent_to_last_point?(x,y)
           @path.add(x,y)
       else

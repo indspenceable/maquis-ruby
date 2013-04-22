@@ -23,7 +23,7 @@ class Level
     x == 0 || x == MAP_SIZE_X-1 || y == 0 || y == MAP_SIZE_Y-1
   end
 
-  def self.generate()
+  def self.generate(player_units)
     l = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
     l.fill do |x,y|
       border?(x,y) ? '#' :
@@ -59,7 +59,54 @@ class Level
         end
       end
     end
-    return generate if connected_count < open_count-10
+    return generate(player_units) if connected_count < open_count-10
+
+    # Now to generate baddies
+    # first, pick a baddie theme
+    # TODO baddie themes
+
+    baddie_units = (7 + rand(7)).times.map do |x|
+      kl = case rand(3)
+      when 0
+        ArmorKnight
+      when 1
+        Archer
+      when 2
+        Cavalier
+      end
+      stats = {}
+      Unit::STATS.each{|stat| stats[stat] = rand(5)+3}
+      kl.new(COMPUTER_TEAM, "Baddie #{x}", 0, 0, stats)
+    end
+
+
+    # now, find some points to center them on. We'll start with just one point for now.
+    begin
+      px, py, bx, by = rand(MAP_SIZE_X), rand(MAP_SIZE_Y), rand(MAP_SIZE_X) ,rand(MAP_SIZE_Y)
+      player_area = Path.discover_paths(Struct.new(:x,:y).new(px,py), l, 3)
+      baddie_area = Path.discover_paths(Struct.new(:x,:y).new(bx,by), l, 3)
+      path_between = Path.find(Struct.new(:x,:y).new(px,py), bx, by, l, 100)
+    end while false ||
+      player_area.count < 10 ||
+      baddie_area.count < 10 ||
+      !path_between || path_between.length < 30
+
+    player_area.map!(&:last_point)
+    baddie_area.map!(&:last_point)
+    player_area.shuffle
+    baddie_area.shuffle
+    puts player_area.inspect
+
+    player_units.each do |u|
+      l.units << u
+      u.x, u.y = player_area.pop
+    end
+
+    # puts "baddie_area is #{baddie_area.inspect}"
+    baddie_units.each do |u|
+      l.units << u
+      u.x, u.y = baddie_area.pop
+    end
 
     l
   end

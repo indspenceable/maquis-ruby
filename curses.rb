@@ -55,9 +55,8 @@ class PlayerTurn
     #     '.'
     #   end
     # end
-    @level = Level.generate
-    5.times do |x|
-      kl = case(rand(3))
+    pl = 5.times.map do |x|
+      kl = case x%3
       when 0
         ArmorKnight
       when 1
@@ -67,13 +66,9 @@ class PlayerTurn
       end
       stats = {}
       Unit::STATS.each{|stat| stats[stat] = rand(10)+5}
-      px, py = rand(40), rand(20)
-      while @level.map[px][py] == '#'
-        px, py = rand(40), rand(20)
-      end
-
-      @level.units << kl.new(x%2, "char#{x}", px, py, stats)
+      kl.new(PLAYER_TEAM, "char#{x}", 0, 0, stats)
     end
+    @level = Level.generate(pl)
     @x, @y = 1, 1
     @current_action = MapSelect.new(3, 3, @level)
   end
@@ -189,8 +184,8 @@ class PlayerTurn
   end
 end
 
+GS.current = PlayerTurn.new
 Screen.open do |s|
-  GS.current = PlayerTurn.new
   loop do
     current = GS.current
     current.execute
