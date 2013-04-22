@@ -13,7 +13,7 @@ class Path
       c = open_list.shift
       cx,cy = c.last_point
       return c if cx == x2 && cy == y2
-      next if c.length > limit || level.map { |e|  }[cx][cy] != '.'
+      next if c.length > limit || level.map[cx][cy] != ' '
       closed_list << c
       [
         c.dup.add(cx+1, cy),
@@ -40,7 +40,7 @@ class Path
       c = open_list.shift
       cx,cy = c.last_point
       # return puts(i)||Curses::getch||c if cx == x2 && cy == y2
-      next if c.length > limit+1 || level.map { |e|  }[cx][cy] != '.'
+      next if c.length > limit+1 || level.map[cx][cy] != ' '
       closed_list << c
       [
         c.dup.add(cx+1, cy),

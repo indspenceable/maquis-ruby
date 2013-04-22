@@ -89,22 +89,15 @@ class Unit
   end
 end
 
-class Archer < Unit
-  glyph ?a
-  klass "Archer"
-  stats movement: 5
-end
-class ArmorKnight < Unit
-  glyph ?A
-  klass "Armor Knight"
-  stats movement: 4
-end
-class Cavalier < Unit
-  glyph ?C
-  klass "Cavalier"
-  def speed
-    8
+def create_class(g, k, mv)
+  Class.new(Unit) do
+    glyph g
+    klass k
+    stats movement: mv
   end
-  stats movement: 7
 end
-
+Archer = create_class(?a, "Archer", 5)
+Cavalier = create_class(?c, "Cavalier", 9)
+ArmorKnight = create_class(?k, "Knight", 4)
+Mercenary = create_class(?m, "Mercenary", 7)
+Myrmidon = create_class(?s, "Myrmidon", 7)

@@ -32,7 +32,7 @@ PLAYER_TEAM = 0
 COMPUTER_TEAM = 1
 
 TEAM_TO_COLOR = {
-  0 => BLUE,
+  0 => GREEN,
   1 => RED
 }
 
@@ -47,23 +47,9 @@ end
 
 class PlayerTurn
   def initialize
-    # @level = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
-    # @level.fill do
-    #   if rand(5) == 0
-    #     '#'
-    #   else
-    #     '.'
-    #   end
-    # end
+    klasses = [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary]
     pl = 5.times.map do |x|
-      kl = case x%3
-      when 0
-        ArmorKnight
-      when 1
-        Archer
-      when 2
-        Cavalier
-      end
+      kl = klasses[x%klasses.length]
       stats = {}
       Unit::STATS.each{|stat| stats[stat] = rand(10)+5}
       kl.new(PLAYER_TEAM, "char#{x}", 0, 0, stats)

@@ -27,7 +27,7 @@ class Level
     l = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
     l.fill do |x,y|
       border?(x,y) ? '#' :
-        rand(100) < 45   ? '#' : '.'
+        rand(100) < 45   ? '#' : ' '
     end
     other_map = Array.new(MAP_SIZE_X){ Array.new(MAP_SIZE_Y) }
     5.times do
@@ -42,7 +42,7 @@ class Level
               count += 1 if l.map[x+i][y+j] == '#'
             end
           end
-          other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? '#' : '.'
+          other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? '#' : ' '
         end
       end
       l.fill { |x,y| other_map[x][y] }
@@ -53,7 +53,7 @@ class Level
     connected_count = nil
     l.map.each_with_index do |col, x|
       col.each_with_index do |tile,y|
-        if tile == '.'
+        if tile == ' '
           open_count += 1
           connected_count ||= Path.discover_paths(Struct.new(:x,:y).new(x,y), l, 100).count
         end
