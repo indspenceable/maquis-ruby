@@ -6,6 +6,7 @@ require './lib/actions/map_select'
 require './lib/actions/move'
 require './lib/actions/confirm_move'
 require './lib/actions/enemy_turn'
+require './lib/level'
 
 class Object
   def self.attrs *attr_list
@@ -44,36 +45,18 @@ class GS
   end
 end
 
-class Level
-  attr_reader :map, :units, :log
-  def initialize(w,h)
-    @w,@h = w,h
-    @units = []
-    @log = []
-  end
-  def fill
-    @map = Array.new(@w) do
-      Array.new(@h) do
-        yield
-      end
-    end
-  end
-  def unit_at(x,y)
-    units.find{|c| c.x == x && c.y == y}
-  end
-end
-
 class PlayerTurn
   def initialize
-    @level = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
-    @level.fill do
-      if rand(5) == 0
-        '#'
-      else
-        '.'
-      end
-    end
-    20.times do |x|
+    # @level = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
+    # @level.fill do
+    #   if rand(5) == 0
+    #     '#'
+    #   else
+    #     '.'
+    #   end
+    # end
+    @level = Level.generate
+    5.times do |x|
       kl = case(rand(3))
       when 0
         ArmorKnight
@@ -82,9 +65,14 @@ class PlayerTurn
       when 2
         Cavalier
       end
-      u = kl.new(rand(2), "char#{x}", rand(40), rand(20))
-      @level.map[u.x][u.y] = '.'
-      @level.units << u
+      stats = {}
+      Unit::STATS.each{|stat| stats[stat] = rand(10)+5}
+      px, py = rand(40), rand(20)
+      while @level.map[px][py] == '#'
+        px, py = rand(40), rand(20)
+      end
+
+      @level.units << kl.new(x%2, "char#{x}", px, py, stats)
     end
     @x, @y = 1, 1
     @current_action = MapSelect.new(3, 3, @level)
@@ -118,14 +106,22 @@ class PlayerTurn
     screen.info.draw_str(unit.klass)
     screen.info.set_xy(x, 2)
     screen.info.draw_str(unit.health_str, unit.health_color)
+    screen.info.set_xy(x, 3)
+    screen.info.draw_str("Power: #{unit.power}")
+    screen.info.set_xy(x, 4)
+    screen.info.draw_str("Skill: #{unit.skill}")
+    screen.info.set_xy(x, 5)
+    screen.info.draw_str("Armor: #{unit.armor}")
+    screen.info.set_xy(x, 6)
+    screen.info.draw_str("Speed: #{unit.speed}")
     if vs
       # combat stats - Power, Strength, Crit
-      screen.info.set_xy(x,4)
-      screen.info.draw_str(unit.power_vs(vs).to_s)
-      screen.info.set_xy(x,5)
-      screen.info.draw_str(unit.accuracy_vs(vs).to_s)
-      screen.info.set_xy(x,6)
-      screen.info.draw_str(unit.crit_chance)
+      screen.info.set_xy(x,8)
+      screen.info.draw_str(unit.power_str(vs))
+      screen.info.set_xy(x,9)
+      screen.info.draw_str(unit.accuracy_str(vs).to_s)
+      screen.info.set_xy(x,10)
+      screen.info.draw_str(unit.crit_str)
       screen.info.set_xy(x, 7)
       screen.info.draw_str("x2") if unit.double_attack?(vs)
     end
@@ -141,7 +137,7 @@ class PlayerTurn
     if u2
       display_character_info_for(screen, u2, 1, enemies && u1)
     end
-    screen.info.set_xy(0, 10)
+    screen.info.set_xy(0, 13)
     screen.info.draw_str(@current_action.class.name)
   end
 
@@ -154,7 +150,7 @@ class PlayerTurn
     highlight_spaces = []
     c = @current_action.unit_for_map_highlighting
     if c
-      highlight_spaces += Path.discover_paths(c.x, c.y, @level, c.movement).map(&:last_point)
+      highlight_spaces += Path.discover_paths(c, @level, c.movement).map(&:last_point)
     end
     MAP_SIZE_X.times do |x|
       MAP_SIZE_Y.times do |y|

@@ -16,12 +16,12 @@ class MenuAction
   end
   def draw(screen)
     @choices.each_with_index do |choice, i|
-      screen.info.set_xy(0, 13+i)
+      screen.info.set_xy(0, 17+i)
       screen.info.draw_str *string_and_color[choice]
     end
   end
   def set_cursor(screen)
-    screen.info.set_xy(0, 13+@index)
+    screen.info.set_xy(0, 17+@index)
   end
 end
 

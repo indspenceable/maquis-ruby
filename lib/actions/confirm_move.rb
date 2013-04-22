@@ -26,23 +26,23 @@ class MoveAndAttackAttack
       # Move the unit, if they're moving
       @unit.x, @unit.y = @path.last_point
       # Do the fight! first round
-      hit = @target.take_hit(@unit.power_vs(@target))
+      hit = @target.take_hit_from(@unit)
       @messages << "#{@unit.name} attacks #{@target.name}, for #{hit} damage."
       check_life
       g << nil
 
-      hit = @unit.take_hit(@target.power_vs(@unit))
+      hit = @unit.take_hit_from(@target)
       @messages << "#{@target.name} attacks #{@unit.name}, for #{hit} damage."
       check_life
 
       if @unit.double_attack?(@target)
         g << nil
-        hit = @target.take_hit(@unit.power_vs(@target))
+        hit = @target.take_hit_from(@unit)
         @messages << "#{@unit.name} attacks #{@target.name}, for #{hit} damage."
         check_life
       elsif @target.double_attack?(@unit)
         g << nil
-        hit = @unit.take_hit(@target.power_vs(@unit))
+        hit = @unit.take_hit_from(@target)
         @messages << "#{@target.name} attacks #{@unit.name}, for #{hit} damage."
         check_life
       end

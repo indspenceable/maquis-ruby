@@ -2,9 +2,9 @@ class Path
   def self.dist(x1,y1,x2,y2)
     (x1-x2).abs + (y1-y2).abs
   end
-  def self.find(x,y, x2, y2, level, limit=99)
+  def self.find(unit, x2, y2, level, limit=99)
 
-    open_list = [Path.new(x,y, level)]
+    open_list = [Path.new(unit.x,unit.y, level)]
     closed_list = []
     i = 0
     while open_list.any?
@@ -22,16 +22,16 @@ class Path
         c.dup.add(cx, cy-1),
       ].each do |p|
         unless (closed_list + open_list).any?{|pp| p.last_point == pp.last_point} ||
-          level.unit_at(*p.last_point)
+          level.unit_at(*p.last_point) && level.unit_at(*p.last_point).team != unit.team
           open_list << p
         end
       end
     end
     nil
   end
-  def self.discover_paths(x,y, level, limit=99)
+  def self.discover_paths(unit, level, limit=99)
 
-    open_list = [Path.new(x,y, level)]
+    open_list = [Path.new(unit.x, unit.y, level)]
     closed_list = []
     i = 0
     while open_list.any?
@@ -49,7 +49,7 @@ class Path
         c.dup.add(cx, cy-1),
       ].each do |p|
         unless (closed_list + open_list).any?{|pp| p.last_point == pp.last_point} ||
-          level.unit_at(*p.last_point)
+          level.unit_at(*p.last_point) && level.unit_at(*p.last_point).team != unit.team
           open_list << p
         end
       end

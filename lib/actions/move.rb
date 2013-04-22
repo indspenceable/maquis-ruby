@@ -30,12 +30,12 @@ class Move < MapAction
       # if this space is already on the path
       @path.trim_to(x,y)
       @valid = true
-    elsif @level.map[x][y] == '.' && @level.units.all? {|u| (u.x != x || u.y != y) || (u == @unit)}
+    elsif @level.map[x][y] == '.'
       if @path.length < @unit.movement &&
         adjacent_to_last_point?(x,y)
           @path.add(x,y)
       else
-        @path = Path.find(@unit.x, @unit.y, x, y, @level, @unit.movement) || @path
+        @path = Path.find(@unit, x, y, @level, @unit.movement) || @path
       end
     end
 
@@ -60,7 +60,8 @@ class Move < MapAction
   end
 
   def activate
-    if [@x,@y] == @path.last_point
+    if [@x,@y] == @path.last_point &&
+     @level.units.all? {|u| (u.x != @x || u.y != @y) || (u == @unit)}
       # We've got a clear path to this location.
       return ConfirmMove.new(@unit, @path, @level, self)
     end

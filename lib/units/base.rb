@@ -1,9 +1,23 @@
 class Unit
   attr_accessor :team, :name, :x, :y, :action_available
-  def initialize team, name, x, y
+
+  STATS = [
+    :max_hp,
+    :power,
+    :skill,
+    :armor,
+    :speed
+  ]
+
+  attr_reader *STATS
+
+  def initialize team, name, x, y, stats
     @team, @name, @x, @y = team, name, x, y
-    @hp = max_hp
     @action_available = true
+    STATS.each do |stat|
+      self.instance_variable_set(:"@#{stat}", stats[stat])
+    end
+    @hp = max_hp
   end
 
   def self.glyph c
@@ -17,24 +31,49 @@ class Unit
     "#{@hp}/#{max_hp}"
   end
   def health_color
-    GREEN
+    @hp/max_hp.to_f > 0.66 ? GREEN :
+      @hp / max_hp.to_f > 0.33 ? BLUE : RED
   end
+
   def power_vs(vs)
     [power - vs.armor,0].max
   end
-  def take_hit(damage)
+  def power_str(vs)
+    power_vs(vs).to_s
+  end
+
+  def take_hit_from(op)
+    damage = op.power_vs(self)
     @hp -= damage
     damage
   end
 
-  def accuracy_vs(vs)
-    "75%"
+  def to_hit
+    85 + skill
+  end
+  def evade
+    2
+  end
+
+  def accuracy(vs)
+    to_hit - evade
+  end
+
+  def accuracy_str(vs)
+    "#{accuracy(vs)}%"
   end
   def crit_chance
-    "2%"
+    2
+  end
+  def crit_str
+    "#{crit_chance}%"
+  end
+
+  def effective_speed
+    speed
   end
   def double_attack?(vs)
-    speed >= vs.speed + 4
+    effective_speed >= vs.effective_speed + 4
   end
 
   def alive?
@@ -53,20 +92,12 @@ end
 class Archer < Unit
   glyph ?a
   klass "Archer"
-  stats power: 9,
-    speed: 10,
-    armor: 0,
-    max_hp: 20,
-    movement: 5
+  stats movement: 5
 end
 class ArmorKnight < Unit
   glyph ?A
   klass "Armor Knight"
-  stats power: 15,
-    speed: 2,
-    armor: 6,
-    max_hp: 20,
-    movement: 4
+  stats movement: 4
 end
 class Cavalier < Unit
   glyph ?C
@@ -74,9 +105,6 @@ class Cavalier < Unit
   def speed
     8
   end
-    stats power: 13,
-    speed: 7,
-    armor: 3,
-    max_hp: 20,
-    movement: 7
+  stats movement: 7
 end
+
