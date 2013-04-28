@@ -100,15 +100,14 @@ class Level
       baddie_area = Path.discover_paths(Struct.new(:x,:y).new(bx,by), l, 3)
       path_between = Path.find(Struct.new(:x,:y).new(px,py), bx, by, l, 100)
     end while false ||
-      player_area.count < 10 ||
-      baddie_area.count < 10 ||
+      player_area.count < player_units.size ||
+      baddie_area.count < baddie_units.size ||
       !path_between || path_between.length < 30
 
     player_area.map!(&:last_point)
     baddie_area.map!(&:last_point)
-    player_area.shuffle
-    baddie_area.shuffle
-    puts player_area.inspect
+    player_area.shuffle!
+    baddie_area.shuffle!
 
     player_units.each do |u|
       l.units << u

@@ -135,7 +135,8 @@ class PlayerTurn
     if c
       highlight_spaces += Path.discover_paths(c, @level, c.movement).map(&:last_point)
     end
-    lit_spaces = @level.calculate_fov(@level.units.select{|u| u.team == PLAYER_TEAM })
+    # lit_spaces = @level.calculate_fov(@level.units.select{|u| u.team == PLAYER_TEAM })
+    lit_spaces = nil
     MAP_SIZE_X.times do |x|
       MAP_SIZE_Y.times do |y|
         add_glyph(screen,x,y, highlight_spaces, lit_spaces)
