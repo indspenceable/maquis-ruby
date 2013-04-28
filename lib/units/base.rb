@@ -99,10 +99,10 @@ class Unit
   end
 
   def weapon_slow
-    [constitution - weapon.weight, 0].max if weapon
+    [constitution - weapon.weight, 0].min if weapon
   end
   def effective_speed
-    speed - (weapon ? weapon_slow : 0)
+    speed + (weapon ? weapon_slow : 0)
   end
   def double_attack?(vs)
     effective_speed >= vs.effective_speed + 4 if weapon
