@@ -21,33 +21,30 @@ class MoveAndAttackAttack
     end
   end
 
+  def combat_round(attacker, defender, messages)
+    hit = defender.take_hit_from(attacker)
+    messages << "#{attacker.name} hits #{defender.name}, for #{hit} damage."
+    check_life
+  end
+
   def execute
     @generator ||= Enumerator.new do |g|
       # Move the unit, if they're moving
       @unit.x, @unit.y = @path.last_point
       # Do the fight! first round
       if @unit.weapon
-        hit = @target.take_hit_from(@unit)
-        @messages << "#{@unit.name} attacks #{@target.name}, for #{hit} damage."
-        check_life
-        g << nil
+        combat_round(@unit, @target, @messages)
       end
-
       if @target.weapon
-        hit = @unit.take_hit_from(@target)
-        @messages << "#{@target.name} attacks #{@unit.name}, for #{hit} damage."
-        check_life
         g << nil
+        combat_round(@target, @unit, @messages)
       end
-
       if @unit.double_attack?(@target) && @unit.weapon
-        hit = @target.take_hit_from(@unit)
-        @messages << "#{@unit.name} attacks #{@target.name}, for #{hit} damage."
-        check_life
+        g << nil
+        combat_round(@unit, @target, @messages)
       elsif @target.double_attack?(@unit) && @target.weapon
-        hit = @unit.take_hit_from(@target)
-        @messages << "#{@target.name} attacks #{@unit.name}, for #{hit} damage."
-        check_life
+        g << nil
+        combat_round(@target, @unit, @messages)
       end
       raise StopIteration
     end

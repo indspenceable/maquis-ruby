@@ -88,7 +88,7 @@ class PlayerTurn
     screen.info.set_xy(x, 0)
     screen.info.draw_str(unit.name.capitalize, TEAM_TO_COLOR[unit.team])
     screen.info.set_xy(x, 1)
-    screen.info.draw_str(unit.klass)
+    screen.info.draw_str("#{unit.klass} (#{unit.level})")
     screen.info.set_xy(x, 2)
     screen.info.draw_str(unit.health_str, unit.health_color)
     screen.info.set_xy(x, 3)
