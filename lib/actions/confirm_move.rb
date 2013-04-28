@@ -22,9 +22,13 @@ class MoveAndAttackAttack
   end
 
   def combat_round(attacker, defender, messages)
-    hit = defender.take_hit_from(attacker)
-    messages << "#{attacker.name} hits #{defender.name}, for #{hit} damage."
-    check_life
+    if rand(100) < attacker.accuracy(defender)
+      hit = defender.take_hit_from(attacker)
+      messages << "#{attacker.name} hits #{defender.name}, for #{hit} damage."
+      check_life
+    else
+      messages << "#{attacker.name} misses!"
+    end
   end
 
   def execute
