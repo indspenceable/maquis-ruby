@@ -4,23 +4,24 @@ class Unit
 
   BASE_STATS = {
     :max_hp => 20,
-    :power => 0,
-    :skill => 0,
-    :armor => 0,
-    :speed => 0
+    :power => 3,
+    :skill => 3,
+    :armor => 3,
+    :speed => 3
   }
   STATS = BASE_STATS.keys
 
   attr_reader *STATS
   attr_reader :level
 
-  LEVEL_UPS_FOR_LEVEL_ONE = 5
+  LEVEL_UPS_FOR_LEVEL_ONE = 1
 
   def initialize team, name, x, y, level = 1
     @team, @name, @x, @y = team, name, x, y
     @action_available = true
     STATS.each do |stat|
-      self.instance_variable_set(:"@#{stat}", BASE_STATS[stat])
+      starting_stat = BASE_STATS[stat] + rand(5) - 2
+      self.instance_variable_set(:"@#{stat}", starting_stat)
     end
     @growths = {}
     class_growths.each do |k, (min,max)|
