@@ -12,6 +12,9 @@ class Unit
   STATS = BASE_STATS.keys
 
   attr_reader *STATS
+  attr_reader :level
+
+  LEVEL_UPS_FOR_LEVEL_ONE = 5
 
   def initialize team, name, x, y, level = 1
     @team, @name, @x, @y = team, name, x, y
@@ -26,7 +29,9 @@ class Unit
 
     @hp = max_hp
     @inventory = [IronSword.new, IronLance.new].shuffle
-    (level + 6).times { level_up! }
+    @level = 0
+    (level + LEVEL_UPS_FOR_LEVEL_ONE - 1).times { level_up! }
+    @level = level
   end
 
   def self.glyph c
@@ -125,10 +130,12 @@ class Unit
   end
 
   def level_up!
+    @level += 1
     @growths.each do |stat, growth|
       if rand(100) < growth
         current_val = instance_variable_get(:"@#{stat}")
         instance_variable_set(:"@#{stat}", current_val + 1)
+        @hp += 1 if stat == :max_hp
       end
     end
   end
