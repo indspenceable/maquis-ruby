@@ -98,6 +98,11 @@ class PlayerTurn
     screen.info.draw_str(unit.armor_for_info_str)
     screen.info.set_xy(x, 6)
     screen.info.draw_str(unit.speed_for_info_str)
+
+    # WEAPON INFORMATION
+    screen.info.set_xy(x, 7)
+    screen.info.draw_str(unit.weapon_name_str)
+
     if vs
       # combat stats - Power, Strength, Crit
       screen.info.set_xy(x,8)

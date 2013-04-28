@@ -19,6 +19,8 @@ class Unit
       self.instance_variable_set(:"@#{stat}", stats[stat])
     end
     @hp = max_hp
+    @inventory = [IronSword.new, IronLance.new].shuffle
+    (level + 6).times { level_up! }
   end
 
   def self.glyph c
@@ -42,7 +44,7 @@ class Unit
   end
 
   def speed_for_info_str
-    "SPE: #{speed} (#{effective_speed})"
+    "SPE: #{speed} (#{weapon_slow})"
   end
 
   # POWER
