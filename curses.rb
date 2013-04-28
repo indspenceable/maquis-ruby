@@ -49,12 +49,13 @@ end
 
 class PlayerTurn
   def initialize
-    klasses = [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary]
+    klasses = [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary].shuffle
+    l = 3
     pl = 5.times.map do |x|
       kl = klasses[x%klasses.length]
-      stats = {}
-      Unit::STATS.each{|stat| stats[stat] = rand(10)+5}
-      kl.new(PLAYER_TEAM, "char#{x}", 0, 0, stats)
+      u = kl.new(PLAYER_TEAM, "char#{x}", 0, 0, l)
+      l -= 1 if l > 1
+      u
     end
     @level = Level.generate(pl)
     @x, @y = 1, 1

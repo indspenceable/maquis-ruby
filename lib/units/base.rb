@@ -1,23 +1,29 @@
 class Unit
   attr_accessor :team, :name, :x, :y, :action_available
 
-  STATS = [
-    :max_hp,
-    :power,
-    :skill,
-    :armor,
-    :speed,
-    :constitution
-  ]
+
+  BASE_STATS = {
+    :max_hp => 20,
+    :power => 0,
+    :skill => 0,
+    :armor => 0,
+    :speed => 0
+  }
+  STATS = BASE_STATS.keys
 
   attr_reader *STATS
 
-  def initialize team, name, x, y, stats
+  def initialize team, name, x, y, level = 1
     @team, @name, @x, @y = team, name, x, y
     @action_available = true
     STATS.each do |stat|
-      self.instance_variable_set(:"@#{stat}", stats[stat])
+      self.instance_variable_set(:"@#{stat}", BASE_STATS[stat])
     end
+    @growths = {}
+    class_growths.each do |k, (min,max)|
+      @growths[k] = rand((max-min)/5)*5 + min
+    end
+
     @hp = max_hp
     @inventory = [IronSword.new, IronLance.new].shuffle
     (level + 6).times { level_up! }
@@ -103,31 +109,79 @@ class Unit
   end
 
   def weapon
-    @weapon ||= Weapon.new("Iron Sword", 5, 90, 0, 5)
+    @inventory.find{|x| x.is_a? Weapon}
+  end
+  def weapon_name_str
+    weapon ? weapon.name : "Unequipped"
   end
 
   def alive?
     @hp > 0
   end
 
-  def self.stats hsh
-    hsh.each do |stat,value|
-      define_method(stat) {
-        value
-      }
+  def self.create(level, *args)
+    unit = self.new(*args)
+    (level+3).times {|u| u.level_up!(:silent => true)}
+  end
+
+  def level_up!
+    @growths.each do |stat, growth|
+      if rand(100) < growth
+        current_val = instance_variable_get(:"@#{stat}")
+        instance_variable_set(:"@#{stat}", current_val + 1)
+      end
     end
   end
 end
 
-def create_class(g, k, mv)
+def create_class(g, k, mv, c, growths)
   Class.new(Unit) do
     glyph g
     klass k
-    stats :movement => mv
+    define_method :class_growths do
+      growths
+    end
+    define_method :movement do
+      mv
+    end
+    define_method :constitution do
+      c
+    end
   end
 end
-Archer = create_class('a', "Archer", 5)
-Cavalier = create_class('c', "Cavalier", 9)
-ArmorKnight = create_class('k', "Knight", 4)
-Mercenary = create_class('m', "Mercenary", 7)
-Myrmidon = create_class('s', "Myrmidon", 7)
+
+Archer = create_class('a', "Archer", 5, 6, {
+  :max_hp =>[50, 70],
+  :power => [10, 40],
+  :speed => [20, 70],
+  :skill => [40, 70],
+  :armor => [10, 30],
+})
+Cavalier = create_class('c', "Cavalier", 7, 11, {
+  :max_hp =>[70, 90],
+  :power => [30, 60],
+  :skill => [20, 50],
+  :speed => [20, 50],
+  :armor => [20, 40],
+})
+ArmorKnight = create_class('k', "Knight", 4, 14, {
+  :max_hp =>[80, 100],
+  :power => [30, 60],
+  :skill => [20, 40],
+  :speed => [20, 40],
+  :armor => [30, 60],
+})
+Mercenary = create_class('m', "Mercenary", 7, 6, {
+  :max_hp =>[70, 90],
+  :power => [40, 60],
+  :skill => [20, 50],
+  :speed => [20, 50],
+  :armor => [10, 30],
+})
+Myrmidon = create_class('s', "Myrmidon", 5, 5, {
+  :max_hp => [60, 80],
+  :power => [20, 30],
+  :skill => [50, 70], # Wowee!
+  :speed => [50, 70],
+  :armor => [10, 20],
+})

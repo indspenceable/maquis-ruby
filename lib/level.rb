@@ -87,9 +87,7 @@ class Level
       when 2
         Cavalier
       end
-      stats = {}
-      Unit::STATS.each{|stat| stats[stat] = rand(5)+3}
-      kl.new(COMPUTER_TEAM, "Baddie #{x}", 0, 0, stats)
+      kl.new(COMPUTER_TEAM, "Baddie #{x}", 0, 0)
     end
 
 
