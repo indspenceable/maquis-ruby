@@ -171,7 +171,7 @@ ArmorKnight = create_class('k', "Knight", 4, 14, {
   :speed => [20, 40],
   :armor => [30, 60],
 })
-Mercenary = create_class('m', "Mercenary", 7, 6, {
+Mercenary = create_class('m', "Mercenary", 5, 6, {
   :max_hp =>[70, 90],
   :power => [40, 60],
   :skill => [20, 50],

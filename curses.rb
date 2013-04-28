@@ -112,7 +112,7 @@ class PlayerTurn
       screen.info.draw_str(unit.accuracy_str(vs).to_s)
       screen.info.set_xy(x,10)
       screen.info.draw_str(unit.crit_str)
-      screen.info.set_xy(x, 7)
+      screen.info.set_xy(x, 11)
       screen.info.draw_str("x2") if unit.double_attack?(vs)
     end
   end
