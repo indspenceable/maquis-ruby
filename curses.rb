@@ -20,6 +20,7 @@ class Object
   end
 end
 
+require './lib/items/weapon'
 require './lib/units/base'
 
 MAP_SIZE_X = 40
@@ -90,13 +91,13 @@ class PlayerTurn
     screen.info.set_xy(x, 2)
     screen.info.draw_str(unit.health_str, unit.health_color)
     screen.info.set_xy(x, 3)
-    screen.info.draw_str("Power: #{unit.power}")
+    screen.info.draw_str(unit.power_for_info_str)
     screen.info.set_xy(x, 4)
-    screen.info.draw_str("Skill: #{unit.skill}")
+    screen.info.draw_str(unit.skill_for_info_str)
     screen.info.set_xy(x, 5)
-    screen.info.draw_str("Armor: #{unit.armor}")
+    screen.info.draw_str(unit.armor_for_info_str)
     screen.info.set_xy(x, 6)
-    screen.info.draw_str("Speed: #{unit.speed}")
+    screen.info.draw_str(unit.speed_for_info_str)
     if vs
       # combat stats - Power, Strength, Crit
       screen.info.set_xy(x,8)

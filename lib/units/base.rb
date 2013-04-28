@@ -6,7 +6,8 @@ class Unit
     :power,
     :skill,
     :armor,
-    :speed
+    :speed,
+    :constitution
   ]
 
   attr_reader *STATS
@@ -27,6 +28,7 @@ class Unit
     define_method(:klass){ c }
   end
 
+  # HEALTH
   def health_str
     "#{@hp}/#{max_hp}"
   end
@@ -35,11 +37,26 @@ class Unit
       @hp / max_hp.to_f > 0.33 ? BLUE : RED
   end
 
+  def armor_for_info_str
+    "ARM: #{armor}"
+  end
+
+  def speed_for_info_str
+    "SPE: #{speed} (#{effective_speed})"
+  end
+
+  # POWER
+  def power_for_info_str
+    weapon ? "POW: #{power} + #{weapon.power}" : "POW: NA"
+  end
+  def total_power
+    power + weapon.power if weapon
+  end
   def power_vs(vs)
-    [power - vs.armor,0].max
+    [total_power - vs.armor,0].max if weapon
   end
   def power_str(vs)
-    power_vs(vs).to_s
+    weapon ? power_vs(vs).to_s : "NA"
   end
 
   def take_hit_from(op)
@@ -48,32 +65,43 @@ class Unit
     damage
   end
 
+  # SKILL
   def to_hit
-    85 + skill
+    weapon.to_hit + skill if weapon
   end
   def evade
-    2
+    0
   end
-
   def accuracy(vs)
-    to_hit - evade
+    to_hit - vs.evade if weapon
+  end
+  def accuracy_str(vs)
+    weapon ? "#{accuracy(vs)}%" : "NA"
+  end
+  def skill_for_info_str
+    weapon ? "HIT: #{skill} + #{weapon.to_hit}" : "HIT: NA"
   end
 
-  def accuracy_str(vs)
-    "#{accuracy(vs)}%"
-  end
+  # CRITICAL
   def crit_chance
-    2
+    weapon.to_crit if weapon
   end
   def crit_str
-    "#{crit_chance}%"
+    weapon ? "#{crit_chance}%" : "NA"
   end
 
+  def weapon_slow
+    [constitution - weapon.weight, 0].max if weapon
+  end
   def effective_speed
-    speed
+    speed - (weapon ? weapon_slow : 0)
   end
   def double_attack?(vs)
-    effective_speed >= vs.effective_speed + 4
+    effective_speed >= vs.effective_speed + 4 if weapon
+  end
+
+  def weapon
+    @weapon ||= Weapon.new("Iron Sword", 5, 90, 0, 5)
   end
 
   def alive?

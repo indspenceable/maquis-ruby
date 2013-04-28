@@ -26,22 +26,25 @@ class MoveAndAttackAttack
       # Move the unit, if they're moving
       @unit.x, @unit.y = @path.last_point
       # Do the fight! first round
-      hit = @target.take_hit_from(@unit)
-      @messages << "#{@unit.name} attacks #{@target.name}, for #{hit} damage."
-      check_life
-      g << nil
-
-      hit = @unit.take_hit_from(@target)
-      @messages << "#{@target.name} attacks #{@unit.name}, for #{hit} damage."
-      check_life
-
-      if @unit.double_attack?(@target)
-        g << nil
+      if @unit.weapon
         hit = @target.take_hit_from(@unit)
         @messages << "#{@unit.name} attacks #{@target.name}, for #{hit} damage."
         check_life
-      elsif @target.double_attack?(@unit)
         g << nil
+      end
+
+      if @target.weapon
+        hit = @unit.take_hit_from(@target)
+        @messages << "#{@target.name} attacks #{@unit.name}, for #{hit} damage."
+        check_life
+        g << nil
+      end
+
+      if @unit.double_attack?(@target) && @unit.weapon
+        hit = @target.take_hit_from(@unit)
+        @messages << "#{@unit.name} attacks #{@target.name}, for #{hit} damage."
+        check_life
+      elsif @target.double_attack?(@unit) && @target.weapon
         hit = @unit.take_hit_from(@target)
         @messages << "#{@target.name} attacks #{@unit.name}, for #{hit} damage."
         check_life
@@ -127,7 +130,7 @@ class ConfirmMove < MenuAction
     @prev_action = prev_action
     @path = path
     opts = []
-    if adjacent_enemies.any?
+    if adjacent_enemies.any? && unit.weapon
       opts << :attack
     end
     opts << :confirm
