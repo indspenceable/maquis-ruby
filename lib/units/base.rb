@@ -28,7 +28,7 @@ class Unit
     end
 
     @hp = max_hp
-    @inventory = [IronSword.new, IronLance.new].shuffle
+    @inventory = [IronSword.new, IronLance.new, IronAxe.new].shuffle
     @level = 0
     (level + LEVEL_UPS_FOR_LEVEL_ONE - 1).times { level_up! }
     @level = level
