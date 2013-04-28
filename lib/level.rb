@@ -1,13 +1,26 @@
-# MAP_SIZE_X = 20
-# MAP_SIZE_Y = 40
-
 class Level
+  include PermissiveFieldOfView
   attr_reader :map, :units, :log
   def initialize(w,h)
     @w,@h = w,h
     @units = []
     @log = []
   end
+
+  def calculate_fov(units)
+    @lit = []
+    units.each do |u|
+      do_fov( u.x, u.y, 5 )
+    end
+    @lit
+  end
+  def blocked?(x,y)
+    @map[x][y] == '#'
+  end
+  def light(x,y)
+    @lit << [x,y]
+  end
+
   def fill
     @map = Array.new(@w) do |x|
       Array.new(@h) do |y|

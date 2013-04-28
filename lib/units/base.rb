@@ -93,11 +93,11 @@ def create_class(g, k, mv)
   Class.new(Unit) do
     glyph g
     klass k
-    stats movement: mv
+    stats :movement => mv
   end
 end
-Archer = create_class(?a, "Archer", 5)
-Cavalier = create_class(?c, "Cavalier", 9)
-ArmorKnight = create_class(?k, "Knight", 4)
-Mercenary = create_class(?m, "Mercenary", 7)
-Myrmidon = create_class(?s, "Myrmidon", 7)
+Archer = create_class('a', "Archer", 5)
+Cavalier = create_class('c', "Cavalier", 9)
+ArmorKnight = create_class('k', "Knight", 4)
+Mercenary = create_class('m', "Mercenary", 7)
+Myrmidon = create_class('s', "Myrmidon", 7)

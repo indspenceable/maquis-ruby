@@ -1,4 +1,5 @@
 require 'curses'
+require './lib/permissive_fov'
 require './lib/display/region'
 require './lib/display/screen'
 require './lib/actions/menu'
@@ -58,8 +59,9 @@ class PlayerTurn
     @x, @y = 1, 1
     @current_action = MapSelect.new(3, 3, @level)
   end
-  def add_glyph(screen,x,y, highlight_squares)
+  def add_glyph(screen, x,y, highlight_squares, lit_spaces)
     screen.map.set_xy(x,y)
+    return screen.map.draw_str('x') unless lit_spaces.nil? || lit_spaces.include?([x,y])
     c = @level.unit_at(x,y)
     if c
       color = TEAM_TO_COLOR[c.team]
@@ -133,9 +135,10 @@ class PlayerTurn
     if c
       highlight_spaces += Path.discover_paths(c, @level, c.movement).map(&:last_point)
     end
+    lit_spaces = @level.calculate_fov(@level.units.select{|u| u.team == PLAYER_TEAM })
     MAP_SIZE_X.times do |x|
       MAP_SIZE_Y.times do |y|
-        add_glyph(screen,x,y, highlight_spaces)
+        add_glyph(screen,x,y, highlight_spaces, lit_spaces)
       end
     end
 
