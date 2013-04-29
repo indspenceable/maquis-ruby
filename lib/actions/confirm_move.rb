@@ -22,6 +22,7 @@ class MoveAndAttackAttack
   end
 
   def combat_round(attacker, defender, messages)
+    return unless attacker.weapon && attacker.weapon.in_range?(Path.unit_dist(attacker, defender))
     if rand(100) < attacker.accuracy(defender)
       hit = defender.take_hit_from(attacker)
       messages << "#{attacker.name} hits #{defender.name}, for #{hit} damage."
@@ -133,7 +134,7 @@ class ConfirmMove < MenuAction
     @prev_action = prev_action
     @path = path
     opts = []
-    if adjacent_enemies.any? && unit.weapon
+    if enemies_in_range.any? && unit.weapon
       opts << :attack
     end
     opts << :confirm
@@ -143,16 +144,24 @@ class ConfirmMove < MenuAction
   def units_for_info_panel
     [@unit]
   end
-  def adjacent_enemies
-    [
-      @level.unit_at(@path.last_point[0]+1,@path.last_point[1]),
-      @level.unit_at(@path.last_point[0]-1,@path.last_point[1]),
-      @level.unit_at(@path.last_point[0],@path.last_point[1]+1),
-      @level.unit_at(@path.last_point[0],@path.last_point[1]-1),
-    ].compact.select{|u| u.team != @unit.team}
+  def enemies_in_range
+    @enemies_in_range ||= begin
+      eir = @level.units.select do |u|
+        u.team != @unit.team &&
+        @unit.available_weapons.any?{|w| w.in_range?(Path.dist(*@path.last_point, u.x, u.y))}
+      end
+      $log << "EIR Is #{eir}"
+      eir
+    end
+    # [
+    #   @level.unit_at(@path.last_point[0]+1,@path.last_point[1]),
+    #   @level.unit_at(@path.last_point[0]-1,@path.last_point[1]),
+    #   @level.unit_at(@path.last_point[0],@path.last_point[1]+1),
+    #   @level.unit_at(@path.last_point[0],@path.last_point[1]-1),
+    # ].compact.select{|u| u.team != @unit.team}
   end
   def attack
-    AttackTargetSelect.new(@unit, @level, adjacent_enemies, @path, self)
+    AttackTargetSelect.new(@unit, @level, enemies_in_range, @path, self)
   end
   def confirm
     @unit.x, @unit.y = @path.last_point

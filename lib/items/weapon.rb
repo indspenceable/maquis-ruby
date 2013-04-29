@@ -5,14 +5,42 @@ class Weapon
       super(*args)
     end
   end
+
+  def in_range?(x)
+    range.include?(x)
+  end
 end
 
-class IronSword < Weapon
+class Sword < Weapon
+  def range
+    (1..1)
+  end
+end
+class Lance < Weapon
+  def range
+    (1..1)
+  end
+end
+class Axe < Weapon
+  def range
+    (1..1)
+  end
+end
+class Bow < Weapon
+  def range
+    (2..2)
+  end
+end
+
+class IronSword < Sword
   stats 'Iron Sword', 5, 90, 0, 5
 end
-class IronLance < Weapon
+class IronLance < Lance
   stats 'Iron Lance', 7, 80, 0, 8
 end
-class IronAxe < Weapon
+class IronAxe < Axe
   stats 'Iron Axe', 8, 75, 0, 10
+end
+class IronBow < Bow
+  stats 'Iron Bow', 6, 85, 0, 5
 end

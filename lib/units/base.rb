@@ -115,8 +115,12 @@ class Unit
   end
 
   def weapon
-    @inventory.find{|x| x.is_a? Weapon}
+    available_weapons.first
   end
+  def available_weapons
+    @inventory.select{| x| x.is_a? Weapon}
+  end
+
   def weapon_name_str
     weapon ? weapon.name : "Unequipped"
   end
@@ -165,6 +169,13 @@ Archer = create_class('a', "Archer", 5, 6, {
   :skill => [40, 70],
   :armor => [10, 30],
 })
+
+class Archer
+  def initialize *args
+    super
+   @inventory = [IronBow.new].shuffle
+ end
+end
 Cavalier = create_class('c', "Cavalier", 7, 11, {
   :max_hp =>[70, 90],
   :power => [30, 60],

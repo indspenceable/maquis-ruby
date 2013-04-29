@@ -1,4 +1,7 @@
 class Path
+  def self.unit_dist(u1,u2)
+    dist(u1.x,u1.y,u2.x,u2.y)
+  end
   def self.dist(x1,y1,x2,y2)
     (x1-x2).abs + (y1-y2).abs
   end
