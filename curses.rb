@@ -9,6 +9,8 @@ require './lib/actions/confirm_move'
 require './lib/actions/enemy_turn'
 require './lib/level'
 
+$log = []
+
 class Object
   def self.attrs *attr_list
     attr_accessor *attr_list
@@ -175,12 +177,16 @@ class PlayerTurn
 end
 
 GS.current = PlayerTurn.new
-Screen.open do |s|
-  loop do
-    current = GS.current
-    current.execute
-    current.display(s)
-    current.move_to_correct_space(s)
-    current.key(Curses::getch)
+begin
+  Screen.open do |s|
+    loop do
+      current = GS.current
+      current.execute
+      current.display(s)
+      current.move_to_correct_space(s)
+      current.key(Curses::getch)
+    end
   end
+ensure
+  puts $log.inspect
 end
