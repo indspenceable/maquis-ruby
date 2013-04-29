@@ -84,36 +84,29 @@ class PlayerTurn
   def display_character_info_for(screen, unit, i, vs=nil)
     x = i*20
 
-    #name
-    screen.info.set_xy(x, 0)
-    screen.info.draw_str(unit.name.capitalize, TEAM_TO_COLOR[unit.team])
-    screen.info.set_xy(x, 1)
-    screen.info.draw_str("#{unit.klass} (#{unit.level})")
-    screen.info.set_xy(x, 2)
-    screen.info.draw_str(unit.health_str, unit.health_color)
-    screen.info.set_xy(x, 3)
-    screen.info.draw_str(unit.power_for_info_str)
-    screen.info.set_xy(x, 4)
-    screen.info.draw_str(unit.skill_for_info_str)
-    screen.info.set_xy(x, 5)
-    screen.info.draw_str(unit.armor_for_info_str)
-    screen.info.set_xy(x, 6)
-    screen.info.draw_str(unit.speed_for_info_str)
-
-    # WEAPON INFORMATION
-    screen.info.set_xy(x, 7)
-    screen.info.draw_str(unit.weapon_name_str)
-
+    strings = [
+      [unit.name.capitalize, TEAM_TO_COLOR[unit.team]],
+      ["#{unit.klass} (#{unit.level})"],
+      [unit.health_str, unit.health_color],
+      [unit.power_for_info_str],
+      [unit.skill_for_info_str],
+      [unit.armor_for_info_str],
+      [unit.speed_for_info_str],
+      [unit.weapon_name_str],
+    ]
     if vs
       # combat stats - Power, Strength, Crit
-      screen.info.set_xy(x,8)
-      screen.info.draw_str(unit.power_str(vs))
-      screen.info.set_xy(x,9)
-      screen.info.draw_str(unit.accuracy_str(vs).to_s)
-      screen.info.set_xy(x,10)
-      screen.info.draw_str(unit.crit_str)
-      screen.info.set_xy(x, 11)
-      screen.info.draw_str("x2") if unit.double_attack?(vs)
+      strings += [
+        [unit.power_str(vs)],
+        [unit.accuracy_str(vs).to_s],
+        [unit.crit_str],
+      ]
+      strings += ["x2"] if unit.double_attack?(vs)
+    end
+
+    strings.each_with_index do |str, i|
+      screen.info.set_xy(x, i)
+      screen.info.draw_str(*str)
     end
   end
   def display_character_info(screen)

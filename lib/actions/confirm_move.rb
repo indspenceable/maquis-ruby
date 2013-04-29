@@ -31,6 +31,8 @@ class MoveAndAttackAttack
     end
   end
 
+  # TODO this doesn't work in ruby 1.8.7
+  # We should move away from this stupid generator style anyway
   def execute
     @generator ||= Enumerator.new do |g|
       # Move the unit, if they're moving
