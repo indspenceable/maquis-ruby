@@ -1,9 +1,10 @@
-class MoveAndAttackAttack
-  def initialize unit, target, level, path
+class AttackExecutor
+  def initialize unit, target, level, next_state
     @unit = unit
     @target = target
     @level = level
-    @path = path
+
+    @next_state = next_state
 
     @messages = []
   end
@@ -36,8 +37,6 @@ class MoveAndAttackAttack
   # We should move away from this stupid generator style anyway
   def execute
     @generator ||= Enumerator.new do |g|
-      # Move the unit, if they're moving
-      @unit.x, @unit.y = @path.last_point
       # Do the fight! first round
       if @unit.weapon
         combat_round(@unit, @target, @messages)
@@ -77,7 +76,7 @@ class MoveAndAttackAttack
   end
   def key(c)
     if @finished
-      MapSelect.new(@unit.x, @unit.y, @level)
+      @next_state
     else
       self
     end
@@ -120,7 +119,7 @@ class AttackWeaponSelect < MenuAction
     @unit.equip!(@available_weapons[@index])
   end
   def action!
-    MoveAndAttackAttack.new(@unit, @target, @level, @path)
+    AttackExecutor.new(@unit, @target, @level, MapSelect.new(@unit.x, @unit.y, @level))
   end
   def cancel
     @prev_action

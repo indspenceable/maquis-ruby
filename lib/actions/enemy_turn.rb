@@ -9,20 +9,16 @@ class EnemyTurn
 
   def execute
     return end_turn unless @unit
-    if @moved
-      attack_unit
-    elsif @path
-      move_unit
+    if @path
+      move_and_attack
     else
       choose_target
     end
-
-    self
   end
 
   def end_turn
     @level.units.each{|u| u.action_available = true }
-    first_unit = @level.units.find{|u| u.team == PLAYER_TEAM}
+    @unit = first_unit = @level.units.find{|u| u.team == PLAYER_TEAM}
     MapSelect.new(first_unit.x, first_unit.y, @level)
   end
   def draw(screen)
@@ -38,13 +34,21 @@ class EnemyTurn
 
   def next_unit
     @unit = @my_units.pop
-    @moved = @path = @target = nil
+    @path = @target = nil
   end
 
-  def move_unit
+  def move_and_attack
     # first, determine the target unit...
     @unit.x, @unit.y = *@path.last_point
-    next_unit unless @target
+    if @target
+      unit, target = @unit, @target
+      next_unit
+      AttackExecutor.new(unit, target, @level, self)
+    else
+      @unit.action_available = false
+      next_unit
+      self
+    end
   end
 
   def attack_unit
@@ -68,20 +72,21 @@ class EnemyTurn
   def choose_target
     ts = possible_targets
     @target = ts.find do |u|
-      @unit.power_vs(u) > u.life
+      @unit.power_vs(u) > u.hp
     end
     @target ||= ts.inject do |u1, u2|
-      if u1.life - @unit.power_vs(u1) > u2.life - @unit.power_vs(u2)
+      if u1.hp - @unit.power_vs(u1) > u2.hp - @unit.power_vs(u2)
         u1
       else
         u2
       end
     end
     if @target
-      @path = reachable_paths.find {|p| hit_from(@target, *p.last_point) }
+      @path = reachable_paths.find {|p| hit_from?(@target, *p.last_point) }
     else
       @path = reachable_paths.shuffle.first
     end
+    self
   end
 
   def hit_from?(u,x,y)
@@ -91,7 +96,7 @@ class EnemyTurn
   end
 
   def reachable_paths
-    Path.discover_paths(@unit, @level, @unit.movement)
+    Path.discover_unblocked_paths(@unit, @level, @unit.movement)
   end
 
   def possible_targets

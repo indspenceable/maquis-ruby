@@ -7,12 +7,12 @@ class Unit
     :power => 3,
     :skill => 3,
     :armor => 3,
-    :speed => 3
+    :speed => 3,
   }
   STATS = BASE_STATS.keys
 
   attr_reader *STATS
-  attr_reader :level
+  attr_reader :level, :hp
 
   LEVEL_UPS_FOR_LEVEL_ONE = 0
 
@@ -190,7 +190,7 @@ Archer = create_class('a', "Archer", 5, 6, {
   :power  => 3,
   :skill  => 5,
   :speed  => 4,
-  :def    => 3,
+  :armor  => 3,
   :res    => 0,
 })
 

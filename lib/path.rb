@@ -59,6 +59,13 @@ class Path
     end
     closed_list
   end
+  def self.discover_unblocked_paths(unit, level, limit=99)
+    discover_paths(unit,level,limit).reject do |p|
+      u = level.unit_at(*p.last_point)
+      u && u != unit
+    end
+  end
+
   def initialize (x, y, level)
     @level = level
     @sx, @sy = x,y
