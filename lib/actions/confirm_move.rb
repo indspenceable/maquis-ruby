@@ -123,7 +123,7 @@ class AttackWeaponSelect < MenuAction
     MoveAndAttackAttack.new(@unit, @target, @level, @path)
   end
   def cancel
-    prev_action
+    @prev_action
   end
 end
 
@@ -177,6 +177,8 @@ class ConfirmMove < MenuAction
     opts << :confirm
     opts << :cancel
     super(opts)
+    @start_x, @start_y = @unit.x, @unit.y
+    @unit.x, @unit.y = @path.last_point
   end
   def units_for_info_panel
     [@unit]
@@ -196,12 +198,21 @@ class ConfirmMove < MenuAction
   def attack
     AttackTargetSelect.new(@unit, @level, enemies_in_range, @path, self)
   end
+
+  def draw(screen)
+    @path.each_but_last do |x,y|
+      screen.map.set_xy(x,y)
+      screen.map.draw_str('*', BLUE)
+    end
+    super
+  end
+
   def confirm
-    @unit.x, @unit.y = @path.last_point
     @unit.action_available = false
     MapSelect.new(@unit.x, @unit.y, @level)
   end
   def cancel
+    @unit.x, @unit.y = @start_x, @start_y
     @prev_action
   end
   def unit_for_map_highlighting

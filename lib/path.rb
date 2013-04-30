@@ -85,6 +85,11 @@ class Path
   def each &blk
     @path.each(&blk)
   end
+  def each_but_last
+    (@path.size - 1).times do |i|
+      yield @path[i]
+    end
+  end
   def include?(x,y)
     @path.include?([x,y])
   end
