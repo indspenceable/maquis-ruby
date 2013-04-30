@@ -14,14 +14,14 @@ class Unit
   attr_reader *STATS
   attr_reader :level
 
-  LEVEL_UPS_FOR_LEVEL_ONE = 1
+  LEVEL_UPS_FOR_LEVEL_ONE = 0
 
   def initialize team, name, x, y, level = 1
     @team, @name, @x, @y = team, name, x, y
     @action_available = true
     STATS.each do |stat|
-      starting_stat = BASE_STATS[stat] + rand(5) - 2
-      self.instance_variable_set(:"@#{stat}", starting_stat)
+      # starting_stat = BASE_STATS[stat] + rand(5) - 2
+      self.instance_variable_set(:"@#{stat}", starting_stats[stat])
     end
     @growths = {}
     class_growths.each do |k, (min,max)|
@@ -157,12 +157,15 @@ class Unit
   end
 end
 
-def create_class(g, k, mv, c, growths)
+def create_class(g, k, mv, c, growths, starting_stats)
   Class.new(Unit) do
     glyph g
     klass k
     define_method :class_growths do
       growths
+    end
+    define_method :starting_stats do
+      starting_stats
     end
     define_method :movement do
       mv
@@ -179,6 +182,13 @@ Archer = create_class('a', "Archer", 5, 6, {
   :speed => [20, 70],
   :skill => [40, 70],
   :armor => [10, 30],
+}, {
+  :max_hp => 14,
+  :power  => 3,
+  :skill  => 5,
+  :speed  => 4,
+  :def    => 3,
+  :res    => 0,
 })
 
 class Archer
@@ -193,6 +203,13 @@ Cavalier = create_class('c', "Cavalier", 7, 11, {
   :skill => [20, 50],
   :speed => [20, 50],
   :armor => [20, 40],
+}, {
+  :max_hp => 16,
+  :power  => 3,
+  :skill  => 3,
+  :speed  => 4,
+  :def    => 3,
+  :res    => 0,
 })
 ArmorKnight = create_class('k', "Knight", 4, 14, {
   :max_hp =>[80, 100],
@@ -200,6 +217,13 @@ ArmorKnight = create_class('k', "Knight", 4, 14, {
   :skill => [20, 40],
   :speed => [20, 40],
   :armor => [30, 60],
+}, {
+  :max_hp => 18,
+  :power  => 4,
+  :skill  => 2,
+  :speed  => 2,
+  :def    => 5,
+  :res    => 0,
 })
 Mercenary = create_class('m', "Mercenary", 5, 6, {
   :max_hp =>[70, 90],
@@ -207,6 +231,13 @@ Mercenary = create_class('m', "Mercenary", 5, 6, {
   :skill => [20, 50],
   :speed => [20, 50],
   :armor => [10, 30],
+}, {
+  :max_hp => 16,
+  :power  => 4,
+  :skill  => 3,
+  :speed  => 3,
+  :def    => 4,
+  :res    => 0,
 })
 Myrmidon = create_class('s', "Myrmidon", 5, 5, {
   :max_hp => [60, 80],
@@ -214,4 +245,11 @@ Myrmidon = create_class('s', "Myrmidon", 5, 5, {
   :skill => [50, 70], # Wowee!
   :speed => [50, 70],
   :armor => [10, 20],
+}, {
+  :max_hp => 14,
+  :power  => 3,
+  :skill  => 5,
+  :speed  => 5,
+  :def    => 2,
+  :res    => 0,
 })
