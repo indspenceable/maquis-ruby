@@ -36,7 +36,7 @@ class MapSelect < MapAction
     end
   end
   def cancel
-    exit
+    raise "herp derp derp"
   end
   def units_for_info_panel
     Array(current_unit)

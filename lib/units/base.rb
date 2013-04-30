@@ -120,6 +120,13 @@ class Unit
   def available_weapons
     @inventory.select{| x| x.is_a? Weapon}
   end
+  def weapons_that_hit_at(x)
+    available_weapons.select{|w| w.in_range?(x)}
+  end
+  def equip! weapon
+    @inventory.delete(weapon)
+    @inventory.unshift(weapon)
+  end
 
   def weapon_name_str
     weapon ? weapon.name : "Unequipped"

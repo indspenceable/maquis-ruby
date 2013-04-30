@@ -63,6 +63,7 @@ class Move < MapAction
     if [@x,@y] == @path.last_point &&
      @level.units.all? {|u| (u.x != @x || u.y != @y) || (u == @unit)}
       # We've got a clear path to this location.
+      # move the unit there
       return ConfirmMove.new(@unit, @path, @level, self)
     end
     self

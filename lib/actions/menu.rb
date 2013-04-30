@@ -9,7 +9,7 @@ class MenuAction
     elsif c == 'k'
       @index -=1
     elsif c == 'a'
-      return send @choices[@index]
+      return action!
     end
     @index = @index % @choices.length
     self
@@ -22,6 +22,9 @@ class MenuAction
   end
   def set_cursor(screen)
     screen.info.set_xy(0, 17+@index)
+  end
+  def action!
+    send @choices[@index]
   end
 end
 

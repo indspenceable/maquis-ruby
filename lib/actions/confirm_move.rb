@@ -91,6 +91,42 @@ class MoveAndAttackAttack
   end
 end
 
+class AttackWeaponSelect < MenuAction
+  def initialize unit, target, level, path, prev_action
+    @unit = unit
+    @level = level
+    @target = target
+    @prev_action = prev_action
+    @path = path
+
+    @available_weapons = @unit.weapons_that_hit_at(Path.dist(*@path.last_point, @target.x, @target.y))
+    super((0...@available_weapons.size).to_a)
+  end
+  def string_and_color
+    @available_weapons.map(&:class).map(&:name)
+  end
+  def unit_for_map_highlighting
+    nil
+  end
+  def units_for_info_panel
+    [@unit, @target]
+  end
+  def key *args
+    rtn = super
+    equip_selected_weapon!
+    rtn
+  end
+  def equip_selected_weapon!
+    @unit.equip!(@available_weapons[@index])
+  end
+  def action!
+    MoveAndAttackAttack.new(@unit, @target, @level, @path)
+  end
+  def cancel
+    prev_action
+  end
+end
+
 class AttackTargetSelect < MenuAction
   def initialize unit, level, targets, path, prev_action
     @unit = unit
@@ -109,7 +145,8 @@ class AttackTargetSelect < MenuAction
     [@unit, @targets[@index]]
   end
   def confirm
-    MoveAndAttackAttack.new(@unit, @targets[@index], @level, @path)
+    # MoveAndAttackAttack.new(@unit, @targets[@index], @level, @path)
+    AttackWeaponSelect.new(@unit, @targets[@index], @level, @path, self)
   end
   def cancel
     @prev_action
@@ -145,13 +182,9 @@ class ConfirmMove < MenuAction
     [@unit]
   end
   def enemies_in_range
-    @enemies_in_range ||= begin
-      eir = @level.units.select do |u|
-        u.team != @unit.team &&
-        @unit.available_weapons.any?{|w| w.in_range?(Path.dist(*@path.last_point, u.x, u.y))}
-      end
-      $log << "EIR Is #{eir}"
-      eir
+    @enemies_in_range ||= @level.units.select do |u|
+      u.team != @unit.team &&
+      @unit.available_weapons.any?{|w| w.in_range?(Path.dist(*@path.last_point, u.x, u.y))}
     end
     # [
     #   @level.unit_at(@path.last_point[0]+1,@path.last_point[1]),
