@@ -36,7 +36,8 @@ class MapSelect < MapAction
     end
   end
   def cancel
-    raise "herp derp derp"
+    self
+    # Ahaha! Can't quit now, sucka.
   end
   def units_for_info_panel
     Array(current_unit)
