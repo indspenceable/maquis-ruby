@@ -17,7 +17,7 @@ class Move < MapAction
   end
 
   def units_for_info_panel
-    [@unit, current_highlighted_unit].uniq.compact
+    [@unit]
   end
 
   def adjacent_to_last_point?(x,y)

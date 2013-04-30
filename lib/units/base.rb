@@ -59,6 +59,10 @@ class Unit
     "SPE: #{speed} (#{weapon_slow})"
   end
 
+  def can_hit?(vs)
+    weapon && weapon.in_range?(Path.unit_dist(self, vs))
+  end
+
   # POWER
   def power_for_info_str
     weapon ? "POW: #{power} + #{weapon.power}" : "POW: NA"
@@ -70,7 +74,7 @@ class Unit
     [total_power - vs.armor,0].max if weapon
   end
   def power_str(vs)
-    weapon ? power_vs(vs).to_s : "NA"
+    can_hit?(vs) ? power_vs(vs).to_s : "NA"
   end
 
   def take_hit_from(op)
@@ -90,7 +94,7 @@ class Unit
     to_hit - vs.evade if weapon
   end
   def accuracy_str(vs)
-    weapon ? "#{accuracy(vs)}%" : "NA"
+    can_hit?(vs) ? "#{accuracy(vs)}%" : "NA"
   end
   def skill_for_info_str
     weapon ? "HIT: #{skill} + #{weapon.to_hit}" : "HIT: NA"
