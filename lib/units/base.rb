@@ -60,7 +60,10 @@ class Unit
   end
 
   def can_hit?(vs)
-    weapon && weapon.in_range?(Path.unit_dist(self, vs))
+    can_hit_range?(Path.unit_dist(self, vs))
+  end
+  def can_hit_range?(n)
+    weapon && weapon.in_range?(n)
   end
 
   # POWER
@@ -208,7 +211,7 @@ Cavalier = create_class('c', "Cavalier", 7, 11, {
   :power  => 3,
   :skill  => 3,
   :speed  => 4,
-  :def    => 3,
+  :armor  => 3,
   :res    => 0,
 })
 ArmorKnight = create_class('k', "Knight", 4, 14, {
@@ -222,7 +225,7 @@ ArmorKnight = create_class('k', "Knight", 4, 14, {
   :power  => 4,
   :skill  => 2,
   :speed  => 2,
-  :def    => 5,
+  :armor  => 5,
   :res    => 0,
 })
 Mercenary = create_class('m', "Mercenary", 5, 6, {
@@ -236,7 +239,7 @@ Mercenary = create_class('m', "Mercenary", 5, 6, {
   :power  => 4,
   :skill  => 3,
   :speed  => 3,
-  :def    => 4,
+  :armor  => 4,
   :res    => 0,
 })
 Myrmidon = create_class('s', "Myrmidon", 5, 5, {
@@ -250,6 +253,6 @@ Myrmidon = create_class('s', "Myrmidon", 5, 5, {
   :power  => 3,
   :skill  => 5,
   :speed  => 5,
-  :def    => 2,
+  :armor  => 2,
   :res    => 0,
 })
