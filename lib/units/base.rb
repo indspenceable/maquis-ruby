@@ -16,7 +16,7 @@ class Unit
 
   LEVEL_UPS_FOR_LEVEL_ONE = 0
 
-  def initialize team, name, x, y, level = 1
+  def initialize team, name, x, y, level = 1, is_lord=false
     @team, @name, @x, @y = team, name, x, y
     @action_available = true
     STATS.each do |stat|
@@ -33,6 +33,12 @@ class Unit
     @level = 0
     (level + LEVEL_UPS_FOR_LEVEL_ONE - 1).times { level_up! }
     @level = level
+
+    @is_lord = is_lord
+  end
+
+  def lord?
+    @is_lord
   end
 
   def self.glyph c

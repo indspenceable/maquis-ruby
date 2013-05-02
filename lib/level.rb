@@ -28,6 +28,11 @@ class Level
       end
     end
   end
+
+  def lord
+    units.find{|u| u.lord? }
+  end
+
   def unit_at(x,y)
     units.find{|c| c.x == x && c.y == y}
   end
@@ -78,7 +83,7 @@ class Level
     # first, pick a baddie theme
     # TODO baddie themes
 
-    baddie_units = (7 + rand(7)).times.map do |x|
+    baddie_units = (2 + rand(3)).times.map do |x|
       kl = case rand(3)
       when 0
         ArmorKnight

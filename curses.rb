@@ -55,7 +55,7 @@ class PlayerTurn
     l = 3
     pl = 5.times.map do |x|
       kl = klasses[x%klasses.length]
-      u = kl.new(PLAYER_TEAM, "char#{x}", 0, 0, l)
+      u = kl.new(PLAYER_TEAM, "char#{x}", 0, 0, l+2, x==0)
       l -= 1 if l > 1
       u
     end

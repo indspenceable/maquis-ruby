@@ -18,8 +18,8 @@ class EnemyTurn
 
   def end_turn
     @level.units.each{|u| u.action_available = true }
-    @unit = first_unit = @level.units.find{|u| u.team == PLAYER_TEAM}
-    MapSelect.new(first_unit.x, first_unit.y, @level)
+    #@unit = first_unit = @level.units.find{|u| u.team == PLAYER_TEAM}
+    MapSelect.new(@level.lord.x, @level.lord.y, @level)
   end
   def draw(screen)
     @path.each do |x,y|
@@ -69,6 +69,18 @@ class EnemyTurn
 
   private
 
+  def lord
+    @lord ||= @level.lord
+  end
+
+  def distance_from_path_to_lord(p)
+    @lord_paths ||= Path.discover_paths(lord, @level, 1000, true)
+    @distance_cache ||= {}
+    #@distance_cache[p] ||= Path.find(lord, *p.last_point, @level, 100, true).length
+    @distance_cache[p] ||= @lord_paths.find{|x| x.last_point == p.last_point}.length
+    @distance_cache[p]
+  end
+
   def choose_target
     ts = possible_targets
     @target = ts.find do |u|
@@ -84,7 +96,13 @@ class EnemyTurn
     if @target
       @path = reachable_paths.find {|p| hit_from?(@target, *p.last_point) }
     else
-      @path = reachable_paths.shuffle.first
+      @path = reachable_paths.inject do |p1,p2|
+        if distance_from_path_to_lord(p1) < distance_from_path_to_lord(p2)
+          p1
+        else
+          p2
+        end
+      end
     end
     self
   end
@@ -96,7 +114,7 @@ class EnemyTurn
   end
 
   def reachable_paths
-    Path.discover_unblocked_paths(@unit, @level, @unit.movement)
+    Path.discover_unblocked_paths(@unit, @level, @unit.movement).shuffle
   end
 
   def possible_targets

@@ -5,7 +5,7 @@ class Path
   def self.dist(x1,y1,x2,y2)
     (x1-x2).abs + (y1-y2).abs
   end
-  def self.find(unit, x2, y2, level, limit=99)
+  def self.find(unit, x2, y2, level, limit=99, path_through_enemies=false)
 
     open_list = [Path.new(unit.x,unit.y, level)]
     closed_list = []
@@ -16,7 +16,7 @@ class Path
       c = open_list.shift
       cx,cy = c.last_point
       return c if cx == x2 && cy == y2
-      next if c.length > limit || level.map[cx][cy] != ' '
+      next if (c.length > limit) || (level.map[cx][cy] != ' ')
       closed_list << c
       [
         c.dup.add(cx+1, cy),
@@ -25,14 +25,14 @@ class Path
         c.dup.add(cx, cy-1),
       ].each do |p|
         unless (closed_list + open_list).any?{|pp| p.last_point == pp.last_point} ||
-          level.unit_at(*p.last_point) && level.unit_at(*p.last_point).team != unit.team
+          level.unit_at(*p.last_point) && ((level.unit_at(*p.last_point).team != unit.team) && !path_through_enemies)
           open_list << p
         end
       end
     end
     nil
   end
-  def self.discover_paths(unit, level, limit=99)
+  def self.discover_paths(unit, level, limit=99, path_through_enemies=false)
 
     open_list = [Path.new(unit.x, unit.y, level)]
     closed_list = []
@@ -52,7 +52,7 @@ class Path
         c.dup.add(cx, cy-1),
       ].each do |p|
         unless (closed_list + open_list).any?{|pp| p.last_point == pp.last_point} ||
-          level.unit_at(*p.last_point) && level.unit_at(*p.last_point).team != unit.team
+          level.unit_at(*p.last_point) && ((level.unit_at(*p.last_point).team != unit.team) && !path_through_enemies)
           open_list << p
         end
       end
