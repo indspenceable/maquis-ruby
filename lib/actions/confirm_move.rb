@@ -13,17 +13,21 @@ class AttackExecutor
     unless @unit.alive?
       @messages << "#{@unit.name} dies!"
       @level.units.delete(@unit)
-      raise StopIteration
+      return false
     end
     unless @target.alive?
       @messages << "#{@target.name} dies!"
       @level.units.delete(@target)
-      raise StopIteration
+      return false
     end
+    true
+  end
+
+  def can_attack(attacker, defender)
+    attacker.weapon && attacker.weapon.in_range?(Path.unit_dist(attacker, defender))
   end
 
   def combat_round(attacker, defender, messages)
-    return unless attacker.weapon && attacker.weapon.in_range?(Path.unit_dist(attacker, defender))
     if rand(100) < attacker.accuracy(defender)
       hit = defender.take_hit_from(attacker)
       messages << "#{attacker.name} hits #{defender.name}, for #{hit} damage."
@@ -33,37 +37,48 @@ class AttackExecutor
     end
   end
 
-  # TODO this doesn't work in ruby 1.8.7
-  # We should move away from this stupid generator style anyway
-  def execute
-    @generator ||= Enumerator.new do |g|
-      # Do the fight! first round
-      if @unit.weapon
-        combat_round(@unit, @target, @messages)
-      end
-      if @target.weapon
-        g << nil
-        combat_round(@target, @unit, @messages)
-      end
-      if @unit.double_attack?(@target) && @unit.weapon
-        g << nil
-        combat_round(@unit, @target, @messages)
-      elsif @target.double_attack?(@unit) && @target.weapon
-        g << nil
-        combat_round(@target, @unit, @messages)
-      end
-      raise StopIteration
+  def determine_next_state(current_state)
+    return :done unless check_life
+    case current_state
+    when :attack
+      return :counter if can_attack(@target, @unit)
+      return :double_attack if @unit.double_attack?(@target)
+      return :double_counter if @target.double_attack?(@unit) && can_attack(@target, @unit)
+    when :counter
+      return :double_attack if @unit.double_attack?(@target)
+      return :double_counter if @target.double_attack?(@unit) && can_attack(@target, @unit)
     end
+    :done
+  end
 
-    @finished = false
-    begin
-      @generator.next
-    rescue StopIteration
-      @unit.action_available = false
-      @finished = true
-    end
+  def execute
+    @current_state ||= :attack
+    @current_state = self.send(@current_state)
+    done if @current_state == :done
     self
   end
+
+  def attack
+    combat_round(@unit, @target, @messages)
+    determine_next_state(:attack)
+  end
+  def counter
+    combat_round(@target, @unit, @messages)
+    determine_next_state(:counter)
+  end
+  def double_attack
+    combat_round(@unit, @target, @messages)
+    :done
+  end
+  def double_counter
+    combat_round(@target, @unit, @messages)
+    :done
+  end
+  def done
+    @unit.action_available = false
+    @finished = true
+  end
+
   def draw(screen)
     screen.messages.set_xy(0,0)
     @messages.each_with_index do |message, i|
@@ -98,7 +113,7 @@ class AttackWeaponSelect < MenuAction
     @prev_action = prev_action
     @path = path
 
-    @available_weapons = @unit.weapons_that_hit_at(Path.dist(*@path.last_point, @target.x, @target.y))
+    @available_weapons = @unit.weapons_that_hit_at(Path.dist(@target.x, @target.y, *@path.last_point))
     super((0...@available_weapons.size).to_a)
   end
   def string_and_color
@@ -185,7 +200,7 @@ class ConfirmMove < MenuAction
   def enemies_in_range
     @enemies_in_range ||= @level.units.select do |u|
       u.team != @unit.team &&
-      @unit.available_weapons.any?{|w| w.in_range?(Path.dist(*@path.last_point, u.x, u.y))}
+      @unit.available_weapons.any?{|w| w.in_range?(Path.dist(u.x, u.y, *@path.last_point))}
     end
     # [
     #   @level.unit_at(@path.last_point[0]+1,@path.last_point[1]),

@@ -166,6 +166,10 @@ class PlayerTurn
   end
 
   def key(c)
+    %w(h j k l a).each do |str|
+      c = str if str.unpack('C')[0] == c
+    end
+
     if %w(h j k l a).include?(c)
       @current_action = @current_action.key(c)
     end
