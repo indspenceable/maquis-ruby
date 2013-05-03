@@ -1,6 +1,8 @@
 require './lib/path'
 
 class Move < MapAction
+  attr_reader :level
+
   def initialize(x, y, level)
     @x, @y = x, y
     @level = level

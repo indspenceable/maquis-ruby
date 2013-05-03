@@ -1,4 +1,6 @@
 class AttackExecutor
+  attr_reader :level
+
   def initialize unit, target, level, next_state
     @unit = unit
     @target = target
@@ -91,7 +93,16 @@ class AttackExecutor
   end
   def key(c)
     if @finished
-      @next_state
+      # Did the players lord die?
+      if @level.lord.nil?
+        exit
+      elsif @level.units.none?{|u| u.team == COMPUTER_TEAM }
+        # heal up all units
+        l = Level.generate(@level.units)
+        return MapSelect.new(l.lord.x, l.lord.y, l)
+      else
+        @next_state
+      end
     else
       self
     end
@@ -106,6 +117,8 @@ class AttackExecutor
 end
 
 class AttackWeaponSelect < MenuAction
+  attr_reader :level
+
   def initialize unit, target, level, path, prev_action
     @unit = unit
     @level = level
@@ -142,6 +155,8 @@ class AttackWeaponSelect < MenuAction
 end
 
 class AttackTargetSelect < MenuAction
+  attr_reader :level
+
   def initialize unit, level, targets, path, prev_action
     @unit = unit
     @level = level
@@ -170,6 +185,8 @@ class AttackTargetSelect < MenuAction
   end
 end
 class ConfirmMove < MenuAction
+  attr_reader :level
+
   def string_and_color
     {
       :attack => ["Attack", BLUE],

@@ -1,4 +1,6 @@
 class EnemyTurn
+  attr_reader :level
+
   def initialize level
     @level = level
     @level.units.each{|u| u.action_available = true }

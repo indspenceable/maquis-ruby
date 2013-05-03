@@ -29,6 +29,7 @@ class MenuAction
 end
 
 class TurnMenu < MenuAction
+  attr_reader :level
   def initialize(level, prev_action)
     @level = level
     @prev_action = prev_action

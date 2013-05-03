@@ -20,6 +20,8 @@ class MapAction
 end
 
 class MapSelect < MapAction
+  attr_reader :level
+
   def current_unit
     @level.units.find{|c| c.x == @x && c.y == @y}
   end
