@@ -59,7 +59,7 @@ class PlayerTurn
       l -= 1 if l > 1
       u
     end
-    level = Level.generate(pl)
+    level = Level.generate(pl, 1)
     @x, @y = 1, 1
     @current_action = MapSelect.new(3, 3, level)
   end

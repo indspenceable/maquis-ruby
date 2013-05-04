@@ -1,10 +1,11 @@
 class Level
   include PermissiveFieldOfView
-  attr_reader :map, :units, :log
-  def initialize(w,h)
+  attr_reader :map, :units, :log, :difficulty
+  def initialize(w,h,difficulty)
     @w,@h = w,h
     @units = []
     @log = []
+    @difficulty = difficulty
   end
 
   def calculate_fov(units)
@@ -41,8 +42,8 @@ class Level
     x == 0 || x == MAP_SIZE_X-1 || y == 0 || y == MAP_SIZE_Y-1
   end
 
-  def self.generate(player_units)
-    l = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
+  def self.generate(player_units, difficulty)
+    l = Level.new(MAP_SIZE_X, MAP_SIZE_Y, difficulty)
     l.fill do |x,y|
       border?(x,y) ? '#' :
         rand(100) < 45   ? '#' : ' '
@@ -77,7 +78,7 @@ class Level
         end
       end
     end
-    return generate(player_units) if connected_count < open_count-10
+    return generate(player_units, difficulty) if connected_count < open_count-10
 
     # Now to generate baddies
     # first, pick a baddie theme
@@ -92,7 +93,8 @@ class Level
       when 2
         Cavalier
       end
-      kl.new(COMPUTER_TEAM, "Baddie #{x}", 0, 0)
+      lv = 1 + rand(difficulty/2 + 1) + difficulty/2
+      kl.new(COMPUTER_TEAM, "Baddie #{x}", 0, 0, lv)
     end
 
 

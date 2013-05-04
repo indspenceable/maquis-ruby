@@ -98,7 +98,11 @@ class AttackExecutor
         exit
       elsif @level.units.none?{|u| u.team == COMPUTER_TEAM }
         # heal up all units
-        l = Level.generate(@level.units)
+        @level.units.each do |u|
+          heal
+          u.action_available = true
+        end
+        l = Level.generate(@level.units, @level.difficulty+1)
         return MapSelect.new(l.lord.x, l.lord.y, l)
       else
         @next_state

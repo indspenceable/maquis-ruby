@@ -149,6 +149,10 @@ class Unit
     @hp > 0
   end
 
+  def heal
+    @hp = max_hp
+  end
+
   def self.create(level, *args)
     unit = self.new(*args)
     (level+3).times {|u| u.level_up!(:silent => true)}
