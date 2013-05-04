@@ -99,7 +99,7 @@ class AttackExecutor
       elsif @level.units.none?{|u| u.team == COMPUTER_TEAM }
         # heal up all units
         @level.units.each do |u|
-          heal
+          u.heal
           u.action_available = true
         end
         l = Level.generate(@level.units, @level.difficulty+1)
