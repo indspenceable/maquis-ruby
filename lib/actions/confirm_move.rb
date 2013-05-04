@@ -11,14 +11,14 @@ class AttackExecutor
     @messages = []
   end
 
-  def check_life
+  def check_life(add_messages=true)
     unless @unit.alive?
-      @messages << "#{@unit.name} dies!"
+      @messages << "#{@unit.name} dies!" if add_messages
       @level.units.delete(@unit)
       return false
     end
     unless @target.alive?
-      @messages << "#{@target.name} dies!"
+      @messages << "#{@target.name} dies!" if add_messages
       @level.units.delete(@target)
       return false
     end
@@ -29,8 +29,17 @@ class AttackExecutor
     attacker.weapon && attacker.weapon.in_range?(Path.unit_dist(attacker, defender))
   end
 
+  def record_hit(u)
+    @hits ||= {}
+    @hits[u] = true
+  end
+  def has_hit?(u)
+    @hits[u]
+  end
+
   def combat_round(attacker, defender, messages)
     if rand(100) < attacker.accuracy(defender)
+      record_hit(attacker)
       hit = defender.take_hit_from(attacker)
       messages << "#{attacker.name} hits #{defender.name}, for #{hit} damage."
       check_life
@@ -39,8 +48,38 @@ class AttackExecutor
     end
   end
 
+  def no_hit_experience
+    1
+  end
+  def hit_experience(me, vs)
+    # this doesn't ammend level for promoted units
+    (31 + vs.level - me.level) / 3
+  end
+  def kill_experience(me, vs)
+    ((vs.level * 3) + 0) - #class relative power, ammend for promoted units
+    ((me.level * 3) + 0)
+  end
+
+
+  def gain_exp(me, vs)
+    exp = [determine_exp_to_gain(me, vs),1].max
+    @messages << "#{me.name} gains #{exp} exp."
+  end
+
+  def determine_exp_to_gain(me, vs)
+    if has_hit?(me)
+      if vs.alive?
+        hit_experience(me, vs)
+      else
+        [kill_experience(me, vs),0].max + hit_experience(me, vs)
+      end
+    else
+      no_hit_experience
+    end
+  end
+
   def determine_next_state(current_state)
-    return :done unless check_life
+    return :done unless check_life(false)
     case current_state
     when :attack
       return :counter if can_attack(@target, @unit)
@@ -77,6 +116,9 @@ class AttackExecutor
     :done
   end
   def done
+    a,b = @unit, @target
+    a,b = b,a if @target.team == PLAYER_TEAM
+    gain_exp(a, b)
     @unit.action_available = false
     @finished = true
   end
@@ -102,7 +144,10 @@ class AttackExecutor
           u.heal
           u.action_available = true
         end
+        klasses = [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary, PegasusKnight, Fighter].shuffle
+        @level.units << klasses.sample.new(PLAYER_TEAM, Names.generate, 0, 0, @level.difficulty, false)
         l = Level.generate(@level.units, @level.difficulty+1)
+
         return MapSelect.new(l.lord.x, l.lord.y, l)
       else
         @next_state
