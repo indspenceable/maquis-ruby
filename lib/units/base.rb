@@ -131,7 +131,7 @@ class Unit
     available_weapons.first
   end
   def available_weapons
-    @inventory.select{| x| x.is_a? Weapon}
+    @inventory.select{|x| x.is_a?(Weapon) && weapon_skills.include?(x.weapon_type)}
   end
   def weapons_that_hit_at(x)
     available_weapons.select{|w| w.in_range?(x)}
@@ -170,7 +170,7 @@ class Unit
   end
 end
 
-def create_class(g, k, mv, c, growths, starting_stats)
+def create_class(g, k, mv, c, growths, starting_stats, weapon_skills)
   Class.new(Unit) do
     glyph g
     klass k
@@ -185,6 +185,9 @@ def create_class(g, k, mv, c, growths, starting_stats)
     end
     define_method :constitution do
       c
+    end
+    define_method :weapon_skills do
+      weapon_skills
     end
   end
 end
@@ -202,7 +205,8 @@ Archer = create_class('a', "Archer", 5, 6, {
   :speed  => 4,
   :armor  => 3,
   :res    => 0,
-})
+}, [:bows]
+)
 
 class Archer
   def initialize *args
@@ -223,7 +227,7 @@ Cavalier = create_class('c', "Cavalier", 7, 11, {
   :speed  => 4,
   :armor  => 3,
   :res    => 0,
-})
+}, [:swords, :lances])
 ArmorKnight = create_class('k', "Knight", 4, 14, {
   :max_hp =>[80, 100],
   :power => [30, 60],
@@ -237,7 +241,7 @@ ArmorKnight = create_class('k', "Knight", 4, 14, {
   :speed  => 2,
   :armor  => 5,
   :res    => 0,
-})
+}, [:lances])
 Mercenary = create_class('m', "Mercenary", 5, 6, {
   :max_hp =>[70, 90],
   :power => [40, 60],
@@ -251,7 +255,7 @@ Mercenary = create_class('m', "Mercenary", 5, 6, {
   :speed  => 3,
   :armor  => 4,
   :res    => 0,
-})
+}, [:swords])
 Myrmidon = create_class('s', "Myrmidon", 5, 5, {
   :max_hp => [60, 80],
   :power => [20, 30],
@@ -265,4 +269,4 @@ Myrmidon = create_class('s', "Myrmidon", 5, 5, {
   :speed  => 5,
   :armor  => 2,
   :res    => 0,
-})
+}, [:swords])

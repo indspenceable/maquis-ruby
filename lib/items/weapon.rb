@@ -15,20 +15,32 @@ class Sword < Weapon
   def range
     (1..1)
   end
+  def weapon_type
+    :swords
+  end
 end
 class Lance < Weapon
   def range
     (1..1)
+  end
+  def weapon_type
+    :lances
   end
 end
 class Axe < Weapon
   def range
     (1..1)
   end
+  def weapon_type
+    :axes
+  end
 end
 class Bow < Weapon
   def range
     (2..2)
+  end
+  def weapon_type
+    :bows
   end
 end
 
