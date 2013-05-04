@@ -79,8 +79,28 @@ class Unit
   def total_power
     power + weapon.power if weapon
   end
+  def triangle(my_type, their_type)
+    {
+      :swords => {
+        :axes => 1,
+        :lances => -1
+      },
+      :axes => {
+        :swords => -1,
+        :lances => 1,
+      },
+      :lances => {
+        :swords => 1,
+        :axes => -1,
+      }
+    }[my_type][their_type] || 0 rescue 0
+  end
+  def triangle_bonus_power(vs)
+    return 0 unless weapon && vs.weapon
+    triangle(weapon_type, vs.weapon_type)
+  end
   def power_vs(vs)
-    [total_power - vs.armor,0].max if weapon
+    [total_power + triangle_bonus_power(vs) - vs.armor,0].max if weapon
   end
   def power_str(vs)
     can_hit?(vs) ? power_vs(vs).to_s : "NA"
@@ -99,8 +119,11 @@ class Unit
   def evade
     0
   end
+  def triangle_bonus_accuracy(vs)
+    triangle(weapon_type, vs.weapon_type) * 15
+  end
   def accuracy(vs)
-    to_hit - vs.evade if weapon
+    to_hit + triangle_bonus_accuracy(vs) - vs.evade if weapon
   end
   def accuracy_str(vs)
     can_hit?(vs) ? "#{accuracy(vs)}%" : "NA"
@@ -129,6 +152,9 @@ class Unit
 
   def weapon
     available_weapons.first
+  end
+  def weapon_type
+    weapon.weapon_type
   end
   def available_weapons
     @inventory.select{|x| x.is_a?(Weapon) && weapon_skills.include?(x.weapon_type)}
