@@ -88,10 +88,10 @@ class Level
       [Fighter, Fighter, Fighter, Mercenary, Mercenary, Archer, Cavalier],
       [Mercenary, Cavalier, ArmorKnight]
     ]
-    theme = themes.sample
+    theme = themes.shuffle.pop
 
     baddie_units = (2 + rand(3)).times.map do |x|
-      kl = theme.sample
+      kl = theme.shuffle.pop
       lv = 1 + rand(difficulty/2 + 1) + difficulty/2
       kl.new(COMPUTER_TEAM, "Baddie #{x}", 0, 0, lv)
     end
