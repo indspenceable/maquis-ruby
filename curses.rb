@@ -52,10 +52,10 @@ end
 
 class PlayerTurn
   def initialize
-    klasses = [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary].shuffle
+    klasses = [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary, PegasusKnight, Fighter].shuffle
     l = 3
-    pl = 5.times.map do |x|
-      kl = klasses[x%klasses.length]
+    pl = 3.times.map do |x|
+      kl = klasses.shuffle.pop
       u = kl.new(PLAYER_TEAM, Names.generate, 0, 0, l+2, x==0)
       l -= 1 if l > 1
       u

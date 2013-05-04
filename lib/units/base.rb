@@ -270,3 +270,43 @@ Myrmidon = create_class('s', "Myrmidon", 5, 5, {
   :armor  => 2,
   :res    => 0,
 }, [:swords])
+# Cleric = create_class('p', "Cleric", x, y, {
+
+# }, {
+#   :max_hp => 14,
+#   :power => 3,
+#   :skill => 2,
+#   :speed => 3,
+#   :armor => 1,
+#   :res =>   4,
+# }, [:staves])
+Fighter = create_class('f', 'Fighter', 5, 13, {
+  :max_hp => [75, 95],
+  :power => [50, 60],
+  :skill => [30, 45],
+  :speed => [20, 35],
+  :armor => [20, 30],
+  # :res => [5, 25],
+}, {
+  :max_hp => 18,
+  :power  => 5,
+  :skill  => 2,
+  :speed  => 2,
+  :armor  => 4,
+  :res    => 0,
+}, [:axes])
+PegasusKnight = create_class('g', 'Pegasus Knight', 7, 5, {
+  :max_hp => [40, 80],
+  :power  => [30, 45],
+  :skill  => [40, 65],
+  :speed  => [50, 70],
+  :armor  => [10, 20],
+  # :res    => [25, 35],
+}, {
+  :max_hp => 14,
+  :power  => 2,
+  :skill  => 4,
+  :speed  => 4,
+  :armor  => 2,
+  :res    => 3,
+}, [:lances])

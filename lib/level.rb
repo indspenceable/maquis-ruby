@@ -84,15 +84,14 @@ class Level
     # first, pick a baddie theme
     # TODO baddie themes
 
+    themes = [
+      [Fighter, Fighter, Fighter, Mercenary, Mercenary, Archer, Cavalier],
+      [Mercenary, Cavalier, ArmorKnight]
+    ]
+    theme = themes.sample
+
     baddie_units = (2 + rand(3)).times.map do |x|
-      kl = case rand(3)
-      when 0
-        ArmorKnight
-      when 1
-        Archer
-      when 2
-        Cavalier
-      end
+      kl = theme.sample
       lv = 1 + rand(difficulty/2 + 1) + difficulty/2
       kl.new(COMPUTER_TEAM, "Baddie #{x}", 0, 0, lv)
     end
