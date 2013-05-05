@@ -1,14 +1,14 @@
 require 'curses'
-require_relative 'lib/permissive_fov'
-require_relative 'lib/display/region'
-require_relative 'lib/display/screen'
-require_relative 'lib/actions/menu'
-require_relative 'lib/actions/map_select'
-require_relative 'lib/actions/move'
-require_relative 'lib/actions/confirm_move'
-require_relative 'lib/actions/enemy_turn'
-require_relative 'lib/level'
-require_relative 'lib/names'
+require './lib/permissive_fov'
+require './lib/display/region'
+require './lib/display/screen'
+require './lib/actions/menu'
+require './lib/actions/map_select'
+require './lib/actions/move'
+require './lib/actions/confirm_move'
+require './lib/actions/enemy_turn'
+require './lib/level'
+require './lib/names'
 
 $log = []
 
@@ -23,8 +23,8 @@ class Object
   end
 end
 
-require_relative 'lib/items/weapon'
-require_relative 'lib/units/base'
+require './lib/items/weapon'
+require './lib/units/base'
 
 MAP_SIZE_X = 40
 MAP_SIZE_Y = 20
