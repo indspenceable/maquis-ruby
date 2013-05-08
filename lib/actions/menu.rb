@@ -4,11 +4,11 @@ class MenuAction
     @index = 0
   end
   def key(c)
-    if c == 'j'
+    if c == KEYS[:down]
       @index += 1
-    elsif c == 'k'
+    elsif c == KEYS[:up]
       @index -=1
-    elsif c == 'a'
+    elsif c == KEYS[:accept]
       return action!
     end
     @index = @index % @choices.length

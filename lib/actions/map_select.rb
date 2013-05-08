@@ -1,15 +1,15 @@
 class MapAction
   def key(c)
     case c
-    when 'k'
+    when KEYS[:up]
       @y -= 1
-    when 'h'
+    when KEYS[:left]
       @x -= 1
-    when 'j'
+    when KEYS[:down]
       @y += 1
-    when 'l'
+    when KEYS[:right]
       @x += 1
-    when 'a'
+    when KEYS[:accept]
       if respond_to?(:activate)
         rtn = activate
         return rtn if rtn

@@ -10,6 +10,23 @@ require './lib/actions/enemy_turn'
 require './lib/level'
 require './lib/names'
 
+KEYS = ARGV[0] == 'vi' ? {
+  :left => 'h',
+  :right => 'l',
+  :down => 'j',
+  :up => 'k',
+  :cancel => 27,
+  :accept => 'a',
+} : {
+  :left => 'a',
+  :right => 'd',
+  :down => 's',
+  :up => 'w',
+  :cancel => 27,
+  :accept => ' ',
+}
+
+
 $log = []
 
 class Object
@@ -171,16 +188,13 @@ class PlayerTurn
   end
 
   def key(c)
-    %w(h j k l a).each do |str|
+    (('a'..'z').to_a + [' ']).each do |str|
       c = str if str.unpack('C')[0] == c
     end
-
-    if %w(h j k l a).include?(c)
-      @current_action = @current_action.key(c)
-    end
-
-    if c == 27
+    if c == KEYS[:cancel]
       @current_action = @current_action.cancel
+    else
+      @current_action = @current_action.key(c)
     end
   end
 end
