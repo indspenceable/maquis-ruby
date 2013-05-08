@@ -90,6 +90,7 @@ class PlayerTurn
     strings = [
       [unit.name.capitalize, TEAM_TO_COLOR[unit.team]],
       ["#{unit.klass} (#{unit.level})"],
+      ["% 3d/100" % unit.exp],
       [unit.health_str, unit.health_color],
       [unit.power_for_info_str],
       [unit.skill_for_info_str],

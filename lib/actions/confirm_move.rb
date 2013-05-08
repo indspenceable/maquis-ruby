@@ -34,6 +34,7 @@ class AttackExecutor
     @hits[u] = true
   end
   def has_hit?(u)
+    @hits ||= {}
     @hits[u]
   end
 
@@ -64,6 +65,11 @@ class AttackExecutor
   def gain_exp(me, vs)
     exp = [determine_exp_to_gain(me, vs),1].max
     @messages << "#{me.name} gains #{exp} exp."
+    level_up_stats_gained = me.gain_experience(exp)
+    if level_up_stats_gained
+      stats_gain_string = level_up_stats_gained.any? ? "(#{level_up_stats_gained.join('/')})" : ''
+      @messages << "#{me.name} gains a level! #{stats_gain_string}"
+    end
   end
 
   def determine_exp_to_gain(me, vs)
@@ -71,7 +77,7 @@ class AttackExecutor
       if vs.alive?
         hit_experience(me, vs)
       else
-        [kill_experience(me, vs),0].max + hit_experience(me, vs)
+        [kill_experience(me, vs) + 20,0].max + hit_experience(me, vs)
       end
     else
       no_hit_experience
@@ -145,7 +151,7 @@ class AttackExecutor
           u.action_available = true
         end
         klasses = [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary, PegasusKnight, Fighter].shuffle
-        @level.units << klasses.sample.new(PLAYER_TEAM, Names.generate, 0, 0, @level.difficulty, false)
+        @level.units << klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, 0, 0, @level.difficulty, false)
         l = Level.generate(@level.units, @level.difficulty+1)
 
         return MapSelect.new(l.lord.x, l.lord.y, l)

@@ -12,7 +12,7 @@ class Unit
   STATS = BASE_STATS.keys
 
   attr_reader *STATS
-  attr_reader :level, :hp
+  attr_reader :level, :hp, :exp
 
   LEVEL_UPS_FOR_LEVEL_ONE = 0
 
@@ -35,6 +35,7 @@ class Unit
     @level = level
 
     @is_lord = is_lord
+    @exp = 0
   end
 
   def lord?
@@ -184,15 +185,26 @@ class Unit
     (level+3).times {|u| u.level_up!(:silent => true)}
   end
 
+  def gain_experience n
+    @exp += n
+    if @exp >= 100
+      @exp -= 100
+      return level_up!
+    end
+  end
+
   def level_up!
     @level += 1
+    stats_grown = []
     @growths.each do |stat, growth|
       if rand(100) < growth
+        stats_grown << stat
         current_val = instance_variable_get(:"@#{stat}")
         instance_variable_set(:"@#{stat}", current_val + 1)
         @hp += 1 if stat == :max_hp
       end
     end
+    stats_grown
   end
 end
 

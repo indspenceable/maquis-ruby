@@ -129,4 +129,8 @@ class EnemyTurn
       end
     end
   end
+
+  def cancel
+    self
+  end
 end
