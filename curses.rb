@@ -58,29 +58,15 @@ TEAM_TO_COLOR = {
   1 => RED
 }
 
-class GS
-  def self.current
-    @current_state
-  end
-  def self.current= gs
-    @current_state = gs
-  end
-end
+require './lib/game_runner'
 
-class PlayerTurn
+class CursesDisplay
+  include GameRunner
+
   def initialize
-    klasses = [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary, PegasusKnight, Fighter].shuffle
-    l = 3
-    pl = 3.times.map do |x|
-      kl = klasses.shuffle.pop
-      u = kl.new(PLAYER_TEAM, Names.generate, 0, 0, l+2, x==0)
-      l -= 1 if l > 1
-      u
-    end
-    level = Level.generate(pl, 1)
-    @x, @y = 1, 1
-    @current_action = MapSelect.new(3, 3, level)
+    setup
   end
+
   def add_glyph(screen, x,y, highlight_squares, lit_spaces)
     screen.map.set_xy(x,y)
     return screen.map.draw_str('x') unless lit_spaces.nil? || lit_spaces.include?([x,y])
@@ -169,24 +155,11 @@ class PlayerTurn
 
   end
 
-  def display(screen)
-    display_map(screen)
-    display_character_info(screen)
-    display_messages(screen)
-
-    @current_action.draw(screen)
-    # screen.map.set_xy(@x,@y)
+  def finish_display
     Curses::refresh
   end
 
-  def execute
-    @current_action = @current_action.execute if @current_action.respond_to?(:execute)
-  end
-
-  def move_to_correct_space(screen)
-    @current_action.set_cursor(screen)
-  end
-
+  #TODO this is not ideal but it lives here so fuck it.
   def key(c)
     (('a'..'z').to_a + [' ']).each do |str|
       c = str if str.unpack('C')[0] == c
@@ -199,7 +172,18 @@ class PlayerTurn
   end
 end
 
-GS.current = PlayerTurn.new
+
+class GS
+  def self.current
+    @current_state
+  end
+  def self.current= gs
+    @current_state = gs
+  end
+end
+
+
+GS.current = CursesDisplay.new
 begin
   Screen.open do |s|
     loop do
@@ -213,3 +197,4 @@ begin
 ensure
   puts $log.inspect
 end
+
