@@ -106,7 +106,7 @@ class Level
     end while false ||
       player_area.count < player_units.size ||
       baddie_area.count < baddie_units.size ||
-      !path_between || path_between.length < 30
+      !path_between || path_between.length < 10
 
     player_area.map!(&:last_point)
     baddie_area.map!(&:last_point)

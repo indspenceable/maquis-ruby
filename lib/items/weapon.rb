@@ -1,5 +1,12 @@
 class Weapon
-  attrs :name, :power, :to_hit, :to_crit, :weight
+  ATTRS = [:name, :power, :to_hit, :to_crit, :weight]
+  attr_reader *ATTRS
+  def initialize *attrs
+    ATTRS.count.times do |i|
+      instance_variable_set("@#{ATTRS[i]}", attrs[i])
+    end
+  end
+
   def self.stats(*args)
     define_method :initialize do
       super(*args)

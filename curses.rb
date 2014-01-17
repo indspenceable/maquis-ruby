@@ -1,14 +1,4 @@
 require 'curses'
-require './lib/permissive_fov'
-require './lib/display/region'
-require './lib/display/screen'
-require './lib/actions/menu'
-require './lib/actions/map_select'
-require './lib/actions/move'
-require './lib/actions/confirm_move'
-require './lib/actions/enemy_turn'
-require './lib/level'
-require './lib/names'
 
 KEYS = ARGV[0] == 'vi' ? {
   :left => 'h',
@@ -26,32 +16,11 @@ KEYS = ARGV[0] == 'vi' ? {
   :accept => ' ',
 }
 
-
 $log = []
-
-class Object
-  def self.attrs *attr_list
-    attr_accessor *attr_list
-    define_method(:initialize) do |*args|
-      attr_list.each do |sym|
-        send("#{sym}=", args.shift)
-      end
-    end
-  end
-end
-
-require './lib/items/weapon'
-require './lib/units/base'
-
-MAP_SIZE_X = 40
-MAP_SIZE_Y = 20
 
 BLUE = 1
 RED = 2
 GREEN = 3
-
-PLAYER_TEAM = 0
-COMPUTER_TEAM = 1
 
 TEAM_TO_COLOR = {
   0 => GREEN,
@@ -138,21 +107,8 @@ class CursesDisplay
     screen.messages.clear
   end
 
-  def display_map(screen)
-    #at this point, discover what paths we can go to.
-    highlight_spaces = []
-    c = @current_action.unit_for_map_highlighting
-    if c
-      highlight_spaces += Path.discover_paths(c, @current_action.level, c.movement).map(&:last_point)
-    end
-    # lit_spaces = @current_action.level.calculate_fov(@current_action.level.units.select{|u| u.team == PLAYER_TEAM })
-    lit_spaces = nil
-    MAP_SIZE_X.times do |x|
-      MAP_SIZE_Y.times do |y|
-        add_glyph(screen,x,y, highlight_spaces, lit_spaces)
-      end
-    end
-
+  def draw_current_action(screen)
+    @current_action.draw(screen)
   end
 
   def finish_display
