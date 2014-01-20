@@ -143,7 +143,7 @@ class AttackExecutor
     if @finished
       # Did the players lord die?
       if @level.lord.nil?
-        exit
+        raise "lord died!"
       elsif @level.units.none?{|u| u.team == COMPUTER_TEAM }
         # heal up all units
         @level.units.each do |u|
