@@ -16,8 +16,13 @@ class Unit
 
   LEVEL_UPS_FOR_LEVEL_ONE = 0
 
-  def initialize team, name, x, y, level = 1, is_lord=false
-    @team, @name, @x, @y = team, name, x, y
+  def initialize team, name, level = 1, is_lord=false
+    @team, @name = team, name
+    @x, @y = 0, 0
+
+    #ensure everyone is level 1 at least.
+    level = 1 if level < 1
+
     @action_available = true
     STATS.each do |stat|
       # starting_stat = BASE_STATS[stat] + rand(5) - 2

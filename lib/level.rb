@@ -1,13 +1,12 @@
-require './lib/level_generator'
-
 class Level
   include PermissiveFieldOfView
-  attr_reader :map, :units, :log, :difficulty
-  def initialize(w,h,difficulty)
+  attr_reader :map, :units, :log, :difficulty, :army
+  def initialize(w,h,difficulty,army)
     @w,@h = w,h
     @units = []
     @log = []
     @difficulty = difficulty
+    @army = army
   end
 
   def calculate_fov(units)
@@ -40,8 +39,8 @@ class Level
     units.find{|c| c.x == x && c.y == y}
   end
 
-  def self.generate(player_units, difficulty)
+  def self.generate(player_army, difficulty)
     generator = [SimpleLevelGenerator].sample
-    generator.generate(player_units, difficulty)
+    generator.generate(player_army, difficulty)
   end
 end

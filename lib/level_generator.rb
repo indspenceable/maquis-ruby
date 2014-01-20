@@ -5,8 +5,8 @@ module SimpleLevelGenerator
     x == 0 || x == MAP_SIZE_X-1 || y == 0 || y == MAP_SIZE_Y-1
   end
 
-  def generate(player_units, difficulty)
-    l = Level.new(MAP_SIZE_X, MAP_SIZE_Y, difficulty)
+  def generate(army, difficulty)
+    l = Level.new(MAP_SIZE_X, MAP_SIZE_Y, difficulty, army)
     l.fill do |x,y|
       border?(x,y) ? '#' :
         rand(100) < 45   ? '#' : ' '
@@ -41,7 +41,7 @@ module SimpleLevelGenerator
         end
       end
     end
-    return generate(player_units, difficulty) if connected_count < open_count-10
+    return generate(army, difficulty) if connected_count < open_count-10
 
     # Now to generate baddies
     # first, pick a baddie theme
@@ -56,10 +56,10 @@ module SimpleLevelGenerator
     baddie_units = (2 + rand(3)).times.map do |x|
       kl = theme.shuffle.pop
       lv = 1 + rand(difficulty/2 + 1) + difficulty/2
-      kl.new(COMPUTER_TEAM, "Baddie #{x}", 0, 0, lv)
+      kl.new(COMPUTER_TEAM, "Baddie #{x}", lv)
     end
 
-
+    player_units = army.units
     # now, find some points to center them on. We'll start with just one point for now.
     begin
       px, py, bx, by = rand(MAP_SIZE_X), rand(MAP_SIZE_Y), rand(MAP_SIZE_X) ,rand(MAP_SIZE_Y)
