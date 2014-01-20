@@ -99,8 +99,8 @@ class CursesDisplay
     if u2
       display_character_info_for(screen, u2, 1, enemies && u1)
     end
-    screen.info.set_xy(0, 13)
-    screen.info.draw_str(@current_action.class.name)
+    # screen.info.set_xy(0, 13)
+    # screen.info.draw_str(@current_action.class.name)
   end
 
   def display_messages(screen)
