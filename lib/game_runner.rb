@@ -27,10 +27,6 @@ COMPUTER_TEAM = 1
 
 module GameRunner
   def setup
-    # We should make a "unit generator" which gives you an interesting distribution
-    # of units, and sets when they get added to your team, etc.
-
-
     level = Level.generate(PlayerArmy.new(3), 1)
     @x, @y = 1, 1
     @current_action = MapSelect.new(3, 3, level)
