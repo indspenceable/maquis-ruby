@@ -145,12 +145,7 @@ class AttackExecutor
       if @level.lord.nil?
         raise "lord died!"
       elsif @level.units.none?{|u| u.team == COMPUTER_TEAM }
-        # heal up all units
-        @level.units.each do |u|
-          u.heal
-          u.action_available = true
-        end
-        l = Level.generate(@level.army.tap(&:next_level), @level.difficulty+1)
+        l = Level.generate(@level.army.tap(&:next_level!), @level.difficulty+1)
         return MapSelect.new(l.lord.x, l.lord.y, l)
       else
         @next_state

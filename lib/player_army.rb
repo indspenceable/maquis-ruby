@@ -6,18 +6,35 @@ class PlayerArmy
     end
   end
 
+  def next_level!
+    purge_dead!
+    recruit!
+    heal_all_units!
+    ready_all_units!
+  end
+
   def klasses
     [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary, PegasusKnight, Fighter]
   end
 
-  def recruit!(level)
-    @army << klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, level)
+  def recruit!
+    @clevel ||= 0
+    @army << klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, @clevel+=1)
   end
 
   def units
     @army
   end
+
   def purge_dead!
     @army.select!(&:alive?)
+  end
+
+  def heal_all_units!
+    @army.each(&:heal)
+  end
+
+  def ready_all_units!
+    @army.each{|u| u.action_available = true}
   end
 end

@@ -1,12 +1,20 @@
 class Level
   include PermissiveFieldOfView
   attr_reader :map, :units, :log, :difficulty, :army
-  def initialize(w,h,difficulty,army)
+  def initialize(w,h)
     @w,@h = w,h
     @units = []
     @log = []
-    @difficulty = difficulty
-    @army = army
+  end
+
+  def army= a
+    raise "level already has player army set!" if @army
+    @army = a
+    @units += @army.units
+  end
+  def difficulty= d
+    raise "difficulty already set!" if @difficulty
+    @difficulty = d
   end
 
   def calculate_fov(units)
