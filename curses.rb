@@ -79,8 +79,8 @@ class CursesDisplay
         [unit.crit_str],
       ]
       strings << ["x2"] if unit.double_attack?(vs)
-      strings << ["+", GREEN] if unit.triangle(unit.weapon_type, vs.weapon_type) == 1
-      strings << ["-", RED] if unit.triangle(unit.weapon_type, vs.weapon_type) == -1
+      strings << ["+", GREEN] if unit.weapon_triangle(unit.weapon_type, vs.weapon_type) == 1
+      strings << ["-", RED] if unit.weapon_triangle(unit.weapon_type, vs.weapon_type) == -1
     end
 
     strings.each_with_index do |str, i|

@@ -80,7 +80,7 @@ class Unit
   def total_power
     power + weapon.power if weapon
   end
-  def triangle(my_type, their_type)
+  def weapon_triangle(my_type, their_type)
     {
       :swords => {
         :axes => 1,
@@ -96,12 +96,12 @@ class Unit
       }
     }[my_type][their_type] || 0 rescue 0
   end
-  def triangle_bonus_power(vs)
+  def weapon_triangle_bonus_power(vs)
     return 0 unless weapon && vs.weapon
-    triangle(weapon_type, vs.weapon_type)
+    weapon_triangle(weapon_type, vs.weapon_type)
   end
   def power_vs(vs)
-    [total_power + triangle_bonus_power(vs) - vs.armor,0].max if weapon
+    [total_power + weapon_triangle_bonus_power(vs) - vs.armor,0].max if weapon
   end
   def power_str(vs)
     can_hit?(vs) ? power_vs(vs).to_s : "NA"
@@ -120,11 +120,11 @@ class Unit
   def evade
     0
   end
-  def triangle_bonus_accuracy(vs)
-    triangle(weapon_type, vs.weapon_type) * 15
+  def weapon_triangle_bonus_accuracy(vs)
+    weapon_triangle(weapon_type, vs.weapon_type) * 15
   end
   def accuracy(vs)
-    to_hit + triangle_bonus_accuracy(vs) - vs.evade if weapon
+    to_hit + weapon_triangle_bonus_accuracy(vs) - vs.evade if weapon
   end
   def accuracy_str(vs)
     can_hit?(vs) ? "#{accuracy(vs)}%" : "NA"
@@ -133,7 +133,7 @@ class Unit
     weapon ? "HIT: #{skill} + #{weapon.to_hit}" : "HIT: NA"
   end
 
-  # CRITICAL
+  # CRITICAL HITS
   def crit_chance
     weapon.to_crit if weapon
   end

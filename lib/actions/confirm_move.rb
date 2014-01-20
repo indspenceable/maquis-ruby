@@ -150,6 +150,7 @@ class AttackExecutor
           u.heal
           u.action_available = true
         end
+        # TODO - use the unit_generator that we generate at the start of the game.
         klasses = [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary, PegasusKnight, Fighter].shuffle
         @level.units << klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, 0, 0, @level.difficulty, false)
         l = Level.generate(@level.units, @level.difficulty+1)

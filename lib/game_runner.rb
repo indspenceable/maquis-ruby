@@ -26,6 +26,8 @@ COMPUTER_TEAM = 1
 
 module GameRunner
   def setup
+    # We should make a "unit generator" which gives you an interesting distribution
+    # of units, and sets when they get added to your team, etc.
     klasses = [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary, PegasusKnight, Fighter].shuffle
     l = 3
     pl = 3.times.map do |x|
@@ -49,7 +51,7 @@ module GameRunner
     finish_display
   end
 
-    def display_map(screen)
+  def display_map(screen)
     #at this point, discover what paths we can go to.
     highlight_spaces = []
     c = @current_action.unit_for_map_highlighting
