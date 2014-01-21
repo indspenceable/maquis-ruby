@@ -2,12 +2,7 @@ class AttackExecutor < Action
   attr_reader :level
 
   def initialize unit, target, level, next_state
-    @unit = unit
-    @target = target
-    @level = level
-
-    @next_state = next_state
-
+    @unit, @target, @level, @next_state = unit, target, level, next_state
     @messages = []
   end
 
@@ -17,11 +12,13 @@ class AttackExecutor < Action
       @level.units.delete(@unit)
       return false
     end
+
     unless @target.alive?
       @messages << "#{@target.name} dies!" if add_messages
       @level.units.delete(@target)
       return false
     end
+
     true
   end
 
@@ -33,6 +30,7 @@ class AttackExecutor < Action
     @hits ||= {}
     @hits[u] = true
   end
+
   def has_hit?(u)
     @hits ||= {}
     @hits[u]
@@ -52,10 +50,12 @@ class AttackExecutor < Action
   def no_hit_experience
     1
   end
+
   def hit_experience(me, vs)
     # this doesn't ammend level for promoted units
     (31 + vs.level - me.level) / 3
   end
+
   def kill_experience(me, vs)
     ((vs.level * 3) + 0) - #class relative power, ammend for promoted units
     ((me.level * 3) + 0)
@@ -109,18 +109,22 @@ class AttackExecutor < Action
     combat_round(@unit, @target, @messages)
     determine_next_state(:attack)
   end
+
   def counter
     combat_round(@target, @unit, @messages)
     determine_next_state(:counter)
   end
+
   def double_attack
     combat_round(@unit, @target, @messages)
     :done
   end
+
   def double_counter
     combat_round(@target, @unit, @messages)
     :done
   end
+
   def done
     a,b = @unit, @target
     a,b = b,a if @target.team == PLAYER_TEAM
@@ -155,6 +159,7 @@ class AttackExecutor < Action
       self
     end
   end
+
   def set_cursor(screen)
     return
   end
@@ -213,21 +218,27 @@ class AttackTargetSelect < MenuAction
     @path = path
     super Array.new(@targets.length){:confirm}
   end
+
   def draw(screen)
   end
+
   def set_cursor(screen)
     screen.map.set_xy(@targets[@index].x, @targets[@index].y)
   end
+
   def units_for_info_panel
     [@unit, @targets[@index]]
   end
+
   def confirm
     # MoveAndAttackAttack.new(@unit, @targets[@index], @level, @path)
     AttackWeaponSelect.new(@unit, @targets[@index], @level, @path, self)
   end
+
   def cancel
     @prev_action
   end
+
   def unit_for_map_highlighting
     nil
   end
@@ -259,9 +270,11 @@ class ConfirmMove < MenuAction
     @start_x, @start_y = @unit.x, @unit.y
     @unit.x, @unit.y = @path.last_point
   end
+
   def units_for_info_panel
     [@unit]
   end
+
   def enemies_in_range
     @enemies_in_range ||= @level.units.select do |u|
       u.team != @unit.team &&
@@ -274,6 +287,7 @@ class ConfirmMove < MenuAction
     #   @level.unit_at(@path.last_point[0],@path.last_point[1]-1),
     # ].compact.select{|u| u.team != @unit.team}
   end
+
   def attack
     AttackTargetSelect.new(@unit, @level, enemies_in_range, @path, self)
   end
@@ -290,10 +304,12 @@ class ConfirmMove < MenuAction
     @unit.action_available = false
     MapSelect.new(@unit.x, @unit.y, @level)
   end
+
   def cancel
     @unit.x, @unit.y = @start_x, @start_y
     @prev_action
   end
+
   def unit_for_map_highlighting
     nil
   end

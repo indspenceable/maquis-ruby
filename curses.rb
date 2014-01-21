@@ -1,22 +1,24 @@
 require 'curses'
 
-KEYS = ARGV[0] == 'vi' ? {
-  :left => 'h',
-  :right => 'l',
-  :down => 'j',
-  :up => 'k',
-  :cancel => 27,
-  :accept => 'a',
-} : {
-  :left => 'a',
-  :right => 'd',
-  :down => 's',
-  :up => 'w',
-  :cancel => 27,
-  :accept => ' ',
-}
-
-$log = []
+KEYS = if ARGV[0] == 'vi'
+  {
+    :left => 'h',
+    :right => 'l',
+    :down => 'j',
+    :up => 'k',
+    :cancel => 27,
+    :accept => 'a',
+  }
+else
+  {
+    :left => 'a',
+    :right => 'd',
+    :down => 's',
+    :up => 'w',
+    :cancel => 27,
+    :accept => ' ',
+  }
+end
 
 BLUE = 1
 RED = 2
