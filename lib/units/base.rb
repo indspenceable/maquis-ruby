@@ -242,84 +242,11 @@ def create_class(g, k, mv, c, growths, starting_stats, weapon_skills)
   end
 end
 
-Archer = create_class('a', "Archer", 5, 6, {
-  :max_hp =>[50, 70],
-  :power => [10, 40],
-  :speed => [20, 70],
-  :skill => [40, 70],
-  :armor => [10, 30],
-}, {
-  :max_hp => 14,
-  :power  => 3,
-  :skill  => 5,
-  :speed  => 4,
-  :armor  => 3,
-  :res    => 0,
-}, [:bows]
-)
-
-class Archer
-  def initialize *args
-    super
-   @inventory = [IronBow.new].shuffle
- end
+%w(archer armor_knight cavalier fighter mercenary myrmidon
+  pegasus_knight).each do |f|
+  require "./lib/units/#{f}"
 end
-Cavalier = create_class('c', "Cavalier", 7, 11, {
-  :max_hp =>[70, 90],
-  :power => [30, 60],
-  :skill => [20, 50],
-  :speed => [20, 50],
-  :armor => [20, 40],
-}, {
-  :max_hp => 16,
-  :power  => 3,
-  :skill  => 3,
-  :speed  => 4,
-  :armor  => 3,
-  :res    => 0,
-}, [:swords, :lances])
-ArmorKnight = create_class('k', "Knight", 4, 14, {
-  :max_hp =>[80, 100],
-  :power => [30, 60],
-  :skill => [20, 40],
-  :speed => [20, 40],
-  :armor => [30, 60],
-}, {
-  :max_hp => 18,
-  :power  => 4,
-  :skill  => 2,
-  :speed  => 2,
-  :armor  => 5,
-  :res    => 0,
-}, [:lances])
-Mercenary = create_class('m', "Mercenary", 5, 6, {
-  :max_hp =>[70, 90],
-  :power => [40, 60],
-  :skill => [20, 50],
-  :speed => [20, 50],
-  :armor => [10, 30],
-}, {
-  :max_hp => 16,
-  :power  => 4,
-  :skill  => 3,
-  :speed  => 3,
-  :armor  => 4,
-  :res    => 0,
-}, [:swords])
-Myrmidon = create_class('s', "Myrmidon", 5, 5, {
-  :max_hp => [60, 80],
-  :power => [20, 30],
-  :skill => [50, 70], # Wowee!
-  :speed => [50, 70],
-  :armor => [10, 20],
-}, {
-  :max_hp => 14,
-  :power  => 3,
-  :skill  => 5,
-  :speed  => 5,
-  :armor  => 2,
-  :res    => 0,
-}, [:swords])
+
 # Cleric = create_class('p', "Cleric", x, y, {
 
 # }, {
@@ -330,33 +257,4 @@ Myrmidon = create_class('s', "Myrmidon", 5, 5, {
 #   :armor => 1,
 #   :res =>   4,
 # }, [:staves])
-Fighter = create_class('f', 'Fighter', 5, 13, {
-  :max_hp => [75, 95],
-  :power => [50, 60],
-  :skill => [30, 45],
-  :speed => [20, 35],
-  :armor => [20, 30],
-  # :res => [5, 25],
-}, {
-  :max_hp => 18,
-  :power  => 5,
-  :skill  => 2,
-  :speed  => 2,
-  :armor  => 4,
-  :res    => 0,
-}, [:axes])
-PegasusKnight = create_class('g', 'Pegasus Knight', 7, 5, {
-  :max_hp => [40, 80],
-  :power  => [30, 45],
-  :skill  => [40, 65],
-  :speed  => [50, 70],
-  :armor  => [10, 20],
-  # :res    => [25, 35],
-}, {
-  :max_hp => 14,
-  :power  => 2,
-  :skill  => 4,
-  :speed  => 4,
-  :armor  => 2,
-  :res    => 3,
-}, [:lances])
+
