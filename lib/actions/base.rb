@@ -26,8 +26,8 @@ class Action
     if c
       highlight_spaces += Path.discover_paths(c, level, c.movement).map(&:last_point)
     end
-    # lit_spaces = @current_action.level.calculate_fov(@current_action.level.units.select{|u| u.team == PLAYER_TEAM })
-    lit_spaces = nil
+    lit_spaces = level.calculate_simple_fov(PLAYER_TEAM) if level.fog_of_war
+    # lit_spaces = nil
     MAP_SIZE_X.times do |x|
       MAP_SIZE_Y.times do |y|
         add_glyph(screen,x,y, highlight_spaces, lit_spaces)
@@ -38,18 +38,21 @@ class Action
   # this method figures out the right glyph to draw, and draws it
   def add_glyph(screen, x, y, highlight_squares, lit_spaces)
     screen.map.set_xy(x,y)
-    return screen.map.draw_str('x') unless lit_spaces.nil? || lit_spaces.include?([x,y])
-    c = level.unit_at(x,y)
-    if c
-      color = TEAM_TO_COLOR[c.team]
-      attrs = c.action_available ? 0 : Curses::A_BOLD
-      return screen.map.draw_str(c.glyph, color, attrs)
+    # return screen.map.draw_str('x') unless lit_spaces.nil? || lit_spaces.include?([x,y])
+    if lit_spaces.nil? || lit_spaces.include?([x,y])
+      c = level.unit_at(x,y)
+      if c
+        color = TEAM_TO_COLOR[c.team]
+        attrs = c.action_available ? 0 : Curses::A_BOLD
+        return screen.map.draw_str(c.glyph, color, attrs)
+      end
     end
 
+    cl = lit_spaces.nil? || lit_spaces.include?([x,y]) ? 0 : FOG_COLOR
     if highlight_squares.include?([x,y])
-      screen.map.draw_str(level.map[x][y], 0, Curses::A_REVERSE)
+      screen.map.draw_str(level.map[x][y], GREEN, Curses::A_REVERSE)
     else
-      screen.map.draw_str(level.map[x][y], 0)
+      screen.map.draw_str(level.map[x][y], cl)
     end
   end
 

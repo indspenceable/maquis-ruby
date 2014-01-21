@@ -109,6 +109,7 @@ module LevelGenerator
       level.goal = goal
       level.army = army
       level.difficulty = difficulty
+      level.fog_of_war = fog_of_war
       level
     end
   end
@@ -117,8 +118,13 @@ module LevelGenerator
     def min_distance
       10
     end
+
     def goal
       :kill_enemies
+    end
+
+    def fog_of_war
+      true
     end
   end
 end

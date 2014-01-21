@@ -9,9 +9,10 @@ class Screen
       Curses::start_color
 
       # INIT colors
-      Curses::init_pair(BLUE,Curses::COLOR_BLUE,Curses::COLOR_BLACK)
-      Curses::init_pair(RED,Curses::COLOR_RED,Curses::COLOR_BLACK)
-      Curses::init_pair(GREEN,Curses::COLOR_GREEN,Curses::COLOR_BLACK)
+      Curses::init_pair(BLUE, Curses::COLOR_BLUE, Curses::COLOR_BLACK)
+      Curses::init_pair(RED, Curses::COLOR_RED, Curses::COLOR_BLACK)
+      Curses::init_pair(GREEN, Curses::COLOR_GREEN, Curses::COLOR_BLACK)
+      Curses::init_pair(FOG_COLOR, Curses::COLOR_BLACK, Curses::COLOR_WHITE)
 
       raise "Must give a block!" unless block_given?
       yield Screen.new

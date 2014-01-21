@@ -23,6 +23,7 @@ end
 BLUE = 1
 RED = 2
 GREEN = 3
+FOG_COLOR = 4
 
 TEAM_TO_COLOR = {
   0 => GREEN,
