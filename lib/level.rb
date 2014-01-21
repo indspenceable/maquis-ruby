@@ -12,9 +12,17 @@ class Level
     @army = a
     @units += @army.units
   end
+
   def difficulty= d
     raise "difficulty already set!" if @difficulty
     @difficulty = d
+  end
+
+  GOALS = [:seize_throne, :kill_enemies]
+  def goal= g
+    raise "Already have a goal!" if @goal
+    raise "#{g} is not a recognized goal" unless GOALS.include?(g)
+    @goal = g
   end
 
   def calculate_fov(units)
@@ -48,7 +56,7 @@ class Level
   end
 
   def self.generate(player_army, difficulty)
-    generator = [SimpleLevelGenerator].sample
+    generator = [LevelGenerator::KillEnemies.new].sample
     generator.generate(player_army, difficulty)
   end
 end
