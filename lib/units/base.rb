@@ -1,6 +1,13 @@
 class Unit
-  attr_accessor :team, :name, :x, :y, :action_available
+  attr_accessor :team, :x, :y, :action_available
 
+  def name
+    if lord?
+      "Lord #{@name.capitalize}"
+    else
+      @name.capitalize
+    end
+  end
 
   BASE_STATS = {
     :max_hp => 20,
