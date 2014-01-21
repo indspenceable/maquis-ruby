@@ -1,4 +1,4 @@
-class EnemyTurn
+class EnemyTurn < Action
   attr_reader :level
 
   def initialize level

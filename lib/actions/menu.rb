@@ -1,4 +1,4 @@
-class MenuAction
+class MenuAction < Action
   def initialize choices
     @choices = choices
     @index = 0

@@ -13,6 +13,7 @@ class Screen
       Curses::init_pair(RED,Curses::COLOR_RED,Curses::COLOR_BLACK)
       Curses::init_pair(GREEN,Curses::COLOR_GREEN,Curses::COLOR_BLACK)
 
+      raise "Must give a block!" unless block_given?
       yield Screen.new
     ensure
       Curses::close_screen

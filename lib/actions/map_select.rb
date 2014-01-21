@@ -1,4 +1,7 @@
-class MapAction
+class MapAction < Action
+  def initialize
+    raise "trying to initialize abstract class MenuAction!"
+  end
   def key(c)
     case c
     when KEYS[:up]

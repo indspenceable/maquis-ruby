@@ -1,4 +1,4 @@
-class AttackExecutor
+class AttackExecutor < Action
   attr_reader :level
 
   def initialize unit, target, level, next_state
