@@ -57,10 +57,10 @@ class Action
     x = i*20
 
     strings = [
-      [unit.name.capitalize, TEAM_TO_COLOR[unit.team]],
-      ["#{unit.klass} (#{unit.level})"],
-      ["% 3d/100" % unit.exp],
-      [unit.health_str, unit.health_color],
+      [unit.name, TEAM_TO_COLOR[unit.team]],
+      ["#{unit.klass} (lv: #{unit.level})"],
+      ["% 3d/100 xp" % unit.exp],
+      ["#{unit.health_str} hp", unit.health_color],
       [unit.power_for_info_str],
       [unit.skill_for_info_str],
       [unit.armor_for_info_str],

@@ -73,7 +73,7 @@ class Planning < Action
     screen.map.set_xy(0,0)
     @menu_items.each_with_index do |item, index|
       str = if item.is_a?(Unit)
-        "#{item.name} (#{item.klass})"
+        "#{item.name} (#{item.klass} #{item.level})"
       else
         item
       end
