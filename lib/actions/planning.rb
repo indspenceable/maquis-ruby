@@ -43,8 +43,11 @@ class Planning < Action
   end
 
   def action!
+    # If we add more actions to this, we should probably just split them out
+    # into their own clases.
     if current_item == "Fortune Teller"
-      raise "Fortune teller isn't implemented at this point in time"
+      # raise "Fortune teller isn't implemented at this point in time"
+      self
     elsif current_item == "Next Level"
       l = Level.generate(@army, @difficulty+1)
       MapSelect.new(l.lord.x, l.lord.y, l)
