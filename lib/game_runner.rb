@@ -6,6 +6,7 @@ require './lib/actions/menu'
 require './lib/actions/map_select'
 require './lib/actions/move'
 require './lib/actions/confirm_move'
+require './lib/actions/planning'
 require './lib/actions/enemy_turn'
 require './lib/level_generator'
 require './lib/level'
@@ -25,9 +26,10 @@ COMPUTER_TEAM = 1
 module GameRunner
   def setup
     # setup the first level of the game. Woot.
-    level = Level.generate(PlayerArmy.new(3), 1)
-    @x, @y = 1, 1
-    @current_action = MapSelect.new(3, 3, level)
+    # level = Level.generate(PlayerArmy.new(3), 1)
+    # @x, @y = 1, 1
+    # @current_action = MapSelect.new(3, 3, level)
+    @current_action = Planning.new(0, PlayerArmy.new(3))
   end
 
   def display(screen)

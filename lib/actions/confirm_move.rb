@@ -136,17 +136,18 @@ class AttackExecutor < Action
       screen.messages.draw_str(message)
     end
   end
+
   def units_for_info_panel
     [@unit, @target]
   end
+
   def key(c)
     if @finished
       # Did the players lord die?
       if @level.lord.nil?
         raise "lord died!"
       elsif @level.units.none?{|u| u.team == COMPUTER_TEAM }
-        l = Level.generate(@level.army.tap(&:next_level!), @level.difficulty+1)
-        return MapSelect.new(l.lord.x, l.lord.y, l)
+        Planning.new(@level.difficulty, @level.army.tap(&:next_level!))
       else
         @next_state
       end
