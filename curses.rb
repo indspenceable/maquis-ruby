@@ -34,10 +34,7 @@ require './lib/game_runner'
 
 class CursesDisplay
   include GameRunner
-
-  def initialize
-    setup
-  end
+  alias_method :initialize, :setup
 
   def finish_display
     Curses::refresh
@@ -48,6 +45,7 @@ class CursesDisplay
     (('a'..'z').to_a + [' ']).each do |str|
       c = str if str.unpack('C')[0] == c
     end
+    # TODO - this is ugly.
     if c == KEYS[:cancel]
       @current_action = @current_action.cancel
     else
@@ -56,15 +54,13 @@ class CursesDisplay
   end
 end
 
-begin
-  Screen.open do |s|
-    display = CursesDisplay.new
-    loop do
-      display.execute
-      display.display(s)
-      display.move_to_correct_space(s)
-      display.key(Curses::getch)
-    end
+Screen.open do |s|
+  display = CursesDisplay.new
+  loop do
+    display.execute
+    display.display(s)
+    display.move_to_correct_space(s)
+    display.key(Curses::getch)
   end
 end
 
