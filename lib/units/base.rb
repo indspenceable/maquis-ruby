@@ -227,7 +227,8 @@ class Unit
         stats_grown << stat
         current_val = instance_variable_get(:"@#{stat}")
         instance_variable_set(:"@#{stat}", current_val + 1)
-        # @hp += 1 if stat == :max_hp
+        # increase current hp when max_hp rises.
+        @hp += 1 if stat == :max_hp
       end
     end
     stats_grown
