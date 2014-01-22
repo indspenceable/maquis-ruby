@@ -53,7 +53,7 @@ class Move < MapAction
   end
 
   def draw_special(screen)
-    @path.each do |x,y|
+    @path.each_but_first do |x,y|
       screen.map.set_xy(x,y)
       screen.map.draw_str('*', GREEN)
     end

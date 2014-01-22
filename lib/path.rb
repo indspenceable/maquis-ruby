@@ -1,3 +1,5 @@
+require 'pqueue'
+
 class Path
   def self.unit_dist(u1,u2)
     dist(u1.x,u1.y,u2.x,u2.y)
@@ -16,59 +18,67 @@ class Path
     }
   end
 
-  def self.find(unit, x2, y2, level, limit=99, path_through_enemies=false)
-    open_list = [Path.new(unit.x,unit.y, level)]
+  def self.find(unit, dx, dy, level, limit=998, path_through_enemies=false)
+    open_list = PQueue.new([Path.new(unit.x,unit.y, level)]) {|a, b| b.cost(unit) <=> a.cost(unit) }
     closed_list = []
-    i = 0
-    while open_list.any?
-      i+=1
-      open_list.sort!{|b,a| dist(x2,y2, *a.last_point) <=> dist(x2,y2, *b.last_point)}
-      c = open_list.shift
-      cx,cy = c.last_point
-      next if (c.cost(unit) > limit)
-      return c if cx == x2 && cy == y2
-      closed_list << c
-      [
-        c.dup.add(cx+1, cy),
-        c.dup.add(cx-1, cy),
-        c.dup.add(cx, cy+1),
-        c.dup.add(cx, cy-1),
-      ].each do |p|
-        unless (closed_list + open_list).any?{|pp| p.last_point == pp.last_point} ||
-          level.unit_at(*p.last_point) && ((level.unit_at(*p.last_point).team != unit.team) && !path_through_enemies)
-          open_list << p
-        end
+    while open_list.size > 0
+      current_path = open_list.pop
+      path_x, path_y = current_path.last_point
+      return current_path if path_x == dx && path_y == dy
+      closed_list << current_path
+      paths_to_consider = [
+        current_path.dup.add(path_x+1, path_y),
+        current_path.dup.add(path_x-1, path_y),
+        current_path.dup.add(path_x, path_y+1),
+        current_path.dup.add(path_x, path_y-1),
+      ]
+      paths_to_consider.reject! do |p|
+        p.cost(unit) > limit ||
+        open_list.to_a.any?{|pp| pp.last_point == p.last_point} ||
+        closed_list.any?{|pp| pp.last_point == p.last_point} ||
+        (
+          !path_through_enemies &&
+          level.unit_at(*p.last_point) &&
+          level.unit_at(*p.last_point).team != unit.team
+        )
+      end
+      paths_to_consider.each do |p|
+        open_list.push p
       end
     end
     nil
   end
-  def self.discover_paths(unit, level, limit=99, path_through_enemies=false)
 
-    open_list = [Path.new(unit.x, unit.y, level)]
+  def self.discover_paths(unit, level, limit=998, path_through_enemies=false)
+    open_list = PQueue.new([Path.new(unit.x,unit.y, level)]) {|a, b| b.cost(unit) <=> a.cost(unit) }
     closed_list = []
-    i = 0
-    while open_list.any?
-      i+=1
-      # open_list.sort{|b,a| dist(x2,y2, *a.last_point) <=> dist(x2,y2, *b.last_point)}
-      c = open_list.shift
-      cx,cy = c.last_point
-      # return puts(i)||Curses::getch||c if cx == x2 && cy == y2
-      next if c.cost(unit) > limit
-      closed_list << c
-      [
-        c.dup.add(cx+1, cy),
-        c.dup.add(cx-1, cy),
-        c.dup.add(cx, cy+1),
-        c.dup.add(cx, cy-1),
-      ].each do |p|
-        unless (closed_list + open_list).any?{|pp| p.last_point == pp.last_point} ||
-          (level.unit_at(*p.last_point) && (level.unit_at(*p.last_point).team != unit.team) && !path_through_enemies)
-          open_list << p
-        end
+    while open_list.size > 0
+      current_path = open_list.pop
+      path_x, path_y = current_path.last_point
+      closed_list << current_path
+      paths_to_consider = [
+        current_path.dup.add(path_x+1, path_y),
+        current_path.dup.add(path_x-1, path_y),
+        current_path.dup.add(path_x, path_y+1),
+        current_path.dup.add(path_x, path_y-1),
+      ]
+      paths_to_consider.reject! do |p|
+        p.cost(unit) > limit ||
+        open_list.to_a.any?{|pp| pp.last_point == p.last_point} ||
+        closed_list.any?{|pp| pp.last_point == p.last_point} ||
+        (
+          !path_through_enemies &&
+          level.unit_at(*p.last_point) &&
+          level.unit_at(*p.last_point).team != unit.team
+        )
+      end
+      paths_to_consider.each do |p|
+        open_list.push p
       end
     end
     closed_list
   end
+
   def self.discover_unblocked_paths(unit, level, limit=99)
     discover_paths(unit,level,limit).reject do |p|
       u = level.unit_at(*p.last_point)
@@ -114,6 +124,11 @@ class Path
   def each_but_last
     (@path.size - 1).times do |i|
       yield @path[i]
+    end
+  end
+  def each_but_first
+    (@path.size - 1).times do |i|
+      yield @path[i+1]
     end
   end
   def include?(x,y)
