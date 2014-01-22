@@ -73,8 +73,8 @@ class EnemyTurn < Action
   end
 
   def set_cursor(screen)
-    return screen.map.set_xy(*@path.last_point) if @path && @level.lit_spaces.include?(@path.last_point)
-    return screen.map.set_xy(@unit.x, @unit.y) if @unit && @level.lit_spaces.include?([@unit.x, @unit.y])
+    return screen.map.set_xy(*@path.last_point) if @path && @level.see?(*@path.last_point)
+    return screen.map.set_xy(@unit.x, @unit.y) if @unit && @level.see?(@unit.x, @unit.y)
     return screen.map.set_xy(level.lord.x, level.lord.y)
   end
 
