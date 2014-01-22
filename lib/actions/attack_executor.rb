@@ -57,8 +57,8 @@ class AttackExecutor < Action
   end
 
   def kill_experience(me, vs)
-    ((vs.level * 3) + 0) - #class relative power, ammend for promoted units
-    ((me.level * 3) + 0)
+    ((vs.level * vs.klass_exp_power) + 0) - #class relative power, ammend for promoted units
+    ((me.level * me.klass_exp_power) + 0)
   end
 
 

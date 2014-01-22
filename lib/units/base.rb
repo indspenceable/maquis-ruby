@@ -205,6 +205,10 @@ class Unit
     end
   end
 
+  def klass_exp_power
+    3
+  end
+
   def level_up!
     @level += 1
     stats_grown = []
@@ -220,7 +224,7 @@ class Unit
   end
 end
 
-def create_class(g, k, mv, c, growths, starting_stats, weapon_skills)
+def create_class(g, k, mv, con, growths, starting_stats, weapon_skills, klass_exp_power=3)
   Class.new(Unit) do
     glyph g
     klass k
@@ -234,10 +238,13 @@ def create_class(g, k, mv, c, growths, starting_stats, weapon_skills)
       mv
     end
     define_method :constitution do
-      c
+      con
     end
     define_method :weapon_skills do
       weapon_skills
+    end
+    define_method :klass_exp_power do
+      klass_exp_power
     end
   end
 end
