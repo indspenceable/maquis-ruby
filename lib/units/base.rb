@@ -241,6 +241,13 @@ class Unit
     end
     @level = level
   end
+
+  def movement_costs
+    {
+      ' ' => 1,
+      '^' => 999
+    }
+  end
 end
 
 def create_class(g, k, mv, con, growths, starting_stats, weapon_skills, klass_exp_power=3)

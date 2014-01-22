@@ -1,3 +1,16 @@
+class FakeUnit
+  attr_reader :x, :y
+  def initialize x, y
+    @x, @y = x, y
+  end
+
+  def movement_costs
+    Hash.new(1).merge({
+      '^' => 999
+    })
+  end
+end
+
 module LevelGenerator
   class Base
     def border?(x,y)
@@ -41,18 +54,19 @@ module LevelGenerator
           l.fill { |x,y| other_map[x][y] }
         end
 
-        #ensure connectivity, recurse if needed
+        # ensure connectivity, recurse if needed
         open_count = 0
         connected_count = nil
         l.map.each_with_index do |col, x|
           col.each_with_index do |tile,y|
             if tile == ' '
               open_count += 1
-              connected_count ||= Path.discover_paths(Struct.new(:x,:y).new(x,y), l, 100).count
+              connected_count ||= Path.discover_paths(FakeUnit.new(x,y), l, 100).count
             end
           end
         end
         return l if connected_count < open_count-10
+        # return l
       end
     end
 
@@ -77,9 +91,9 @@ module LevelGenerator
       # now, find some points to center them on. We'll start with just one point for now.
       begin
         px, py, bx, by = rand(MAP_SIZE_X), rand(MAP_SIZE_Y), rand(MAP_SIZE_X) ,rand(MAP_SIZE_Y)
-        player_area = Path.discover_paths(Struct.new(:x,:y).new(px,py), level, 3)
-        baddie_area = Path.discover_paths(Struct.new(:x,:y).new(bx,by), level, 3)
-        path_between = Path.find(Struct.new(:x,:y).new(px,py), bx, by, level, 100)
+        player_area = Path.discover_paths(FakeUnit.new(px,py), level, 3)
+        baddie_area = Path.discover_paths(FakeUnit.new(bx,by), level, 3)
+        path_between = Path.find(FakeUnit.new(px,py), bx, by, level, 100)
       end while false ||
         player_area.count < player_units.size ||
         baddie_area.count < baddie_units.size ||

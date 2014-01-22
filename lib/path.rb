@@ -2,9 +2,11 @@ class Path
   def self.unit_dist(u1,u2)
     dist(u1.x,u1.y,u2.x,u2.y)
   end
+
   def self.dist(x1,y1,x2,y2)
     (x1-x2).abs + (y1-y2).abs
   end
+
   def self.find(unit, x2, y2, level, limit=99, path_through_enemies=false)
 
     open_list = [Path.new(unit.x,unit.y, level)]
@@ -16,7 +18,7 @@ class Path
       c = open_list.shift
       cx,cy = c.last_point
       return c if cx == x2 && cy == y2
-      next if (c.length > limit) || (level.map[cx][cy] != ' ')
+      next if (c.cost(unit) > limit)
       closed_list << c
       [
         c.dup.add(cx+1, cy),
@@ -43,7 +45,7 @@ class Path
       c = open_list.shift
       cx,cy = c.last_point
       # return puts(i)||Curses::getch||c if cx == x2 && cy == y2
-      next if c.length > limit+1 || level.map[cx][cy] != ' '
+      next if c.cost(unit) > limit+1
       closed_list << c
       [
         c.dup.add(cx+1, cy),
@@ -71,21 +73,28 @@ class Path
     @sx, @sy = x,y
     @path = [[x,y]]
   end
+
   def dup
     p = Path.new(@sx, @sy, @level)
     p.instance_variable_set(:@path, @path.map(&:dup))
     p
   end
-  def cost
-    @path.length
+
+  def cost(unit)
+    @path.map do |x,y|
+      unit.movement_costs[@level.map[x][y]]
+    end.inject(0,&:+)
   end
+
   def add x,y
     @path << [x,y]
     self
   end
+
   def trim_to(x,y)
     @path = @path.take_while{|xx,yy| (xx!=x) || (yy!=y)} + [[x,y]]
   end
+
   def last_point
     (@path.last || [@sx, @sy])
   end
