@@ -50,9 +50,9 @@ class Action
 
     cl = lit_spaces.nil? || lit_spaces.include?([x,y]) ? 0 : FOG_COLOR
     if highlight_squares.include?([x,y])
-      screen.map.draw_str(level.map[x][y], GREEN, Curses::A_REVERSE)
+      screen.map.draw_str(level.map(x,y), GREEN, Curses::A_REVERSE)
     else
-      screen.map.draw_str(level.map[x][y], cl)
+      screen.map.draw_str(level.map(x,y), cl)
     end
   end
 

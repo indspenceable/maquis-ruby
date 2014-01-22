@@ -45,7 +45,7 @@ module LevelGenerator
                 i = _i-1
                 3.times do |_j|
                   j = _j-1
-                  count += 1 if l.map[x+i][y+j] == '^'
+                  count += 1 if l.map(x+i,y+j) == '^'
                 end
               end
               other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? '^' : ' '
@@ -57,7 +57,7 @@ module LevelGenerator
         # ensure connectivity, recurse if needed
         open_count = 0
         connected_count = nil
-        l.map.each_with_index do |col, x|
+        l.raw_map.each_with_index do |col, x|
           col.each_with_index do |tile,y|
             if tile == ' '
               open_count += 1

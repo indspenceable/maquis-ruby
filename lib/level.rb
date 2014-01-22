@@ -2,7 +2,7 @@ require 'set'
 
 class Level
   include PermissiveFieldOfView
-  attr_reader :map, :units, :log, :difficulty, :army, :goal
+  attr_reader :units, :log, :difficulty, :army, :goal
   attr_accessor :fog_of_war
   def initialize(w,h)
     @w,@h = w,h
@@ -46,6 +46,14 @@ class Level
       end
     end
     lit
+  end
+
+  def map(x,y)
+    @map[x][y] || '^' rescue '^'
+  end
+
+  def raw_map
+    @map
   end
 
   def blocked?(x,y)

@@ -12,4 +12,4 @@ PegasusKnight = create_class('g', 'Pegasus Knight', 7, 5, {
   :speed  => 4,
   :armor  => 2,
   :res    => 3,
-}, [:lances])
+}, [:lances], {'^' => 1})

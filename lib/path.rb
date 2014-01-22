@@ -7,6 +7,14 @@ class Path
     (x1-x2).abs + (y1-y2).abs
   end
 
+  def self.default_movement_costs
+    {
+      ' ' => 1,
+      '^' => 999,
+      'x' => 999
+    }
+  end
+
   def self.find(unit, x2, y2, level, limit=99, path_through_enemies=false)
 
     open_list = [Path.new(unit.x,unit.y, level)]
@@ -17,8 +25,8 @@ class Path
       # open_list.sort{|b,a| dist(x2,y2, *a.last_point) <=> dist(x2,y2, *b.last_point)}
       c = open_list.shift
       cx,cy = c.last_point
-      return c if cx == x2 && cy == y2
       next if (c.cost(unit) > limit)
+      return c if cx == x2 && cy == y2
       closed_list << c
       [
         c.dup.add(cx+1, cy),
@@ -45,7 +53,7 @@ class Path
       c = open_list.shift
       cx,cy = c.last_point
       # return puts(i)||Curses::getch||c if cx == x2 && cy == y2
-      next if c.cost(unit) > limit+1
+      next if c.cost(unit) > limit
       closed_list << c
       [
         c.dup.add(cx+1, cy),
@@ -81,9 +89,11 @@ class Path
   end
 
   def cost(unit)
-    @path.map do |x,y|
-      unit.movement_costs[@level.map[x][y]]
-    end.inject(0,&:+)
+    costs = @path.map do |x,y|
+      unit.movement_costs[@level.map(x,y)]
+    end
+    costs.shift
+    costs.inject(0,&:+)
   end
 
   def add x,y

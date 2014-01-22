@@ -241,16 +241,9 @@ class Unit
     end
     @level = level
   end
-
-  def movement_costs
-    {
-      ' ' => 1,
-      '^' => 999
-    }
-  end
 end
 
-def create_class(g, k, mv, con, growths, starting_stats, weapon_skills, klass_exp_power=3)
+def create_class(g, k, mv, con, growths, starting_stats, weapon_skills, movement_costs={}, klass_exp_power=3)
   Class.new(Unit) do
     glyph g
     klass k
@@ -271,6 +264,9 @@ def create_class(g, k, mv, con, growths, starting_stats, weapon_skills, klass_ex
     end
     define_method :klass_exp_power do
       klass_exp_power
+    end
+    define_method :movement_costs do
+      Path.default_movement_costs.merge(movement_costs)
     end
   end
 end
