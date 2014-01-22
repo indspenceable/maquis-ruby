@@ -49,7 +49,7 @@ class Level
   end
 
   def blocked?(x,y)
-    @map[x][y] == '#'
+    @map[x][y] == '^'
   end
 
   def light(x,y)

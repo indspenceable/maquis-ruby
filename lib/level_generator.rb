@@ -17,8 +17,8 @@ module LevelGenerator
         # start with an empy level, fill it with tiles randomly
         l = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
         l.fill do |x,y|
-          border?(x,y) ? '#' :
-            rand(100) < 45   ? '#' : ' '
+          border?(x,y) ? '^' :
+            rand(100) < 45   ? '^' : ' '
         end
 
         # use cellular attomata to iterate 5 times over this map
@@ -26,16 +26,16 @@ module LevelGenerator
         5.times do
           (MAP_SIZE_X).times do |x|
             (MAP_SIZE_Y).times do |y|
-              next other_map[x][y] = '#' if border?(x,y)
+              next other_map[x][y] = '^' if border?(x,y)
               count = 0
               3.times do |_i|
                 i = _i-1
                 3.times do |_j|
                   j = _j-1
-                  count += 1 if l.map[x+i][y+j] == '#'
+                  count += 1 if l.map[x+i][y+j] == '^'
                 end
               end
-              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? '#' : ' '
+              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? '^' : ' '
             end
           end
           l.fill { |x,y| other_map[x][y] }
