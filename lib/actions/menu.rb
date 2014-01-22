@@ -14,7 +14,7 @@ class MenuAction < Action
     @index = @index % @choices.length
     self
   end
-  def draw(screen)
+  def draw_special(screen, highlight_spaces, lit_spaces)
     @choices.each_with_index do |choice, i|
       screen.info.set_xy(0, 17+i)
       screen.info.draw_str *string_and_color[choice]

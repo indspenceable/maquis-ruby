@@ -50,7 +50,7 @@ class MapSelect < MapAction
   def unit_for_map_highlighting
     nil
   end
-  def draw(screen)
+  def draw_special(screen, highlight_spaces, lit_spaces)
   end
   def set_cursor(screen)
     screen.map.set_xy(@x,@y)

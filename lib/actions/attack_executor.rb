@@ -133,7 +133,7 @@ class AttackExecutor < Action
     @finished = true
   end
 
-  def draw(screen)
+  def draw_special(screen, highlight_spaces, lit_spaces)
     screen.messages.set_xy(0,0)
     @messages.each_with_index do |message, i|
       screen.messages.set_xy(0, i)

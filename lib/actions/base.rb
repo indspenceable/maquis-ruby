@@ -8,11 +8,9 @@ class Action
   # for curses play
 
   def display(screen)
-    display_map(screen)
     display_character_info(screen)
     display_messages(screen)
-
-    draw(screen)
+    display_map(screen)
   end
 
   def display_messages(screen)
@@ -33,13 +31,16 @@ class Action
         add_glyph(screen,x,y, highlight_spaces, lit_spaces)
       end
     end
+
+    draw_special(screen, highlight_spaces, lit_spaces)
   end
 
   # this method figures out the right glyph to draw, and draws it
   def add_glyph(screen, x, y, highlight_squares, lit_spaces)
     screen.map.set_xy(x,y)
+    space_is_lit = lit_spaces.nil? || lit_spaces.include?([x,y])
     # return screen.map.draw_str('x') unless lit_spaces.nil? || lit_spaces.include?([x,y])
-    if lit_spaces.nil? || lit_spaces.include?([x,y])
+    if space_is_lit
       c = level.unit_at(x,y)
       if c
         color = TEAM_TO_COLOR[c.team]
@@ -48,11 +49,11 @@ class Action
       end
     end
 
-    cl = lit_spaces.nil? || lit_spaces.include?([x,y]) ? 0 : FOG_COLOR
+    cl = space_is_lit ? [] : [FOG_COLOR, Curses::A_DIM]
     if highlight_squares.include?([x,y])
       screen.map.draw_str(level.map(x,y), GREEN, Curses::A_REVERSE)
     else
-      screen.map.draw_str(level.map(x,y), cl)
+      screen.map.draw_str(level.map(x,y), *cl)
     end
   end
 

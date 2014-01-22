@@ -23,10 +23,12 @@ class EnemyTurn < Action
     #@unit = first_unit = @level.units.find{|u| u.team == PLAYER_TEAM}
     MapSelect.new(@level.lord.x, @level.lord.y, @level)
   end
-  def draw(screen)
+  def draw_special(screen, highlight_spaces, lit_spaces)
     @path.each do |x,y|
-      screen.map.set_xy(x,y)
-      screen.map.draw_str('*', GREEN)
+      if lit_spaces.include?([x,y])
+        screen.map.set_xy(x,y)
+        screen.map.draw_str('*', GREEN)
+      end
     end if @path
   end
 
@@ -57,7 +59,7 @@ class EnemyTurn < Action
   end
 
   def unit_for_map_highlighting
-    @unit
+    nil
   end
 
   def units_for_info_panel
@@ -65,8 +67,9 @@ class EnemyTurn < Action
   end
 
   def set_cursor(screen)
-    return screen.map.set_xy(*@path.last_point) if @path
-    return screen.map.set_xy(@unit.x, @unit.y) if @unit
+    # return screen.map.set_xy(*@path.last_point) if @path
+    # return screen.map.set_xy(@unit.x, @unit.y) if @unit
+    return screen.map.set_xy(level.lord.x, level.lord.y)
   end
 
   private
