@@ -131,9 +131,41 @@ module LevelGenerator
     end
   end
 
-  class KillEnemies < Base
+  class Forest < Base
     def min_distance
-      10
+      1
+    end
+
+    def generate_map
+      # might not generate a good map the first time, so loop until we do.
+      while true
+        # start with an empy level, fill it with tiles randomly
+        l = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
+        starting_mountains = 15.times.map{[rand(MAP_SIZE_X), rand(MAP_SIZE_Y)]}
+        l.fill {|x,y| starting_mountains.include?([x,y]) ? 'T' : ' ' }
+
+        # use cellular attomata to iterate 5 times over this map
+        other_map = Array.new(MAP_SIZE_X){ Array.new(MAP_SIZE_Y) }
+        3.times do
+          (MAP_SIZE_X).times do |x|
+            (MAP_SIZE_Y).times do |y|
+              next other_map[x][y] = '^' if border?(x,y)
+              count = 0
+              3.times do |_i|
+                i = _i-1
+                3.times do |_j|
+                  j = _j-1
+                  count += 1 if l.map(x+i,y+j) == 'T'
+                end
+              end
+              other_map[x][y] = (count >= 1) && (rand(100) > 25) ? 'T' : ' '
+            end
+          end
+          l.fill { |x,y| other_map[x][y] }
+        end
+
+        return l
+      end
     end
 
     def goal

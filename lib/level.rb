@@ -94,7 +94,7 @@ class Level
   end
 
   def self.generate(player_army, difficulty)
-    generator = [LevelGenerator::KillEnemies.new].sample
+    generator = [LevelGenerator::Forest.new].sample
     generator.generate(player_army, difficulty)
   end
 end

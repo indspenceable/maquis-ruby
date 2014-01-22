@@ -11,4 +11,4 @@ Cavalier = create_class('c', "Cavalier", 7, 11, {
   :speed  => 4,
   :armor  => 3,
   :res    => 0,
-}, [:swords, :lances])
+}, [:swords, :lances], {'T' => 3})
