@@ -1,4 +1,4 @@
-Myrmidon = create_class('s', "Myrmidon", 5, 5, {
+Myrmidon = create_class('y', "Myrmidon", 5, 5, {
   :max_hp => [60, 80],
   :power => [20, 30],
   :skill => [50, 70], # Wowee!

@@ -250,7 +250,7 @@ def create_class(g, k, mv, con, growths, starting_stats, weapon_skills, klass_ex
 end
 
 %w(archer armor_knight cavalier fighter mercenary myrmidon
-  pegasus_knight).each do |f|
+  pegasus_knight soldier).each do |f|
   require "./lib/units/#{f}"
 end
 
