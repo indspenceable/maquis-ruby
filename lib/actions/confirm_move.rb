@@ -41,12 +41,12 @@ class ConfirmMove < MenuAction
     AttackTargetSelect.new(@unit, @level, enemies_in_range, @path, self)
   end
 
-  def draw_special(screen, highlight_spaces, lit_spaces)
+  def draw_special(screen)
     @path.each_but_last do |x,y|
       screen.map.set_xy(x,y)
       screen.map.draw_str('*', BLUE)
     end
-    super(screen, highlight_spaces, lit_spaces)
+    super(screen)
   end
 
   def confirm

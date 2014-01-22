@@ -8,9 +8,10 @@ class Action
   # for curses play
 
   def display(screen)
+    display_map(screen)
     display_character_info(screen)
     display_messages(screen)
-    display_map(screen)
+    draw_special(screen)
   end
 
   def display_messages(screen)
@@ -31,8 +32,6 @@ class Action
         add_glyph(screen,x,y, highlight_spaces, lit_spaces)
       end
     end
-
-    draw_special(screen, highlight_spaces, lit_spaces)
   end
 
   # this method figures out the right glyph to draw, and draws it

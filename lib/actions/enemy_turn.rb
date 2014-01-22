@@ -6,15 +6,20 @@ class EnemyTurn < Action
     @level.units.each{|u| u.action_available = true }
 
     @my_units = @level.units.select{|u| u.team == COMPUTER_TEAM}
-    next_unit
+    next_unit!
   end
 
   def execute
-    return end_turn unless @unit
-    if @path
-      move_and_attack
-    else
-      choose_target
+    while true
+      return end_turn unless @unit
+      if @path
+        rtn_me = true if @path && @level.see_path?(@path)
+        rtn = move_and_attack
+        return rtn if rtn_me
+      else
+        choose_target
+      end
+      return self if @path && @level.see_path?(@path)
     end
   end
 
@@ -23,11 +28,11 @@ class EnemyTurn < Action
     #@unit = first_unit = @level.units.find{|u| u.team == PLAYER_TEAM}
     MapSelect.new(@level.lord.x, @level.lord.y, @level)
   end
-  def draw_special(screen, highlight_spaces, lit_spaces)
+  def draw_special(screen)
     @path.each do |x,y|
-      if lit_spaces.include?([x,y])
+      if @level.see?(x,y)
         screen.map.set_xy(x,y)
-        screen.map.draw_str('*', GREEN)
+        screen.map.draw_str('*', RED)
       end
     end if @path
   end
@@ -36,7 +41,7 @@ class EnemyTurn < Action
     self
   end
 
-  def next_unit
+  def next_unit!
     @unit = @my_units.pop
     @path = @target = nil
   end
@@ -46,11 +51,12 @@ class EnemyTurn < Action
     @unit.x, @unit.y = *@path.last_point
     if @target
       unit, target = @unit, @target
-      next_unit
+      next_unit!
+      displayed_anything = true
       AttackExecutor.new(unit, target, @level, self)
     else
       @unit.action_available = false
-      next_unit
+      next_unit!
       self
     end
   end
@@ -67,8 +73,8 @@ class EnemyTurn < Action
   end
 
   def set_cursor(screen)
-    # return screen.map.set_xy(*@path.last_point) if @path
-    # return screen.map.set_xy(@unit.x, @unit.y) if @unit
+    return screen.map.set_xy(*@path.last_point) if @path && @level.lit_spaces.include?(@path.last_point)
+    return screen.map.set_xy(@unit.x, @unit.y) if @unit && @level.lit_spaces.include?([@unit.x, @unit.y])
     return screen.map.set_xy(level.lord.x, level.lord.y)
   end
 

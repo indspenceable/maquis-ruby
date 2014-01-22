@@ -52,7 +52,7 @@ class Move < MapAction
     MapSelect.new(@x, @y, @level)
   end
 
-  def draw_special(screen, highlight_spaces, lit_spaces)
+  def draw_special(screen)
     @path.each do |x,y|
       screen.map.set_xy(x,y)
       screen.map.draw_str('*', GREEN)

@@ -90,7 +90,7 @@ class Planning < Action
     screen.map.set_xy(0,@index)
   end
 
-  def draw_special(screen, highlight_spaces, lit_spaces)
+  def draw_special(screen)
   end
 
   def cancel

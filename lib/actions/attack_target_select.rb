@@ -10,7 +10,7 @@ class AttackTargetSelect < MenuAction
     super Array.new(@targets.length){:confirm}
   end
 
-  def draw_special(screen, highlight_spaces, lit_spaces)
+  def draw_special(screen)
   end
 
   def set_cursor(screen)

@@ -37,15 +37,28 @@ class Level
   end
 
   def calculate_simple_fov(team)
-    lit = Set.new
+    @lit = Set.new
     units.select{|u| u.team == team}.each do |u|
       (-3).upto(3) do |x|
         (-3).upto(3) do |y|
-          lit << [u.x+x, u.y+y] if x.abs + y.abs <= 3
+          @lit << [u.x+x, u.y+y] if x.abs + y.abs <= 3
         end
       end
     end
-    lit
+    @lit
+  end
+
+  def lit_spaces
+    @lit
+  end
+
+  def see?(x,y)
+    return true unless fog_of_war
+    lit_spaces.include?([x,y])
+  end
+
+  def see_path?(p)
+    p.any?{|x,y| see?(x,y)}
   end
 
   def map(x,y)

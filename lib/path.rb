@@ -119,6 +119,9 @@ class Path
   def include?(x,y)
     @path.include?([x,y])
   end
+  def any?(&blk)
+    @path.any?(&blk)
+  end
   def length
     @path.length
   end
