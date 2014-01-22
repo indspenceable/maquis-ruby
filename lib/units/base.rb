@@ -23,7 +23,7 @@ class Unit
 
   LEVEL_UPS_FOR_LEVEL_ONE = 0
 
-  def initialize team, name, level = 1, is_lord=false
+  def initialize team, name, level = 1, is_lord=false, average=false
     @team, @name = team, name
     @x, @y = 0, 0
 
@@ -36,14 +36,24 @@ class Unit
       self.instance_variable_set(:"@#{stat}", starting_stats[stat])
     end
     @growths = {}
-    class_growths.each do |k, (min,max)|
-      @growths[k] = rand((max-min)/5)*5 + min
+    if average
+      class_growths.each do |k, (min,max)|
+        @growths[k] = (max-min)/2 + min
+      end
+    else
+      class_growths.each do |k, (min,max)|
+        @growths[k] = rand((max-min)/5)*5 + min
+      end
     end
 
     @hp = max_hp
     @inventory = [IronSword.new, IronLance.new, IronAxe.new].shuffle
     @level = 0
-    (level + LEVEL_UPS_FOR_LEVEL_ONE - 1).times { level_up! }
+    if average
+      jump_to_level(level)
+    else
+      (level + LEVEL_UPS_FOR_LEVEL_ONE - 1).times { level_up! }
+    end
     @level = level
 
     @is_lord = is_lord
@@ -217,10 +227,19 @@ class Unit
         stats_grown << stat
         current_val = instance_variable_get(:"@#{stat}")
         instance_variable_set(:"@#{stat}", current_val + 1)
-        @hp += 1 if stat == :max_hp
+        # @hp += 1 if stat == :max_hp
       end
     end
     stats_grown
+  end
+
+  def jump_to_level(level)
+    @growths.each do |stat, growth|
+      amount_to_grow = growth*level/100
+      current_val = instance_variable_get(:"@#{stat}")
+      instance_variable_set(:"@#{stat}", current_val + amount_to_grow)
+    end
+    @level = level
   end
 end
 

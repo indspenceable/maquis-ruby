@@ -69,7 +69,7 @@ module LevelGenerator
       (2 + rand(3)).times.map do |x|
         kl = theme.shuffle.pop
         lv = 1 + rand(difficulty/2 + 1) + difficulty/2
-        kl.new(COMPUTER_TEAM, "Baddie #{x}", lv)
+        kl.new(COMPUTER_TEAM, "Baddie #{x}", lv, false, true)
       end
     end
 
