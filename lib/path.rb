@@ -10,19 +10,19 @@ class Path
   def self.default_movement_costs
     {
       ' ' => 1,
+      'T' => 2,
       '^' => 999,
       'x' => 999
     }
   end
 
   def self.find(unit, x2, y2, level, limit=99, path_through_enemies=false)
-
     open_list = [Path.new(unit.x,unit.y, level)]
     closed_list = []
     i = 0
     while open_list.any?
       i+=1
-      # open_list.sort{|b,a| dist(x2,y2, *a.last_point) <=> dist(x2,y2, *b.last_point)}
+      open_list.sort!{|b,a| dist(x2,y2, *a.last_point) <=> dist(x2,y2, *b.last_point)}
       c = open_list.shift
       cx,cy = c.last_point
       next if (c.cost(unit) > limit)
@@ -62,7 +62,7 @@ class Path
         c.dup.add(cx, cy-1),
       ].each do |p|
         unless (closed_list + open_list).any?{|pp| p.last_point == pp.last_point} ||
-          level.unit_at(*p.last_point) && ((level.unit_at(*p.last_point).team != unit.team) && !path_through_enemies)
+          (level.unit_at(*p.last_point) && (level.unit_at(*p.last_point).team != unit.team) && !path_through_enemies)
           open_list << p
         end
       end
