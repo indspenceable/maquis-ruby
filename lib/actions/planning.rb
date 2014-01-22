@@ -85,10 +85,16 @@ class Planning < Action
       end
     end
   end
+
   def set_cursor(screen)
     screen.map.set_xy(0,@index)
   end
+
   def draw(screen)
+  end
+
+  def cancel
+    self
   end
 end
 
