@@ -74,11 +74,11 @@ class Action
       # combat stats - Power, Strength, Crit
       strings += [
         [''],
-        [unit.power_str(vs)],
-        [unit.accuracy_str(vs).to_s],
-        [unit.crit_str],
+        ["  Pow: #{unit.power_str(vs)}", 0, 0],
+        [" Hit%: #{unit.accuracy_str(vs).to_s}"],
+        ["Crit%: #{unit.crit_str}"],
+        [unit.double_attack?(vs)? "Double" : ""]
       ]
-      strings << ["x2"] if unit.double_attack?(vs)
       strings << ["+", GREEN] if unit.weapon_triangle(unit.weapon_type, vs.weapon_type) == 1
       strings << ["-", RED] if unit.weapon_triangle(unit.weapon_type, vs.weapon_type) == -1
     end
