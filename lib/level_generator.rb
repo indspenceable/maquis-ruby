@@ -72,7 +72,9 @@ module LevelGenerator
 
     def select_theme
       [
-        [Soldier, Soldier, Soldier, Soldier, Soldier, Cavalier]
+        [Soldier, Soldier, Soldier, Soldier, Soldier, Cavalier],
+        [Brigand, Brigand, Brigand, Brigand, Fighter, Mercenary],
+        [Brigand, Brigand, Soldier, Soldier, Cavalier, Archer, ArmorKnight]
         # [Fighter, Fighter, Fighter, Mercenary, Mercenary, Archer, Cavalier],
         # [Mercenary, Cavalier, ArmorKnight]
       ].shuffle.pop
