@@ -75,8 +75,8 @@ class Action
       double_str = unit.double_attack?(vs)? "(x2)" : ""
       strings += [
         [''],
-        [" Pow: #{unit.power_str(vs, @level)}#{double_str}", 0, 0],
-        [" Hit: #{unit.accuracy_str(vs, @level).to_s}"],
+        [" Pow: #{unit.power_str(vs, @level, ignore_range)}#{double_str}", 0, 0],
+        [" Hit: #{unit.accuracy_str(vs, @level, ignore_range).to_s}"],
         ["Crit: #{unit.crit_str}"],
       ]
       strings << ["+", GREEN] if unit.weapon_triangle(unit.weapon_type, vs.weapon_type) == 1
@@ -88,6 +88,11 @@ class Action
       screen.info.draw_str(*str)
     end
   end
+
+  def ignore_range
+    false
+  end
+
   def display_character_info(screen)
     screen.info.clear
     u1, u2 = units_for_info_panel
