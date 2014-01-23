@@ -18,7 +18,7 @@ class Move < MapAction
   end
 
   def units_for_info_panel
-    [@unit, @level.unit_at(*@path.last_point)].compact
+    [@unit, @level.see?(@x,@y) && @level.unit_at(@x,@y)].compact.uniq
   end
 
   def adjacent_to_last_point?(x,y)

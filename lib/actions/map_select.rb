@@ -28,6 +28,7 @@ class MapSelect < MapAction
   def current_unit
     @level.units.find{|c| c.x == @x && c.y == @y}
   end
+
   def initialize(x, y, level)
     @level = level
     @x, @y = x, y
@@ -45,13 +46,16 @@ class MapSelect < MapAction
     # Ahaha! Can't quit now, sucka.
   end
   def units_for_info_panel
-    Array(current_unit)
+    Array(@level.see?(@x,@y) && current_unit)
   end
+
   def unit_for_map_highlighting
     nil
   end
+
   def draw_special(screen)
   end
+
   def set_cursor(screen)
     screen.map.set_xy(@x,@y)
   end
