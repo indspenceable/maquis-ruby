@@ -26,12 +26,19 @@ class Move < MapAction
     ((xx-x).abs + (yy-y).abs) == 1
   end
 
+  def can_add_to_path?(x,y)
+    @path.dup.add(x,y).cost(@unit) <= @unit.movement &&
+    adjacent_to_last_point?(x,y) &&
+    ( @level.unit_at(x,y).nil? ||
+      @level.unit_at(x,y).team == @unit.team )
+  end
+
   def update(x,y)
     if @path.include?(x,y)
       # if this space is already on the path
       @path.trim_to(x,y)
     else
-      if @path.dup.add(x,y).cost(@unit) <= @unit.movement && adjacent_to_last_point?(x,y)
+      if can_add_to_path?(x,y)
         @path.add(x,y)
       else
         @path = Path.find(@unit, x, y, @level, @unit.movement) || @path
