@@ -1,4 +1,4 @@
-1) Terrain bonuses to combat
+1) X Terrain bonuses to combat
 2) Display combat panel correctly on the select move screen
 3) don't show info panel for units under fog of war
 4) Level Generators

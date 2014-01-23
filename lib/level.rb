@@ -21,6 +21,18 @@ class Level
     @difficulty = d
   end
 
+  def armor_bonus_at(x,y)
+    {
+      'T' => 1
+    }[map(x,y)] || 0
+  end
+
+  def evade_bonus_at(x,y)
+    {
+      'T' => 20
+    }[map(x,y)] || 0
+  end
+
   GOALS = [:seize_throne, :kill_enemies]
   def goal= g
     raise "Already have a goal!" if @goal

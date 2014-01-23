@@ -88,6 +88,14 @@ class Unit
     "SPE: #{speed} (#{weapon_slow})"
   end
 
+  def adjusted_armor(level)
+    armor + level.armor_bonus_at(x, y)
+  end
+
+  def adjusted_evade(level)
+    evade + level.evade_bonus_at(x,y)
+  end
+
   def can_hit?(vs)
     can_hit_range?(Path.unit_dist(self, vs))
   end
@@ -122,15 +130,15 @@ class Unit
     return 0 unless weapon && vs.weapon
     weapon_triangle(weapon_type, vs.weapon_type)
   end
-  def power_vs(vs)
-    [total_power + weapon_triangle_bonus_power(vs) - vs.armor,0].max if weapon
+  def power_vs(vs, level)
+    [total_power + weapon_triangle_bonus_power(vs) - vs.adjusted_armor(level),0].max if weapon
   end
-  def power_str(vs)
-    can_hit?(vs) ? power_vs(vs).to_s : "NA"
+  def power_str(vs, level)
+    can_hit?(vs) ? power_vs(vs, level).to_s : "NA"
   end
 
-  def take_hit_from(op)
-    damage = op.power_vs(self)
+  def take_hit_from(vs, level)
+    damage = vs.power_vs(self, level)
     @hp -= damage
     damage
   end
@@ -145,11 +153,11 @@ class Unit
   def weapon_triangle_bonus_accuracy(vs)
     weapon_triangle(weapon_type, vs.weapon_type) * 15
   end
-  def accuracy(vs)
-    to_hit + weapon_triangle_bonus_accuracy(vs) - vs.evade if weapon
+  def accuracy(vs, level)
+    to_hit + weapon_triangle_bonus_accuracy(vs) - vs.adjusted_evade(level) if weapon
   end
-  def accuracy_str(vs)
-    can_hit?(vs) ? "#{accuracy(vs)}%" : "NA"
+  def accuracy_str(vs, level)
+    can_hit?(vs) ? "#{accuracy(vs, level)}%" : "NA"
   end
   def skill_for_info_str
     weapon ? "HIT: #{skill} + #{weapon.to_hit}" : "HIT: NA"

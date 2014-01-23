@@ -37,9 +37,9 @@ class AttackExecutor < Action
   end
 
   def combat_round(attacker, defender, messages)
-    if rand(100) < attacker.accuracy(defender)
+    if rand(100) < attacker.accuracy(defender, @level)
       record_hit(attacker)
-      hit = defender.take_hit_from(attacker)
+      hit = defender.take_hit_from(attacker, level)
       messages << "#{attacker.name} hits #{defender.name}, for #{hit} damage."
       check_life
     else
