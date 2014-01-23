@@ -134,7 +134,7 @@ class Unit
     [total_power + weapon_triangle_bonus_power(vs) - vs.adjusted_armor(level),0].max if weapon
   end
   def power_str(vs, level, at_range)
-    if at_range && can_hit_range?(at_range) || can_hit?(vs)
+    if (at_range ? can_hit_range?(at_range) : can_hit?(vs))
       power_vs(vs, level).to_s
     else
       "NA"
@@ -161,7 +161,7 @@ class Unit
     to_hit + weapon_triangle_bonus_accuracy(vs) - vs.adjusted_evade(level) if weapon
   end
   def accuracy_str(vs, level, at_range)
-    if at_range && can_hit_range?(at_range) || can_hit?(vs)
+    if (at_range ? can_hit_range?(at_range) : can_hit?(vs))
       "#{accuracy(vs, level)}%"
     else
       "NA"
