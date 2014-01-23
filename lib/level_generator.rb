@@ -24,52 +24,6 @@ module LevelGenerator
       fill_in_level(army, difficulty, generate_map)
     end
 
-    def generate_map
-      # might not generate a good map the first time, so loop until we do.
-      while true
-        # start with an empy level, fill it with tiles randomly
-        l = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
-        l.fill do |x,y|
-          border?(x,y) ? '^' :
-            rand(100) < 45   ? '^' : ' '
-        end
-
-        # use cellular attomata to iterate 5 times over this map
-        other_map = Array.new(MAP_SIZE_X){ Array.new(MAP_SIZE_Y) }
-        5.times do
-          (MAP_SIZE_X).times do |x|
-            (MAP_SIZE_Y).times do |y|
-              next other_map[x][y] = '^' if border?(x,y)
-              count = 0
-              3.times do |_i|
-                i = _i-1
-                3.times do |_j|
-                  j = _j-1
-                  count += 1 if l.map(x+i,y+j) == '^'
-                end
-              end
-              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? '^' : ' '
-            end
-          end
-          l.fill { |x,y| other_map[x][y] }
-        end
-
-        # ensure connectivity, recurse if needed
-        open_count = 0
-        connected_count = nil
-        l.raw_map.each_with_index do |col, x|
-          col.each_with_index do |tile,y|
-            if tile == ' '
-              open_count += 1
-              connected_count ||= Path.discover_paths(FakeUnit.new(x,y), l, 100).count
-            end
-          end
-        end
-        return l if connected_count < open_count-10
-        # return l
-      end
-    end
-
     def select_theme
       [
         [Soldier, Soldier, Soldier, Soldier, Soldier, Cavalier],
@@ -131,9 +85,69 @@ module LevelGenerator
     end
   end
 
+  class Mountain < Base
+    def generate_map
+      # might not generate a good map the first time, so loop until we do.
+      while true
+        # start with an empy level, fill it with tiles randomly
+        l = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
+        l.fill do |x,y|
+          border?(x,y) ? '^' :
+            rand(100) < 45   ? '^' : ' '
+        end
+
+        # use cellular attomata to iterate 5 times over this map
+        other_map = Array.new(MAP_SIZE_X){ Array.new(MAP_SIZE_Y) }
+        5.times do
+          (MAP_SIZE_X).times do |x|
+            (MAP_SIZE_Y).times do |y|
+              next other_map[x][y] = '^' if border?(x,y)
+              count = 0
+              3.times do |_i|
+                i = _i-1
+                3.times do |_j|
+                  j = _j-1
+                  count += 1 if l.map(x+i,y+j) == '^'
+                end
+              end
+              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? '^' : (rand(100) > 75 ? 'T' : ' ')
+            end
+          end
+          l.fill { |x,y| other_map[x][y] }
+        end
+
+        # ensure connectivity, recurse if needed
+        open_count = 0
+        connected_count = nil
+        l.raw_map.each_with_index do |col, x|
+          col.each_with_index do |tile,y|
+            if tile == ' '
+              open_count += 1
+              connected_count ||= Path.discover_paths(FakeUnit.new(x,y), l, 100).count
+            end
+          end
+        end
+        return l if connected_count < open_count-10
+        # return l
+      end
+    end
+
+    def goal
+      :kill_enemies
+    end
+
+    def fog_of_war
+      true
+    end
+
+    def min_distance
+      10
+    end
+  end
+
   class Forest < Base
     def min_distance
-      1
+      10
     end
 
     def generate_map
