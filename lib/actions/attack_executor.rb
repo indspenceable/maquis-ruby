@@ -137,7 +137,7 @@ class AttackExecutor < Action
     screen.messages.set_xy(0,0)
     @messages.each_with_index do |message, i|
       screen.messages.set_xy(0, i)
-      screen.messages.draw_str(message)
+      screen.messages.draw_str(*Array(message))
     end
   end
 
