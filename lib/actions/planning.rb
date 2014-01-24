@@ -64,7 +64,7 @@ class Planning < Action
       self
     elsif current_item == "Next Level"
       l = @generator.generate(@army, @difficulty+1)
-      MapSelect.new(l.lord.x, l.lord.y, l)
+      UnitSelect.new(l.lord.x, l.lord.y, l)
     elsif !@army.units.include?(current_item)
       @army.recruit!(current_item)
       Planning.new(@difficulty, @army, false)

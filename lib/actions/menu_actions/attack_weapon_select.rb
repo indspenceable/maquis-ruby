@@ -29,7 +29,7 @@ class AttackWeaponSelect < MenuAction
     @unit.equip!(@available_weapons[@index])
   end
   def action!
-    AttackExecutor.new(@unit, @target, @level, MapSelect.new(@unit.x, @unit.y, @level))
+    AttackExecutor.new(@unit, @target, @level, UnitSelect.new(@unit.x, @unit.y, @level))
   end
   def cancel
     @prev_action

@@ -1,28 +1,4 @@
-class MapAction < Action
-  def initialize
-    raise "trying to initialize abstract class MenuAction!"
-  end
-  def key(c)
-    case c
-    when KEYS[:up]
-      @y -= 1
-    when KEYS[:left]
-      @x -= 1
-    when KEYS[:down]
-      @y += 1
-    when KEYS[:right]
-      @x += 1
-    when KEYS[:accept]
-      if respond_to?(:activate)
-        rtn = activate
-        return rtn if rtn
-      end
-    end
-    self
-  end
-end
-
-class MapSelect < MapAction
+class UnitSelect < MapAction
   attr_reader :level
 
   def current_unit

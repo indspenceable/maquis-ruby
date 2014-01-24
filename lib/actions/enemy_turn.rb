@@ -26,7 +26,7 @@ class EnemyTurn < Action
   def end_turn
     @level.units.each{|u| u.action_available = true }
     #@unit = first_unit = @level.units.find{|u| u.team == PLAYER_TEAM}
-    MapSelect.new(@level.lord.x, @level.lord.y, @level)
+    UnitSelect.new(@level.lord.x, @level.lord.y, @level)
   end
   def draw_special(screen)
     @path.each do |x,y|

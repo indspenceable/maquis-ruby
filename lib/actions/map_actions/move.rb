@@ -60,7 +60,7 @@ class Move < MapAction
   end
 
   def cancel
-    MapSelect.new(@x, @y, @level)
+    UnitSelect.new(@x, @y, @level)
   end
 
   def draw_special(screen)

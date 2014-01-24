@@ -4,6 +4,7 @@ class ConfirmMove < MenuAction
   def string_and_color
     {
       :attack => ["Attack", BLUE],
+      :items => ["Items", GREEN],
       :confirm => ["Move", GREEN],
       :cancel => ["Cancel", RED]
     }
@@ -51,7 +52,7 @@ class ConfirmMove < MenuAction
 
   def confirm
     @unit.action_available = false
-    MapSelect.new(@unit.x, @unit.y, @level)
+    UnitSelect.new(@unit.x, @unit.y, @level)
   end
 
   def cancel
