@@ -9,7 +9,7 @@ Archer = create_class('a', "Archer", 5, 6, {
   :power  => 3,
   :skill  => 5,
   :speed  => 4,
-  :armor  => 3,
+  :armor  => 2,
   :res    => 0,
 }, [:bows]
 )

@@ -6,9 +6,9 @@ Brigand = create_class('b', "Brigand", 5, 12, {
   :armor => [20, 20],
 }, {
   :max_hp => 20,
-  :power  => 5,
+  :power  => 3,
   :skill  => 1,
-  :speed  => 5,
-  :armor  => 3,
+  :speed  => 3,
+  :armor  => 1,
   :res    => 0,
 }, [:axes])
