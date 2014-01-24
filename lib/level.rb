@@ -23,13 +23,15 @@ class Level
 
   def armor_bonus_at(x,y)
     {
-      'T' => 1
+      'T' => 1,
+      '#' => 2,
     }[map(x,y)] || 0
   end
 
   def evade_bonus_at(x,y)
     {
-      'T' => 20
+      'T' => 20,
+      '#' => 20,
     }[map(x,y)] || 0
   end
 
