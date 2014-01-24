@@ -1,7 +1,7 @@
 class Action
 
   def initialize
-    raise "trying to initialize abstract class MenuAction!"
+    raise "trying to initialize abstract class Action!"
   end
 
   #################
