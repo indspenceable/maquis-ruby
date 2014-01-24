@@ -4,7 +4,7 @@
 #  * visit the fortune teller (pay to know about the next level) (?)
 #  * recruit units?
 class Planning < Action
-  def initialize(difficulty, army, can_recruit = true)
+  def initialize(difficulty, army, can_recruit = true, generator = [LevelGenerator::Mountain.new].sample)
     @difficulty, @army = difficulty, army
     @index = 0
     @seperator = "---"
@@ -13,6 +13,9 @@ class Planning < Action
       @menu_items += [@seperator] + army.possible_recruits(difficulty)
     end
     @menu_items += [@seperator, "Fortune Teller", "Next Level"]
+    @pending_messages = []
+    @messages = []
+    @generator = generator
   end
 
   def current_item
@@ -31,6 +34,14 @@ class Planning < Action
     end
   end
   def key(c)
+    if @pending_messages.any?
+      @messages << @pending_messages.shift
+      return self
+    else
+      @messages = []
+    end
+
+
     if c == KEYS[:down]
       next!
     elsif c == KEYS[:up]
@@ -47,9 +58,12 @@ class Planning < Action
     # into their own clases.
     if current_item == "Fortune Teller"
       # raise "Fortune teller isn't implemented at this point in time"
+      @messages << @generator.terrain_fortune
+      @pending_messages << @generator.theme.fortune
+      @pending_messages += @generator.fog_fortune
       self
     elsif current_item == "Next Level"
-      l = Level.generate(@army, @difficulty+1)
+      l = @generator.generate(@army, @difficulty+1)
       MapSelect.new(l.lord.x, l.lord.y, l)
     elsif !@army.units.include?(current_item)
       @army.recruit!(current_item)
@@ -91,6 +105,12 @@ class Planning < Action
   end
 
   def draw_special(screen)
+    screen.messages.set_xy(0,0)
+    ms = @messages + (@pending_messages.any?? ["---More---"] : [])
+    ms.each_with_index do |message, i|
+      screen.messages.set_xy(0, i)
+      screen.messages.draw_str(message)
+    end
   end
 
   def cancel

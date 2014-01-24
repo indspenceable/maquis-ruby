@@ -11,6 +11,33 @@ class FakeUnit
   end
 end
 
+class SoldierTheme
+  def pop_klass
+    [Soldier, Soldier, Soldier, Soldier, Soldier, Cavalier].shuffle.pop
+  end
+  def fortune
+    "Lots of soldiers! Bring axes."
+  end
+end
+
+class BrigandTheme
+  def pop_klass
+    [Brigand, Brigand, Brigand, Brigand, Fighter, Mercenary].shuffle.pop
+  end
+  def fortune
+    "Brigands coming in over the mountains. Sword wielders would be useful here."
+  end
+end
+
+class BalancedArmyTheme
+  def pop_klass
+    [Brigand, Soldier, Soldier, Cavalier, Archer, ArmorKnight, Mercenary].shuffle.pop
+  end
+  def fortune
+    "They're sending a balanced army at you. Bring a diversity of weapons in this battle!"
+  end
+end
+
 module LevelGenerator
   class Base
     def border?(x,y)
@@ -24,20 +51,19 @@ module LevelGenerator
       fill_in_level(army, difficulty, generate_map)
     end
 
-    def select_theme
-      [
-        [Soldier, Soldier, Soldier, Soldier, Soldier, Cavalier],
-        [Brigand, Brigand, Brigand, Brigand, Fighter, Mercenary],
-        [Brigand, Brigand, Soldier, Soldier, Cavalier, Archer, ArmorKnight]
+    def theme
+      @theme ||= [
+        SoldierTheme.new,
+        BrigandTheme.new,
+        BalancedArmyTheme.new,
         # [Fighter, Fighter, Fighter, Mercenary, Mercenary, Archer, Cavalier],
         # [Mercenary, Cavalier, ArmorKnight]
       ].shuffle.pop
     end
 
     def select_enemy_units(difficulty)
-      theme = select_theme
       (2 + rand(3)).times.map do |x|
-        kl = theme.shuffle.pop
+        kl = theme.pop_klass
         lv = 1 + rand(difficulty/2 + 1) + difficulty/2
         kl.new(COMPUTER_TEAM, "Baddie #{x}", lv, false, true)
       end
@@ -83,6 +109,14 @@ module LevelGenerator
       level.fog_of_war = fog_of_war
       level
     end
+
+    def fog_fortune
+      if fog_of_war
+        ["A heavy fog is setting in... Consider bringing thieves or torches."]
+      else
+        []
+      end
+    end
   end
 
   class Mountain < Base
@@ -110,7 +144,7 @@ module LevelGenerator
                   count += 1 if l.map(x+i,y+j) == '^'
                 end
               end
-              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? '^' : (rand(100) > 75 ? 'T' : ' ')
+              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? '^' : (rand(100) > 75 ? 'T' : rand(100) > 98 ? '#' : ' ')
             end
           end
           l.fill { |x,y| other_map[x][y] }
@@ -130,6 +164,10 @@ module LevelGenerator
         return l if connected_count < open_count-10
         # return l
       end
+    end
+
+    def terrain_fortune
+      "Your next fight will take place in a mountain pass. Mountaineers might let you avoid some chokepoints..."
     end
 
     def goal
@@ -172,7 +210,7 @@ module LevelGenerator
                   count += 1 if l.map(x+i,y+j) == 'T'
                 end
               end
-              other_map[x][y] = (count >= 1) && (rand(100) > 25) ? 'T' : ' '
+              other_map[x][y] = (count >= 1) && (rand(100) < 25) ? 'T' :  (rand(100) < 10) ? '#' : ' '
             end
           end
           l.fill { |x,y| other_map[x][y] }
@@ -180,6 +218,10 @@ module LevelGenerator
 
         return l
       end
+    end
+
+    def terrain_fortune
+      "Your next fight will take place in a dense forest. Calvalry will have a hard time omving around."
     end
 
     def goal
