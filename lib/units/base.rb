@@ -258,6 +258,7 @@ class Unit
       amount_to_grow = growth*level/100
       current_val = instance_variable_get(:"@#{stat}")
       instance_variable_set(:"@#{stat}", current_val + amount_to_grow)
+      @hp += amount_to_grow if stat == :max_hp
     end
     @level = level
   end
