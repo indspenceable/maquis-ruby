@@ -59,9 +59,11 @@ class Action
   def display_character_info_for(screen, unit, i, vs=nil)
     x = i*20
 
+    map_strs = @level ? "(#{@level.map(unit.x, unit.y)})" : ""
+
     strings = [
       [unit.name, TEAM_TO_COLOR[unit.team]],
-      ["#{unit.klass} (lv: #{unit.level})"],
+      ["#{unit.klass}: #{unit.level} #{map_strs}"],
       ["% 3d/100 xp" % unit.exp],
       ["#{unit.health_str} hp", unit.health_color],
       [unit.power_for_info_str],
