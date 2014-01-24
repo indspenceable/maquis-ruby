@@ -216,8 +216,9 @@ class Unit
     @hp > 0
   end
 
-  def heal
-    @hp = max_hp
+  def heal(amount=max_hp)
+    @hp += amount
+    @hp = max_hp if @hp > max_hp
   end
 
   def self.create(level, *args)
