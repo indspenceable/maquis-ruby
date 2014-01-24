@@ -14,10 +14,6 @@ class Action
     draw_special(screen)
   end
 
-  def display_messages(screen)
-    screen.messages.clear
-  end
-
   def display_map(screen)
     #at this point, discover what paths we can go to.
     highlight_spaces = []
@@ -89,6 +85,15 @@ class Action
       screen.info.set_xy(x, i)
       screen.info.draw_str(*str)
     end
+  end
+
+  def display_messages(screen)
+    screen.messages.clear
+    screen.messages.set_xy(0,0)
+    @messages.each_with_index do |message, i|
+      screen.messages.set_xy(0, i)
+      screen.messages.draw_str(*Array(message))
+    end if @messages
   end
 
   def ignore_range

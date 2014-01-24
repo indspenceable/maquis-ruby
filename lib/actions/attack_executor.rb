@@ -139,11 +139,6 @@ class AttackExecutor < Action
   end
 
   def draw_special(screen)
-    screen.messages.set_xy(0,0)
-    @messages.each_with_index do |message, i|
-      screen.messages.set_xy(0, i)
-      screen.messages.draw_str(*Array(message))
-    end
   end
 
   def units_for_info_panel
