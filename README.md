@@ -15,6 +15,6 @@ Controls
 WASD to move / space to confirm / escape to cancel
 Alternatively, you can invoke it from:
 
-`ruby curses.rb vi`
+`bundle exec ruby curses.rb vi`
 
 to use vi keys (hjkl) and a for move + confirm.
