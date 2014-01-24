@@ -141,8 +141,8 @@ class Unit
     end
   end
 
-  def take_hit_from(vs, level)
-    damage = vs.power_vs(self, level)
+  def take_hit_from(vs, level, multiplier)
+    damage = vs.power_vs(self, level)*multiplier
     @hp -= damage
     damage
   end
@@ -173,7 +173,9 @@ class Unit
 
   # CRITICAL HITS
   def crit_chance
-    weapon.to_crit if weapon
+    if weapon
+      weapon.to_crit + skill/2 + 5
+    end
   end
   def crit_str
     weapon ? "#{crit_chance}%" : "NA"
