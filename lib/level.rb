@@ -106,9 +106,4 @@ class Level
   def unit_at(x,y)
     units.find{|c| c.x == x && c.y == y}
   end
-
-  def self.generate(player_army, difficulty)
-    generator = [LevelGenerator::Mountain.new].sample
-    generator.generate(player_army, difficulty)
-  end
 end
