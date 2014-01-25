@@ -26,10 +26,10 @@ GREEN = 3
 YELLOW = 4
 FOG_COLOR = 5
 
-TEAM_TO_COLOR = {
-  0 => GREEN,
-  1 => RED
-}
+TEAM_TO_COLOR = [
+  GREEN,
+  RED,
+]
 
 require './lib/game_runner'
 

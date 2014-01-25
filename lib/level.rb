@@ -106,4 +106,27 @@ class Level
   def unit_at(x,y)
     units.find{|c| c.x == x && c.y == y}
   end
+
+  # returns the action for whoever's turn is next.
+  # also, do stuff that happens between turns.
+  def finish_turn(team)
+    if units.none?{ |u| u.team == COMPUTER_TEAM }
+      return Planning.new(difficulty, army.tap(&:next_level!))
+    end
+
+    units.each do |u|
+      if u.team == team
+        u.action_available = true
+        if map(u.x, u.y) == '#'
+          u.heal(u.max_hp / 10)
+        end
+      end
+    end
+
+    if team == PLAYER_TEAM
+      EnemyTurn.new(self)
+    else
+      UnitSelect.new(lord.x, lord.y, self)
+    end
+  end
 end

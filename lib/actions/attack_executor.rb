@@ -151,7 +151,7 @@ class AttackExecutor < Action
       if @level.lord.nil?
         raise "lord died!"
       elsif @level.units.none?{|u| u.team == COMPUTER_TEAM } && @level.goal == :kill_enemies
-        Planning.new(@level.difficulty, @level.army.tap(&:next_level!))
+        @level.next_turn(COMPUTER_TEAM)
       else
         @next_state
       end

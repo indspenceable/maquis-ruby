@@ -9,8 +9,7 @@ class TurnMenu < MenuAction
     @prev_action
   end
   def end_turn
-    @level.units.each{|u| u.action_available = true }
-    EnemyTurn.new(@level)
+    @level.finish_turn(PLAYER_TEAM)
   end
   def string_and_color
     {
