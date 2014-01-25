@@ -35,7 +35,10 @@ class Weapon
 
   # equip!
   def trigger!(unit)
-    unit.equip!(self) if unit.can_wield?(self)
+    if unit.can_wield?(self)
+      unit.equip!(self)
+    end
+    false
   end
 
   def color_for(unit)

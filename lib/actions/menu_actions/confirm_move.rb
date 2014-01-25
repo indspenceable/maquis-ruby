@@ -1,6 +1,8 @@
 class ConfirmMove < MenuAction
   attr_reader :level
 
+  attr_accessor :can_undo_move
+
   def string_and_color
     {
       :attack => ["Attack", BLUE],
