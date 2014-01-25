@@ -5,10 +5,10 @@ class ConfirmMove < MenuAction
 
   def string_and_color
     {
-      :attack => ["Attack", BLUE],
-      :items => ["Inventory", YELLOW],
-      :confirm => ["Move", GREEN],
-      :cancel => ["Cancel", RED]
+      :attack => "Attack",
+      :items => "Item",
+      :confirm => ["End", GREEN],
+      :cancel => ["Cancel", RED],
     }
   end
 
@@ -22,8 +22,8 @@ class ConfirmMove < MenuAction
     if enemies_in_range.any? && unit.weapon
       opts << :attack
     end
-    opts << :confirm
     opts << :items
+    opts << :confirm
     opts << :cancel
     super(opts)
     @start_x, @start_y = @unit.x, @unit.y
