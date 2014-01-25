@@ -31,7 +31,7 @@ TEAM_TO_COLOR = [
   RED,
 ]
 
-require './lib/game_runner'
+require './app/game_runner'
 
 class CursesDisplay
   include GameRunner

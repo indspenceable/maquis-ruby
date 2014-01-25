@@ -307,7 +307,7 @@ end
 
 %w(archer armor_knight cavalier fighter mercenary myrmidon
   pegasus_knight soldier brigand).each do |f|
-  require "./lib/units/#{f}"
+  require "./app/units/#{f}"
 end
 
 # Cleric = create_class('p', "Cleric", x, y, {
