@@ -34,11 +34,7 @@ COMPUTER_TEAM = 1
 
 module GameRunner
   def setup
-    # setup the first level of the game. Woot.
-    # level = Level.generate(PlayerArmy.new(3), 1)
-    # @x, @y = 1, 1
-    # @current_action = MapSelect.new(3, 3, level)
-    @current_action = Planning.new(0, PlayerArmy.new(3))
+    @current_action = Planning.new(10, PlayerArmy.new(3))
   end
 
   def display(screen)

@@ -19,9 +19,9 @@ class Action
     highlight_spaces = []
     c = unit_for_map_highlighting
     if c
-      highlight_spaces += Path.discover_paths(c, level, c.movement).map(&:last_point)
+      highlight_spaces += Path.discover_paths(c, @level, c.movement).map(&:last_point)
     end
-    lit_spaces = level.calculate_simple_fov(PLAYER_TEAM) if level.fog_of_war
+    lit_spaces = @level.calculate_simple_fov(PLAYER_TEAM) if @level.fog_of_war
     # lit_spaces = nil
     MAP_SIZE_X.times do |x|
       MAP_SIZE_Y.times do |y|
@@ -36,7 +36,7 @@ class Action
     space_is_lit = lit_spaces.nil? || lit_spaces.include?([x,y])
     # return screen.map.draw_str('x') unless lit_spaces.nil? || lit_spaces.include?([x,y])
     if space_is_lit
-      c = level.unit_at(x,y)
+      c = @level.unit_at(x,y)
       if c
         color = TEAM_TO_COLOR[c.team]
         attrs = c.action_available ? 0 : Curses::A_BOLD
@@ -46,9 +46,9 @@ class Action
 
     cl = space_is_lit ? [] : [FOG_COLOR, Curses::A_DIM]
     if highlight_squares.include?([x,y])
-      screen.map.draw_str(level.map(x,y), GREEN, Curses::A_REVERSE)
+      screen.map.draw_str(@level.map(x,y), GREEN, Curses::A_REVERSE)
     else
-      screen.map.draw_str(level.map(x,y), *cl)
+      screen.map.draw_str(@level.map(x,y), *cl)
     end
   end
 

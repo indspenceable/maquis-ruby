@@ -194,18 +194,31 @@ class Unit
   def weapon
     available_weapons.first
   end
+
   def weapon_type
     weapon.weapon_type
   end
+
   def available_weapons
-    @inventory.select{|x| x.is_a?(Weapon) && weapon_skills.include?(x.weapon_type)}
+    @inventory.select{|x| x.is_a?(Weapon) && can_wield?(x)}
   end
+
+  def can_wield?(weapon)
+    weapon_skills.include?(weapon.weapon_type)
+  end
+
   def weapons_that_hit_at(x)
     available_weapons.select{|w| w.in_range?(x)}
   end
+
   def equip! weapon
     @inventory.delete(weapon)
     @inventory.unshift(weapon)
+  end
+
+  def inventory
+    @inventory.reject!(&:used_up?)
+    @inventory
   end
 
   def weapon_name_str

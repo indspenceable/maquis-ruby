@@ -4,7 +4,7 @@ class ConfirmMove < MenuAction
   def string_and_color
     {
       :attack => ["Attack", BLUE],
-      :items => ["Items", GREEN],
+      :items => ["Inventory", YELLOW],
       :confirm => ["Move", GREEN],
       :cancel => ["Cancel", RED]
     }
@@ -21,6 +21,7 @@ class ConfirmMove < MenuAction
       opts << :attack
     end
     opts << :confirm
+    opts << :items
     opts << :cancel
     super(opts)
     @start_x, @start_y = @unit.x, @unit.y
@@ -66,5 +67,9 @@ class ConfirmMove < MenuAction
 
   def unit_for_map_highlighting
     nil
+  end
+
+  def items
+    Inventory.new(@unit, @level, self)
   end
 end

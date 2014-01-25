@@ -32,4 +32,22 @@ class Weapon
   def wield_type
     weapon_type
   end
+
+  # equip!
+  def trigger!(unit)
+    unit.equip!(self) if unit.can_wield?(self)
+  end
+
+  def color_for(unit)
+    if unit.can_wield?(self)
+      GREEN
+    else
+      YELLOW
+    end
+  end
+
+  def used_up?
+    #TODO weapon durabilities
+    false
+  end
 end
