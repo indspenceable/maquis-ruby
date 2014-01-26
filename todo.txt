@@ -4,8 +4,9 @@
 4) Level Generators
 5) Level rewards
 6) Durability for weapons
-7) Arbitrary items, money?
+7) X Arbitrary items
+  7b) money?
 8) Display items on info mpanel
 9) Forts + shops
 10) Seize the gate, level goal.
-11 Fix Fog of war movement+cancel (confirm how games do it first)
+11) X Fix Fog of war movement+cancel (confirm how games do it first)
