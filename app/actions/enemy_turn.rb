@@ -24,11 +24,9 @@ class EnemyTurn < Action
   end
 
   def end_turn
-    # @level.units.each{|u| u.action_available = true }
-    # @unit = first_unit = @level.units.find{|u| u.team == PLAYER_TEAM}
-    # UnitSelect.new(@level.lord.x, @level.lord.y, @level)
     @level.finish_turn(COMPUTER_TEAM)
   end
+
   def draw_special(screen)
     @path.each do |x,y|
       if @level.see?(x,y)

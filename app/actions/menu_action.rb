@@ -25,9 +25,11 @@ class MenuAction < Action
       screen.info.draw_str *string_and_color[choice]
     end
   end
+
   def set_cursor(screen)
     screen.info.set_xy(0, vertical_offset+@index)
   end
+
   def action!
     send @choices[@index]
   end

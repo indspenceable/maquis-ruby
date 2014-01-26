@@ -9,6 +9,7 @@ class Move < MapAction
     @unit = current_highlighted_unit
     @path = Path.new(x,y,level)
   end
+
   def name
     'move'
   end

@@ -6,6 +6,45 @@ class AttackExecutor < Action
     @messages = []
   end
 
+  def execute
+    @current_state ||= :attack
+    @current_state = self.send(@current_state)
+    done if @current_state == :done
+    self
+  end
+
+  def draw_special(screen)
+  end
+
+  def units_for_info_panel
+    [@unit, @target]
+  end
+
+  def key(c)
+    if @finished
+      # Did the players lord die?
+      if @level.lord.nil?
+        raise "lord died!"
+      elsif @level.units.none?{|u| u.team == COMPUTER_TEAM } && @level.goal == :kill_enemies
+        @level.next_turn(COMPUTER_TEAM)
+      else
+        @next_state
+      end
+    else
+      self
+    end
+  end
+
+  def set_cursor(screen)
+    return
+  end
+
+  def unit_for_map_highlighting
+    nil
+  end
+
+  private
+
   def check_life(add_messages=true)
     unless @unit.alive?
       @messages << "#{@unit.name} dies!" if add_messages
@@ -68,6 +107,7 @@ class AttackExecutor < Action
 
 
   def gain_exp(me, vs)
+    return unless me.alive?
     exp = [determine_exp_to_gain(me, vs),1].max
     @messages << "#{me.name} gains #{exp} exp."
     level_up_stats_gained = me.gain_experience(exp)
@@ -103,13 +143,6 @@ class AttackExecutor < Action
     :done
   end
 
-  def execute
-    @current_state ||= :attack
-    @current_state = self.send(@current_state)
-    done if @current_state == :done
-    self
-  end
-
   def attack
     combat_round(@unit, @target, @messages)
     determine_next_state(:attack)
@@ -138,33 +171,4 @@ class AttackExecutor < Action
     @finished = true
   end
 
-  def draw_special(screen)
-  end
-
-  def units_for_info_panel
-    [@unit, @target]
-  end
-
-  def key(c)
-    if @finished
-      # Did the players lord die?
-      if @level.lord.nil?
-        raise "lord died!"
-      elsif @level.units.none?{|u| u.team == COMPUTER_TEAM } && @level.goal == :kill_enemies
-        @level.next_turn(COMPUTER_TEAM)
-      else
-        @next_state
-      end
-    else
-      self
-    end
-  end
-
-  def set_cursor(screen)
-    return
-  end
-
-  def unit_for_map_highlighting
-    nil
-  end
 end
