@@ -37,15 +37,20 @@ class Action
   def squares_to_color_for_highlighting(c)
     return @squares_to_color_for_highlighting ||= begin
       movements = Path.discover_paths(c, @level, c.movement).map(&:last_point)
+      movements_with_no_one_there = movements.reject do |m|
+        u = @level.unit_at(*m)
+        (u && u != c)
+      end
       attack = []
       MAP_SIZE_X.times do |x|
         MAP_SIZE_Y.times do |y|
-          attack << [x,y] if movements.any? do |_x,_y|
+          attack << [x,y] if movements_with_no_one_there.any? do |_x,_y|
             c.weapons_that_hit_at(Path.dist(x, y, _x, _y)).any?
           end
         end
       end
-      attack -= movements
+      attack -= movements_with_no_one_there
+      attack -= @level.units.select{|u| u.team == c.team }.map{|u| [u.x, u.y]}
       rtn = {}
       movements.each do |x,y|
         rtn[[x,y]] = BLUE
