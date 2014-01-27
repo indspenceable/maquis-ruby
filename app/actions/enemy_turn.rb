@@ -41,7 +41,10 @@ class EnemyTurn < Action
   end
 
   def next_unit!
-    @unit = @my_units.pop
+    begin
+      @unit.action_available = false if @unit
+      @unit = @my_units.pop
+    end until @unit.nil? || possible_targets.any?
     @path = @target = nil
   end
 
@@ -105,14 +108,9 @@ class EnemyTurn < Action
     end
     if @target
       @path = reachable_paths.find {|p| hit_from?(@target, *p.last_point) }
+      @path = Path.new(@unit.x, @unit.y, @level) unless @path
     else
-      @path = reachable_paths.inject do |p1,p2|
-        if distance_from_path_to_lord(p1) < distance_from_path_to_lord(p2)
-          p1
-        else
-          p2
-        end
-      end
+      @path = Path.new(@unit.x, @unit.y, @level)
     end
     self
   end

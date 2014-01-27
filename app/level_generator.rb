@@ -9,6 +9,10 @@ class FakeUnit
       '^' => 999
     })
   end
+
+  def team
+    1
+  end
 end
 
 class SoldierTheme
@@ -69,38 +73,44 @@ module LevelGenerator
       end
     end
 
+    def place_units_in_area(units, area, level)
+      units.each do |u|
+        return false if area.none?
+        begin
+          u.x, u.y = area.pop
+        end while level.map(u.x, u.y) == '^'
+      end
+    end
+
     def place_units_in_far_away_circles(level, baddie_units, player_units)
       # now, find some points to center them on. We'll start with just one point for now.
       begin
         px, py, bx, by = rand(MAP_SIZE_X), rand(MAP_SIZE_Y), rand(MAP_SIZE_X) ,rand(MAP_SIZE_Y)
-        player_area = Path.discover_paths(FakeUnit.new(px,py), level, 3)
-        baddie_area = Path.discover_paths(FakeUnit.new(bx,by), level, 3)
-        path_between = Path.find(FakeUnit.new(px,py), bx, by, level, 100)
+        player_area = Path.discover_paths(FakeUnit.new(px,py), level, 4)
+        baddie_area = Path.discover_paths(FakeUnit.new(bx,by), level, 4)
+        path_between = Path.find(FakeUnit.new(px,py), bx, by, level, 100, true)
       end while false ||
         player_area.count < player_units.size ||
         baddie_area.count < baddie_units.size ||
         !path_between || path_between.length < min_distance
-
       player_area.map!(&:last_point)
       baddie_area.map!(&:last_point)
       player_area.shuffle!
       baddie_area.shuffle!
+      place_units_in_area(player_units, player_area, level)
+      place_units_in_area(baddie_units, baddie_area, level)
+      level.units.concat(baddie_units)
 
-      player_units.each do |u|
-        u.x, u.y = player_area.pop
-      end
-
-      # puts "baddie_area is #{baddie_area.inspect}"
-      baddie_units.each do |u|
-        level.units << u
-        u.x, u.y = baddie_area.pop
-      end
+      return true
     end
 
     def fill_in_level(army, difficulty, level)
       baddie_units = select_enemy_units(difficulty)
       player_units = army.units
-      place_units_in_far_away_circles(level, baddie_units, player_units)
+      success = false
+      until success == true
+        success = place_units_in_far_away_circles(level, baddie_units, player_units)
+      end
 
       # set important level stats
       level.goal = goal
@@ -144,25 +154,23 @@ module LevelGenerator
                   count += 1 if l.map(x+i,y+j) == '^'
                 end
               end
-              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? '^' : (rand(100) > 75 ? 'T' : rand(100) > 98 ? '#' : ' ')
+              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? '^' : ' '
             end
           end
           l.fill { |x,y| other_map[x][y] }
         end
 
-        # ensure connectivity, recurse if needed
-        open_count = 0
-        connected_count = nil
-        l.raw_map.each_with_index do |col, x|
-          col.each_with_index do |tile,y|
-            if tile == ' '
-              open_count += 1
-              connected_count ||= Path.discover_paths(FakeUnit.new(x,y), l, 100).count
-            end
+        l.fill do |x,y|
+          next '^' if border?(x,y)
+
+          case other_map[x][y]
+          when ' '
+            '^'
+          when '^'
+            rand(100) > 95 ? 'T' : (rand(100) > 95 ? '#' : ' ')
           end
         end
-        return l if connected_count < open_count-10
-        # return l
+        return l
       end
     end
 
@@ -175,7 +183,7 @@ module LevelGenerator
     end
 
     def fog_of_war
-      true
+      false
     end
 
     def min_distance
@@ -229,7 +237,7 @@ module LevelGenerator
     end
 
     def fog_of_war
-      true
+      false
     end
   end
 end
