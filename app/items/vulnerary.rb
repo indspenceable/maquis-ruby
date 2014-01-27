@@ -23,16 +23,12 @@ class Vulnerary < Consumable
     super(3)
   end
 
-  def on_consume(unit)
-    unit.heal(20)
-  end
-
   def name
     "Vulnerary (#{@charges})"
   end
 
   def consume(unit)
-    unit.heal(20)
+    unit.heal(10)
     true
   end
 
