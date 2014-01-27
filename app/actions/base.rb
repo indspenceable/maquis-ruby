@@ -63,6 +63,7 @@ class Action
       if c
         color = TEAM_TO_COLOR[c.team]
         attrs = c.action_available ? 0 : Curses::A_BOLD
+        attrs |= Curses::A_REVERSE if highlight_squares[[x,y]] == RED
         return screen.map.draw_str(c.glyph, color, attrs)
       end
     end

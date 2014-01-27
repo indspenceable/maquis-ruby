@@ -172,6 +172,8 @@ module LevelGenerator
       baddie_area.map!(&:last_point).delete([bx,by])
       player_area.shuffle!
       baddie_area.shuffle!
+      baddie_area -= Path.discover_paths(FakeUnit.new(px,py), level, 7).map(&:last_point)
+
       return false unless place_units_in_area(player_units, player_area, level)
       return false unless place_units_in_area(baddie_units, baddie_area, level)
       baddie_boss.x, baddie_boss.y = bx, by

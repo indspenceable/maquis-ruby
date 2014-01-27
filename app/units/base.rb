@@ -42,6 +42,7 @@ class Unit
       raise "#{stat} start undefined for #{self.class.name}!" unless starting_stats[stat]
       raise "#{stat} growth undefined for #{self.class.name}!" unless class_growths[stat]
     end
+
     @growths = {}
     if average
       class_growths.each do |k, (min,max)|

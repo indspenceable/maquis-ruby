@@ -9,9 +9,9 @@ class Planning < Action
     @index = 0
     @seperator = "---"
     @menu_items = army.units
-    if can_recruit
-      @menu_items += [@seperator] + army.possible_recruits(difficulty)
-    end
+    # if can_recruit
+    #   @menu_items += [@seperator] + army.possible_recruits(difficulty)
+    # end
     @menu_items += [@seperator, "Fortune Teller", "Next Level"]
     @pending_messages = []
     @messages = []

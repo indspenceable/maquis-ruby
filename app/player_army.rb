@@ -26,8 +26,6 @@ class PlayerArmy
   end
 
   def klasses
-    [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary, PegasusKnight, Fighter]
-
     @klass_list ||= [
       [PegasusKnight] * 3,
       [ArmorKnight] * 2,
