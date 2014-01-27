@@ -59,12 +59,8 @@ class ConfirmMove < MenuAction
   end
 
   def cancel
-    # if level.fog_of_war
-    #   self
-    # else
     @unit.x, @unit.y = @start_x, @start_y
     @prev_action
-    # end
   end
 
   def unit_for_map_highlighting

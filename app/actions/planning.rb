@@ -72,7 +72,7 @@ class Planning < Action
       l = @generator.generate(@army, @difficulty+1)
       UnitSelect.new(l.lord.x, l.lord.y, l)
     elsif !@army.units.include?(current_item)
-      @army.recruit!(current_item)
+      @army.units << current_item
       Planning.new(@difficulty, @army, false, @generator)
     else
       self

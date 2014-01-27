@@ -16,7 +16,6 @@ class PlayerArmy
 
   def next_level!
     purge_dead!
-    # recruit!
     heal_all_units!
     ready_all_units!
   end
@@ -43,17 +42,11 @@ class PlayerArmy
     ].flatten.shuffle
   end
 
-  def recruit! r
-    # @clevel ||= 0
-    # @army << klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, @clevel+=1)
-    @army << r
-  end
-
   def possible_recruits(diff)
     rtn = []
-    # klasses.shuffle.first(3).each_with_index do |k,x|
-    #   rtn << k.new(PLAYER_TEAM, Names.generate, diff+x-1)
-    # end
+    klasses.shuffle.first(3).each_with_index do |k,x|
+      rtn << k.new(PLAYER_TEAM, Names.generate, diff+x-1)
+    end
     return []
     rtn
   end

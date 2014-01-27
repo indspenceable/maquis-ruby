@@ -6,7 +6,7 @@
 6) Durability for weapons
 7) X Arbitrary items
   7b) money?
-8) Display items on info mpanel
+8) X Display items on info screen
 9) Forts + shops
 10) Seize the gate, level goal.
 11) X Fix Fog of war movement+cancel (confirm how games do it first)
