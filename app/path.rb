@@ -11,11 +11,11 @@ class Path
 
   def self.default_movement_costs
     {
-      ' ' => 1,
-      'T' => 2,
-      '#' => 2,
-      '^' => 999,
-      'x' => 999
+      :plains => 1,
+      :forest => 2,
+      :fort => 2,
+      :mountain => 999,
+      :wall => 999
     }
   end
 

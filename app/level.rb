@@ -23,15 +23,15 @@ class Level
 
   def armor_bonus_at(x,y)
     {
-      'T' => 1,
-      '#' => 2,
+      :forest => 1,
+      :fort => 2,
     }[map(x,y)] || 0
   end
 
   def evade_bonus_at(x,y)
     {
-      'T' => 20,
-      '#' => 20,
+      :forest => 20,
+      :fort => 20,
     }[map(x,y)] || 0
   end
 
@@ -76,7 +76,17 @@ class Level
   end
 
   def map(x,y)
-    @map[x][y] || '^' rescue '^'
+    @map[x][y] || :wall rescue :wall
+  end
+
+  def map_to_str(x,y)
+    {
+      :plains => ' ',
+      :mountain => '^',
+      :forest => '7',
+      :fort => '#',
+      :wall => 'x',
+    }[map(x,y)] || (raise "Oops #{map(x,y)}")
   end
 
   def raw_map
@@ -84,7 +94,7 @@ class Level
   end
 
   def blocked?(x,y)
-    @map[x][y] == '^'
+    @map[x][y] == :wall
   end
 
   def light(x,y)

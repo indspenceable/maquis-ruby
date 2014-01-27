@@ -12,4 +12,4 @@ Brigand = create_class('b', "Brigand", 5, 12, {
   :speed  => 3,
   :armor  => 1,
   :resistance    => 0,
-}, [:axes])
+}, [:axes], {:mountain => 3})

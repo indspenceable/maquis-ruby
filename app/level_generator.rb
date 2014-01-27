@@ -6,7 +6,8 @@ class FakeUnit
 
   def movement_costs
     Hash.new(1).merge({
-      '^' => 999
+      :mountain => 3,
+      :wall => 999
     })
   end
 
@@ -130,7 +131,7 @@ module LevelGenerator
         return false if area.none?
         begin
           u.x, u.y = area.pop
-        end while level.map(u.x, u.y) == '^'
+        end while level.map(u.x, u.y) == :mountain
       end
     end
 
@@ -214,8 +215,8 @@ module LevelGenerator
         # start with an empy level, fill it with tiles randomly
         l = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
         l.fill do |x,y|
-          border?(x,y) ? '^' :
-            rand(100) < 45   ? '^' : ' '
+          border?(x,y) ? :mountain :
+            rand(100) < 45   ? :mountain : :plains
         end
 
         # use cellular attomata to iterate 5 times over this map
@@ -223,29 +224,29 @@ module LevelGenerator
         5.times do
           (MAP_SIZE_X).times do |x|
             (MAP_SIZE_Y).times do |y|
-              next other_map[x][y] = '^' if border?(x,y)
+              next other_map[x][y] = :mountain if border?(x,y)
               count = 0
               3.times do |_i|
                 i = _i-1
                 3.times do |_j|
                   j = _j-1
-                  count += 1 if l.map(x+i,y+j) == '^'
+                  count += 1 if l.map(x+i,y+j) == :mountain
                 end
               end
-              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? '^' : ' '
+              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? :mountain : :plains
             end
           end
           l.fill { |x,y| other_map[x][y] }
         end
 
         l.fill do |x,y|
-          next '^' if border?(x,y)
+          next :wall if border?(x,y)
 
           case other_map[x][y]
-          when ' '
-            '^'
-          when '^'
-            rand(100) > 95 ? 'T' : (rand(100) > 95 ? '#' : ' ')
+          when :plains
+            :mountain
+          when :mountain
+            rand(100) > 95 ? :forest : (rand(100) > 95 ? :fort : :plains)
           end
         end
         return l
@@ -280,23 +281,23 @@ module LevelGenerator
         # start with an empy level, fill it with tiles randomly
         l = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
         starting_mountains = 15.times.map{[rand(MAP_SIZE_X), rand(MAP_SIZE_Y)]}
-        l.fill {|x,y| starting_mountains.include?([x,y]) ? 'T' : ' ' }
+        l.fill {|x,y| starting_mountains.include?([x,y]) ? :forest : :plains }
 
         # use cellular attomata to iterate 5 times over this map
         other_map = Array.new(MAP_SIZE_X){ Array.new(MAP_SIZE_Y) }
         3.times do
           (MAP_SIZE_X).times do |x|
             (MAP_SIZE_Y).times do |y|
-              next other_map[x][y] = '^' if border?(x,y)
+              next other_map[x][y] = :mountain if border?(x,y)
               count = 0
               3.times do |_i|
                 i = _i-1
                 3.times do |_j|
                   j = _j-1
-                  count += 1 if l.map(x+i,y+j) == 'T'
+                  count += 1 if l.map(x+i,y+j) == :forest
                 end
               end
-              other_map[x][y] = (count >= 1) && (rand(100) < 25) ? 'T' :  (rand(100) < 10) ? '#' : ' '
+              other_map[x][y] = (count >= 1) && (rand(100) < 25) ? :forest :  (rand(100) < 10) ? :fort : :plains
             end
           end
           l.fill { |x,y| other_map[x][y] }

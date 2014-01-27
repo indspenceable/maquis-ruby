@@ -12,4 +12,4 @@ Nomad = create_class('n', "Nomad", 7, 11, {
   :speed  => 4,
   :armor  => 3,
   :resistance    => 0,
-}, [:bows], {'T' => 3}, [:horse])
+}, [:bows], {:forest => 3}, [:horse])

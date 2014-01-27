@@ -12,4 +12,4 @@ WyvernRider = create_class('w', 'Wyvern Rider', 7, 5, {
   :speed  => 2,
   :armor  => 3,
   :resistance    => 0,
-}, [:lances], {'^' => 1, 'T' => 1, '#' => 1}, [:flying])
+}, [:lances], {:mountain => 1, :forest => 1, :fort => 1}, [:flying])
