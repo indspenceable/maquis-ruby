@@ -10,9 +10,12 @@ class UnitSelect < MapAction
     @x, @y = x, y
   end
   def activate
-    if current_unit && current_unit.action_available &&
-      current_unit.team == PLAYER_TEAM
-      Move.new(@x, @y, @level)
+    if current_unit && current_unit.action_available
+      if current_unit.team == PLAYER_TEAM
+        Move.new(@x, @y, @level)
+      else
+        HighlightEnemyMoves.new(current_unit, @level, self)
+      end
     else
       TurnMenu.new(@level, self)
     end

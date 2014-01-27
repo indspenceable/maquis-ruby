@@ -17,10 +17,10 @@ class Action
   # Releys on @level, #unit_for_map_highlihgting
   def display_map(screen)
     #at this point, discover what paths we can go to.
-    highlight_spaces = []
+    highlight_spaces = {}
     c = unit_for_map_highlighting
     if c
-      highlight_spaces += Path.discover_paths(c, @level, c.movement).map(&:last_point)
+      highlight_spaces = squares_to_color_for_highlighting(c)
     end
     @level.calculate_simple_fov(PLAYER_TEAM) if @level.fog_of_war
     # lit_spaces = nil
@@ -28,6 +28,29 @@ class Action
       MAP_SIZE_Y.times do |y|
         add_glyph(screen,x,y, highlight_spaces)
       end
+    end
+  end
+
+  def squares_to_color_for_highlighting(c)
+    return @squares_to_color_for_highlighting ||= begin
+      movements = Path.discover_paths(c, @level, c.movement).map(&:last_point)
+      attack = []
+      MAP_SIZE_X.times do |x|
+        MAP_SIZE_Y.times do |y|
+          attack << [x,y] if movements.any? do |_x,_y|
+            c.weapons_that_hit_at(Path.dist(x, y, _x, _y)).any?
+          end
+        end
+      end
+      attack -= movements
+      rtn = {}
+      movements.each do |x,y|
+        rtn[[x,y]] = BLUE
+      end
+      attack.each do |x,y|
+        rtn[[x,y]] = RED
+      end
+      rtn
     end
   end
 
@@ -45,8 +68,8 @@ class Action
     end
 
     cl = @level.see?(x,y) ? [] : [FOG_COLOR, Curses::A_DIM]
-    if highlight_squares.include?([x,y])
-      screen.map.draw_str(@level.map(x,y), GREEN, Curses::A_REVERSE)
+    if highlight_squares.key?([x,y])
+      screen.map.draw_str(@level.map(x,y), highlight_squares[[x,y]], Curses::A_REVERSE)
     else
       screen.map.draw_str(@level.map(x,y), *cl)
     end
