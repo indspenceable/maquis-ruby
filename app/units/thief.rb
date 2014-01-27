@@ -13,3 +13,9 @@ Thief = create_class('t', "Thief", 5, 5, {
   :armor  => 0,
   :resistance    => 0,
 }, [:swords])
+
+class Thief
+  def los_distance
+    7
+  end
+end

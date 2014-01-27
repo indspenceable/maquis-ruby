@@ -39,6 +39,7 @@ class PlayerArmy
       [Nomad] * 1,
       [Shaman] * 1,
       [WyvernRider] * 1,
+      [Thief] * 2,
     ].flatten.shuffle
   end
 

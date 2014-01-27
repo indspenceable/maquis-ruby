@@ -340,6 +340,10 @@ class Unit
     end
     @level = level
   end
+
+  def los_distance
+    3
+  end
 end
 
 def create_class(g, k, mv, con, growths, starting_stats, weapon_skills, movement_costs={}, qualities=[], klass_exp_power=3)

@@ -53,9 +53,10 @@ class Level
   def calculate_simple_fov(team)
     @lit = Set.new
     units.select{|u| u.team == team}.each do |u|
-      (-3).upto(3) do |x|
-        (-3).upto(3) do |y|
-          @lit << [u.x+x, u.y+y] if x.abs + y.abs <= 3
+      los_dist = u.los_distance
+      (-los_dist).upto(los_dist) do |x|
+        (-los_dist).upto(los_dist) do |y|
+          @lit << [u.x+x, u.y+y] if x.abs + y.abs <= los_dist
         end
       end
     end
