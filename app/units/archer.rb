@@ -14,10 +14,3 @@ Archer = create_class('a', "Archer", 5, 6, {
 }, [:bows]
 )
 
-class Archer
-  def initialize *args
-    super
-    @inventory = [IronBow.new].shuffle
-  end
-end
-

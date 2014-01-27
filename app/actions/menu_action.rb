@@ -7,7 +7,7 @@ class MenuAction < Action
     if c == KEYS[:down]
       @index += 1
     elsif c == KEYS[:up]
-      @index -=1
+      @index -= 1
     elsif c == KEYS[:accept]
       return action!
     end
@@ -16,7 +16,7 @@ class MenuAction < Action
   end
 
   def vertical_offset
-    15
+    20 - @choices.length
   end
 
   def draw_special(screen)

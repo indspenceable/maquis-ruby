@@ -1,5 +1,5 @@
 class Screen
-  attr_reader :map, :messages, :info
+  attr_reader :map, :messages, :info, :full
   def self.open
     Curses::init_screen
     begin
@@ -27,5 +27,6 @@ class Screen
         Curses::cols-MAP_SIZE_X-1, MAP_SIZE_Y)
       @messages = Region.new(0, MAP_SIZE_Y+1,
         Curses::cols, Curses::lines-MAP_SIZE_Y+1)
+      @full     = Region.new(0, 0, Curses::cols, Curses::lines)
   end
 end

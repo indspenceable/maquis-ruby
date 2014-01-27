@@ -46,6 +46,12 @@ class Planning < Action
       next!
     elsif c == KEYS[:up]
       prev!
+    elsif c == KEYS[:info]
+      if current_item.is_a?(Unit)
+        if @army.units.include?(current_item)
+          return UnitInfo.new(current_item, @army.units, self)
+        end
+      end
     elsif c == KEYS[:accept]
       return action!
     end

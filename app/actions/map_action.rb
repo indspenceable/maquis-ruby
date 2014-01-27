@@ -12,6 +12,12 @@ class MapAction < Action
       @y += 1
     when KEYS[:right]
       @x += 1
+    when KEYS[:info]
+      u = @level.unit_at(@x,@y)
+      if u
+        team = @level.units.select{|u2| u.team == u2.team}
+        return UnitInfo.new(u, team, self)
+      end
     when KEYS[:accept]
       if respond_to?(:activate)
         rtn = activate

@@ -47,7 +47,8 @@ class Unit
     end
 
     @hp = max_hp
-    @inventory = [IronSword.new, IronLance.new, IronAxe.new, Vulnerary.new].shuffle
+    @inventory = [IronSword.new, IronLance.new, IronAxe.new, IronBow.new].shuffle
+    @inventory = available_weapons
     @level = 0
     if average
       jump_to_level(level)

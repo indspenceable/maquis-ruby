@@ -8,6 +8,7 @@ KEYS = if ARGV[0] == 'vi'
     :up => 'k',
     :cancel => 27,
     :accept => 'a',
+    :info => 's',
   }
 else
   {
@@ -17,6 +18,7 @@ else
     :up => 'w',
     :cancel => 27,
     :accept => ' ',
+    :info => 'i',
   }
 end
 
