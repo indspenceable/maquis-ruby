@@ -32,9 +32,6 @@ class UnitSelect < MapAction
     nil
   end
 
-  def draw_special(screen)
-  end
-
   def set_cursor(screen)
     screen.map.set_xy(@x,@y)
   end

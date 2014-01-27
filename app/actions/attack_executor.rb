@@ -13,9 +13,6 @@ class AttackExecutor < Action
     self
   end
 
-  def draw_special(screen)
-  end
-
   def units_for_info_panel
     [@unit, @target]
   end

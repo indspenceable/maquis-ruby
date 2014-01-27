@@ -25,8 +25,6 @@ class HighlightEnemyMoves < MapAction
     @prev
   end
 
-  def draw_special(_);end
-
   def set_cursor(screen)
     screen.map.set_xy(@x, @y)
   end

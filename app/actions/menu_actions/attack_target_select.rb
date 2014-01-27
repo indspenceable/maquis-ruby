@@ -10,9 +10,6 @@ class AttackTargetSelect < MenuAction
     super Array.new(@targets.length){:confirm}
   end
 
-  def draw_special(screen)
-  end
-
   def set_cursor(screen)
     screen.map.set_xy(@targets[@index].x, @targets[@index].y)
   end

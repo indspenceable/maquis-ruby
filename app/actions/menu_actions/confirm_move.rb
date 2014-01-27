@@ -12,7 +12,6 @@ class ConfirmMove < MenuAction
     }
   end
 
-
   def initialize(unit, path, level, prev_action)
     @level = level
     @unit = unit

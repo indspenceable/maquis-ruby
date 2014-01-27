@@ -14,6 +14,9 @@ class Action
     draw_special(screen)
   end
 
+  def draw_special(screen)
+  end
+
   # Releys on @level, #unit_for_map_highlihgting
   def display_map(screen)
     #at this point, discover what paths we can go to.
