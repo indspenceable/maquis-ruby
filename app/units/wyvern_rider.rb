@@ -4,7 +4,7 @@ WyvernRider = create_class('w', 'Wyvern Rider', 7, 5, {
   :skill  => [20, 55],
   :speed  => [30, 60],
   :armor  => [30, 60],
-  :resistence  => [5, 30],
+  :resistance  => [5, 30],
 }, {
   :max_hp => 14,
   :power  => 4,

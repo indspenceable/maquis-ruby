@@ -27,7 +27,7 @@ class Unit
     @growths[stat]
   end
 
-  LEVEL_UPS_FOR_LEVEL_ONE = 0
+  LEVEL_UPS_FOR_LEVEL_ONE = 3
 
   def initialize team, name, level = 1, is_lord=false, average=false
     @team, @name = team, name
@@ -50,6 +50,13 @@ class Unit
     else
       class_growths.each do |k, (min,max)|
         @growths[k] = rand((max-min)/5)*5 + min
+      end
+    end
+
+    # lords have universally improved growths. Look out, myrmidon lord skill stat...
+    if is_lord
+      @growths.keys.each do |k|
+        @growths[k] += rand(3)*5
       end
     end
 

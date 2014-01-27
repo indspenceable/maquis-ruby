@@ -1,8 +1,13 @@
 class PlayerArmy
   def initialize(size)
-    # build an army of size unit
-    @army = size.times.map do |x|
-      klasses.pop.new(PLAYER_TEAM, Names.generate, 1, x==0)
+    # build an army of size units, plus the lord.
+
+    lord = lord_klasses.pop.new(PLAYER_TEAM, Names.generate, 1, true)
+    @army = [
+      lord
+    ]
+    @army += size.times.map do |x|
+      klasses.pop.new(PLAYER_TEAM, Names.generate, 1)
     end
     @army.each do |u|
       u.inventory << Vulnerary.new
@@ -16,21 +21,27 @@ class PlayerArmy
     ready_all_units!
   end
 
+  def lord_klasses
+    [ArmorKnight, Myrmidon, Mercenary, Fighter]
+  end
+
   def klasses
     [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary, PegasusKnight, Fighter]
 
     @klass_list ||= [
       [PegasusKnight] * 3,
-      [ArmorKnight] * 3,
-      [Cavalier] * 8,
-      [Myrmidon] * 4,
-      [Archer] * 3,
-      [Fighter] * 4,
-      [Mercenary] * 3,
-      [Cleric],
-      [Mage],
-      [Monk],
-      [Nomad],
+      [ArmorKnight] * 2,
+      [Cavalier] * 5,
+      [Myrmidon] * 2,
+      [Archer] * 2,
+      [Fighter] * 2,
+      [Mercenary] * 2,
+      [Cleric] * 1,
+      [Mage] * 1,
+      [Monk] * 1,
+      [Nomad] * 1,
+      [Shaman] * 1,
+      [WyvernRider] * 1,
     ].flatten.shuffle
   end
 
