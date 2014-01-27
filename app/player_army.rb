@@ -2,7 +2,10 @@ class PlayerArmy
   def initialize(size)
     # build an army of size unit
     @army = size.times.map do |x|
-      klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, 1, x==0)
+      klasses.pop.new(PLAYER_TEAM, Names.generate, 1, x==0)
+    end
+    @army.each do |u|
+      u.inventory << Vulnerary.new
     end
   end
 
@@ -15,6 +18,16 @@ class PlayerArmy
 
   def klasses
     [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary, PegasusKnight, Fighter]
+
+    klass_list ||= [
+      [PegasusKnight] * 3,
+      [ArmorKnight] * 3,
+      [Cavalier] * 8,
+      [Myrmidon] * 4,
+      [Archer] * 3,
+      [Fighter] * 4,
+      [Mercenary] * 3,
+    ].flatten.shuffle
   end
 
   def recruit! r
@@ -25,9 +38,10 @@ class PlayerArmy
 
   def possible_recruits(diff)
     rtn = []
-    klasses.shuffle.first(3).each_with_index do |k,x|
-      rtn << k.new(PLAYER_TEAM, Names.generate, diff+x-1)
-    end
+    # klasses.shuffle.first(3).each_with_index do |k,x|
+    #   rtn << k.new(PLAYER_TEAM, Names.generate, diff+x-1)
+    # end
+    return []
     rtn
   end
 
