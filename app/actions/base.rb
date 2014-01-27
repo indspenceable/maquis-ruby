@@ -93,10 +93,13 @@ class Action
     x = i*20
 
     map_strs = @level ? "(#{@level.map(unit.x, unit.y)})" : ""
+    exp_bars = ((unit.exp+5)/10)
+    exp_level = ('-' * exp_bars) + ' ' * (10-exp_bars)
 
     strings = [
       [unit.name, TEAM_TO_COLOR[unit.team]],
       ["#{unit.klass}: #{unit.level} #{map_strs}"],
+      ["|#{exp_level}|"],
       # ["% 3d/100 xp" % unit.exp],
       ["#{unit.health_str} hp", unit.health_color],
       # [unit.power_for_info_str],
