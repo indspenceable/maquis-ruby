@@ -76,12 +76,13 @@ class Action
       end
     end
 
-    cl = @level.see?(x,y) ? [] : [FOG_COLOR, Curses::A_DIM]
-    if highlight_squares.key?([x,y])
-      screen.map.draw_str(@level.map(x,y), highlight_squares[[x,y]], Curses::A_REVERSE)
+    cl = if highlight_squares.key?([x,y])
+      [highlight_squares[[x,y]], Curses::A_REVERSE]
     else
-      screen.map.draw_str(@level.map(x,y), *cl)
+      @level.see?(x,y) ? [] : [FOG_COLOR, Curses::A_DIM]
     end
+
+    screen.map.draw_str(@level.map_to_str(x,y), *cl)
   end
 
   # Depends on @level, #units_for_info_panel
