@@ -66,8 +66,13 @@ class Unit
   end
 
   def self.glyph c
-    define_method(:glyph){ c }
+    define_method(:klass_glyph){ c }
   end
+
+  def glyph
+    @is_lord ? 'l' : klass_glyph
+  end
+
   def self.klass c
     define_method(:klass){ c }
   end
