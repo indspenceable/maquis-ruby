@@ -4,11 +4,12 @@ Soldier = create_class('s', "Soldier", 5, 6, {
   :skill => [20, 20],
   :speed => [20, 20],
   :armor => [20, 20],
+  :resistence => [20, 20],
 }, {
   :max_hp => 20,
   :power  => 3,
   :skill  => 0,
   :speed  => 2,
   :armor  => 1,
-  :res    => 0,
+  :resistance    => 0,
 }, [:lances], {}, [], 2)

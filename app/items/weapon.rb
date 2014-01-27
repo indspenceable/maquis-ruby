@@ -53,6 +53,10 @@ class Weapon
   def targets
     @targets || []
   end
+
+  def magic?
+    [:anima, :light, :dark].include?(weapon_type)
+  end
 end
 
 Dir.glob('./app/items/weapons/*').each do |f|

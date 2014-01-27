@@ -4,11 +4,12 @@ Mage = create_class('m', "Mage", 5, 3, {
   :skill => [20, 45],
   :speed => [10, 40],
   :armor => [10, 30],
+  :resistance => [30, 60],
 }, {
   :max_hp => 15,
   :power  => 3,
   :skill  => 1,
   :speed  => 1,
   :armor  => 1,
-  :res    => 3,
+  :resistance    => 3,
 }, [:anima])

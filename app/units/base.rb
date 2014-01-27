@@ -11,14 +11,14 @@ class Unit
     end
   end
 
-  BASE_STATS = {
-    :max_hp => 20,
-    :power => 3,
-    :skill => 3,
-    :armor => 3,
-    :speed => 3,
-  }
-  STATS = BASE_STATS.keys
+  STATS = [
+    :max_hp,
+    :power,
+    :skill,
+    :armor,
+    :speed,
+    :resistance,
+  ]
 
   attr_reader *STATS
   attr_reader :level, :hp, :exp
@@ -38,8 +38,9 @@ class Unit
 
     @action_available = true
     STATS.each do |stat|
-      # starting_stat = BASE_STATS[stat] + rand(5) - 2
       self.instance_variable_set(:"@#{stat}", starting_stats[stat])
+      raise "#{stat} start undefined for #{self.class.name}!" unless starting_stats[stat]
+      raise "#{stat} growth undefined for #{self.class.name}!" unless class_growths[stat]
     end
     @growths = {}
     if average
@@ -103,12 +104,20 @@ class Unit
     "ARM: #{armor}"
   end
 
+  def resistance_for_info_str
+    "RES: #{resistance}"
+  end
+
   def speed_for_info_str
     "SPE: #{speed} (#{weapon_slow})"
   end
 
-  def adjusted_armor(level)
-    armor + level.armor_bonus_at(x, y)
+  def adjusted_armor(level, weapon)
+    level.armor_bonus_at(x, y) + if weapon.magic?
+      resistance
+    else
+      armor
+    end
   end
 
   def adjusted_evade(level)
@@ -177,7 +186,7 @@ class Unit
     [
       power +
       (weapon.power + weapon_triangle_bonus_power(vs)) * weapon_effectiveness(vs) -
-      vs.adjusted_armor(level),
+      vs.adjusted_armor(level, weapon),
     0].max if weapon
   end
   def power_str(vs, level, at_range)

@@ -32,6 +32,7 @@ class UnitInfo < Action
       [unit.skill_for_info_str],
       [unit.armor_for_info_str],
       [unit.speed_for_info_str],
+      [unit.resistance_for_info_str],
       [unit.weapon_name_str],
     ]
 
