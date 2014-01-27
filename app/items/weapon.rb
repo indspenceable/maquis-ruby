@@ -54,3 +54,7 @@ class Weapon
     @targets || []
   end
 end
+
+Dir.glob('./app/items/weapons/*').each do |f|
+  require f
+end
