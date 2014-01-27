@@ -19,7 +19,7 @@ class PlayerArmy
   def klasses
     [ArmorKnight, Archer, Cavalier, Myrmidon, Mercenary, PegasusKnight, Fighter]
 
-    klass_list ||= [
+    @klass_list ||= [
       [PegasusKnight] * 3,
       [ArmorKnight] * 3,
       [Cavalier] * 8,
@@ -27,6 +27,10 @@ class PlayerArmy
       [Archer] * 3,
       [Fighter] * 4,
       [Mercenary] * 3,
+      [Cleric],
+      [Mage],
+      [Monk],
+      [Nomad],
     ].flatten.shuffle
   end
 

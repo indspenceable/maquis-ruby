@@ -1,3 +1,5 @@
+require 'pry'
+
 class Unit
   attr_accessor :team, :x, :y, :action_available
 
@@ -20,6 +22,10 @@ class Unit
 
   attr_reader *STATS
   attr_reader :level, :hp, :exp
+
+  def growth_pct(stat)
+    @growths[stat]
+  end
 
   LEVEL_UPS_FOR_LEVEL_ONE = 0
 
@@ -127,7 +133,20 @@ class Unit
       :lances => {
         :swords => 1,
         :axes => -1,
+      },
+      :anima => {
+        :light => 1,
+        :dark => -1
+      },
+      :light => {
+        :anima => -1,
+        :dark => 1,
+      },
+      :dark => {
+        :anima => 1,
+        :light => -1,
       }
+
     }[my_type][their_type] || 0 rescue 0
   end
   def weapon_triangle_bonus_power(vs)
@@ -165,6 +184,7 @@ class Unit
   def take_hit_from(vs, level, multiplier)
     damage = vs.power_vs(self, level)*multiplier
     @hp -= damage
+    @hp = 0 if hp < 0
     damage
   end
 
@@ -329,9 +349,8 @@ def create_class(g, k, mv, con, growths, starting_stats, weapon_skills, movement
   end
 end
 
-%w(archer armor_knight cavalier fighter mercenary myrmidon
-  pegasus_knight soldier brigand).each do |f|
-  require "./app/units/#{f}"
+Dir.glob('./app/units/*').each do |f|
+  require f
 end
 
 # Cleric = create_class('p', "Cleric", x, y, {

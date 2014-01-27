@@ -1,4 +1,4 @@
-Mercenary = create_class('m', "Mercenary", 5, 6, {
+Mercenary = create_class('e', "Mercenary", 5, 6, {
   :max_hp =>[70, 90],
   :power => [40, 60],
   :skill => [20, 50],
