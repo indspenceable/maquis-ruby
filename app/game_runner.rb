@@ -37,7 +37,7 @@ COMPUTER_TEAM = 1
 
 module GameRunner
   def setup
-    @current_action = Planning.new(10, PlayerArmy.new(3))
+    @current_action = Planning.new(0, PlayerArmy.new(6))
   end
 
   def display(screen)

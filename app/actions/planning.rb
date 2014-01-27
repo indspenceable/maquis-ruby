@@ -5,7 +5,7 @@
 #  * recruit units?
 class Planning < Action
   def initialize(difficulty, army, can_recruit = true, generator = [LevelGenerator::Mountain.new].sample)
-    @difficulty, @army = difficulty, army
+    @difficulty, @army = difficulty-1, army
     @index = 0
     @seperator = "---"
     @menu_items = army.units

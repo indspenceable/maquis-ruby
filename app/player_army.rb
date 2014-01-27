@@ -1,8 +1,8 @@
 class PlayerArmy
   def initialize(size)
     # build an army of size unit
-    @army = 3.times.map do |x|
-      klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, x+2, x==0)
+    @army = size.times.map do |x|
+      klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, 1, x==0)
     end
   end
 
