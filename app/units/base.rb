@@ -180,7 +180,7 @@ class Unit
   # CRITICAL HITS
   def crit_chance
     if weapon
-      weapon.to_crit + skill/2 + 5
+      [weapon.to_crit + skill/2].max
     end
   end
   def crit_str
