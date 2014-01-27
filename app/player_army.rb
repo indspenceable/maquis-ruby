@@ -2,7 +2,7 @@ class PlayerArmy
   def initialize(size)
     # build an army of size units, plus the lord.
 
-    lord = lord_klasses.pop.new(PLAYER_TEAM, Names.generate, 1, true)
+    lord = lord_klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, 1, true)
     @army = [
       lord
     ]
