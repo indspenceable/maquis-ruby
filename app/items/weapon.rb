@@ -1,16 +1,10 @@
 class Weapon
-  ATTRS = [:name, :weapon_type, :range, :power, :to_hit, :to_crit, :weight]
+  ATTRS = [:name, :weapon_type, :range, :power, :to_hit, :to_crit, :weight, :targets]
   attr_reader *ATTRS
 
   def initialize *attrs
     ATTRS.count.times do |i|
       instance_variable_set("@#{ATTRS[i]}", attrs[i])
-    end
-  end
-
-  def self.stats(*args)
-    define_method :initialize do
-      super(*args)
     end
   end
 
@@ -21,7 +15,9 @@ class Weapon
   def self.create(*args)
     @all||=[]
     c = Class.new(self) do
-      stats(*args)
+      define_method :initialize do
+        super(*args)
+      end
     end
     @all << c
     c
@@ -52,5 +48,9 @@ class Weapon
   def used_up?
     #TODO weapon durabilities
     false
+  end
+
+  def targets
+    @targets || []
   end
 end

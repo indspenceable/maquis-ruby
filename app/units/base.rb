@@ -113,9 +113,7 @@ class Unit
   def power_for_info_str
     weapon ? "POW: #{power} + #{weapon.power}" : "POW: NA"
   end
-  def total_power
-    power + weapon.power if weapon
-  end
+
   def weapon_triangle(my_type, their_type)
     {
       :swords => {
@@ -136,8 +134,25 @@ class Unit
     return 0 unless weapon && vs.weapon
     weapon_triangle(weapon_type, vs.weapon_type)
   end
+
+  def weapon_effectiveness(vs)
+    # this accounts for things like:
+    # Bows are good against fliers
+    # Rapiers are good against armored and horseback
+    # etc
+    if (weapon.targets & vs.qualities).any?
+      3
+    else
+      1
+    end
+  end
+
   def power_vs(vs, level)
-    [total_power + weapon_triangle_bonus_power(vs) - vs.adjusted_armor(level),0].max if weapon
+    [
+      power +
+      (weapon.power + weapon_triangle_bonus_power(vs)) * weapon_effectiveness(vs) -
+      vs.adjusted_armor(level),
+    0].max if weapon
   end
   def power_str(vs, level, at_range)
     if (at_range ? can_hit_range?(at_range) : can_hit?(vs))
@@ -283,7 +298,7 @@ class Unit
   end
 end
 
-def create_class(g, k, mv, con, growths, starting_stats, weapon_skills, movement_costs={}, klass_exp_power=3)
+def create_class(g, k, mv, con, growths, starting_stats, weapon_skills, movement_costs={}, qualities=[], klass_exp_power=3)
   Class.new(Unit) do
     glyph g
     klass k
@@ -307,6 +322,9 @@ def create_class(g, k, mv, con, growths, starting_stats, weapon_skills, movement
     end
     define_method :movement_costs do
       Path.default_movement_costs.merge(movement_costs)
+    end
+    define_method :qualities do
+      qualities
     end
   end
 end

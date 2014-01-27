@@ -108,10 +108,11 @@ class Action
     if vs
       # combat stats - Power, Strength, Crit
       double_str = unit.double_attack?(vs)? "(x2)" : ""
+      power_accent = unit.weapon_effectiveness(vs) == 3 ? Curses::A_BOLD : 0
       strings += [
         [''],
         [unit.weapon.name],
-        [" Pow: #{unit.power_str(vs, @level, ignore_range)}#{double_str}"],
+        [" Pow: #{unit.power_str(vs, @level, ignore_range)}#{double_str}", 0, power_accent],
         [" Hit: #{unit.accuracy_str(vs, @level, ignore_range).to_s}"],
         ["Crit: #{unit.crit_str}"],
       ]
