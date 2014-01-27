@@ -30,4 +30,7 @@ class AttackTargetSelect < MenuAction
   def unit_for_map_highlighting
     nil
   end
+
+  def draw_special(screen)
+  end
 end
