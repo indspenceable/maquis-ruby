@@ -6,7 +6,7 @@ class FakeUnit
 
   def movement_costs
     Hash.new(1).merge({
-      :mountain => 3,
+      :mountain => 999,
       :wall => 999
     })
   end
@@ -143,6 +143,7 @@ module LevelGenerator
         baddie_area = Path.discover_paths(FakeUnit.new(bx,by), level, 4)
         path_between = Path.find(FakeUnit.new(px,py), bx, by, level, 70, :ignore)
       end while false ||
+        map(px, py) == :wall || map(bx, by) == :wall
         player_area.count < player_units.size ||
         baddie_area.count < baddie_units.size ||
         !path_between || path_between.length < min_distance
