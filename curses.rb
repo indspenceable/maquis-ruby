@@ -1,4 +1,6 @@
 require 'curses'
+require 'pry'
+require 'yaml'
 
 KEYS = if ARGV[0] == 'vi'
   {
@@ -34,6 +36,8 @@ TEAM_TO_COLOR = [
 ]
 
 require './app/game_runner'
+SAVE_FILE_PATH = File.expand_path(File.join('~', '.tarog'))
+previous_save = YAML.load(File.read(SAVE_FILE_PATH)) rescue nil
 
 class CursesDisplay
   include GameRunner
@@ -57,14 +61,21 @@ class CursesDisplay
   end
 end
 
+DISPLAY = CursesDisplay.new(previous_save)
+
+def save_game
+  File.open(SAVE_FILE_PATH, 'w+', 0644) do |f|
+    f << YAML.dump(DISPLAY.current_action)
+  end
+end
 
 Screen.open do |s|
-  display = CursesDisplay.new
   loop do
-    display.execute
-    display.display(s)
-    display.move_to_correct_space(s)
-    display.key(s.win.getch)
+    DISPLAY.execute
+    DISPLAY.display(s)
+    DISPLAY.move_to_correct_space(s)
+    save_game
+    DISPLAY.key(s.win.getch)
   end
 end
 

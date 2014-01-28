@@ -21,6 +21,8 @@ class AttackExecutor < Action
     if @finished
       # Did the players lord die?
       if @level.lord.nil?
+        # Kill our savegame.
+        `rm #{SAVE_FILE_PATH}`
         raise "lord died!"
       elsif @level.units.none?{|u| u.team == COMPUTER_TEAM }
         @level.finish_turn(COMPUTER_TEAM)

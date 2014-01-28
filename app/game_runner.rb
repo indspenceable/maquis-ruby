@@ -33,8 +33,10 @@ PLAYER_TEAM = 0
 COMPUTER_TEAM = 1
 
 module GameRunner
-  def setup
-    @current_action = Planning.new(0, PlayerArmy.new(6))
+  attr_reader :current_action
+
+  def setup(action=nil)
+    @current_action = action || Planning.new(-1, PlayerArmy.new(6))
   end
 
   def display(screen)
