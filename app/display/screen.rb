@@ -1,5 +1,6 @@
 class Screen
   attr_reader :map, :messages, :info, :full
+  attr_reader :win
   def self.open
     Curses::init_screen
     begin
@@ -22,6 +23,8 @@ class Screen
     end
   end
   def initialize
+      @win = Curses::stdscr
+      @win.keypad(true)
       @map      = Region.new(0, 0, MAP_SIZE_X, MAP_SIZE_Y)
       @info     = Region.new(MAP_SIZE_X + 1, 0,
         Curses::cols-MAP_SIZE_X-1, MAP_SIZE_Y)

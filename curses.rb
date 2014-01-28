@@ -12,12 +12,12 @@ KEYS = if ARGV[0] == 'vi'
   }
 else
   {
-    :left => 'a',
-    :right => 'd',
-    :down => 's',
-    :up => 'w',
-    :cancel => 27,
-    :accept => ' ',
+    :left => Curses::Key::LEFT,
+    :right => Curses::Key::RIGHT,
+    :down => Curses::Key::DOWN,
+    :up => Curses::Key::UP,
+    :cancel => 'x',
+    :accept => 'z',
     :info => 'i',
   }
 end
@@ -57,13 +57,14 @@ class CursesDisplay
   end
 end
 
+
 Screen.open do |s|
   display = CursesDisplay.new
   loop do
     display.execute
     display.display(s)
     display.move_to_correct_space(s)
-    display.key(Curses::getch)
+    display.key(s.win.getch)
   end
 end
 
