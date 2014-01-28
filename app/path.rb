@@ -19,43 +19,21 @@ class Path
     }
   end
 
-  def self.find(unit, dx, dy, level, limit=998, path_through_enemies=false)
-    open_list = PQueue.new([Path.new(unit.x,unit.y, level)]) {|a, b| b.cost(unit) <=> a.cost(unit) }
-    closed_list = []
-    while open_list.size > 0
-      current_path = open_list.pop
-      path_x, path_y = current_path.last_point
-      return current_path if path_x == dx && path_y == dy
-      closed_list << current_path
-      paths_to_consider = [
-        current_path.dup.add(path_x+1, path_y),
-        current_path.dup.add(path_x-1, path_y),
-        current_path.dup.add(path_x, path_y+1),
-        current_path.dup.add(path_x, path_y-1),
-      ]
-      paths_to_consider.reject! do |p|
-        p.cost(unit) > limit ||
-        open_list.to_a.any?{|pp| pp.last_point == p.last_point} ||
-        closed_list.any?{|pp| pp.last_point == p.last_point} ||
-        (
-          !path_through_enemies &&
-          level.unit_at(*p.last_point) &&
-          level.unit_at(*p.last_point).team != unit.team
-        )
-      end
-      paths_to_consider.each do |p|
-        open_list.push p
-      end
-    end
-    nil
+  def self.find(unit, dx, dy, level, limit=999, path_through_enemies=false)
+    path_base(:find, unit, level, limit, path_through_enemies, dx, dy)
   end
 
-  def self.discover_paths(unit, level, limit=998, path_through_enemies=false)
+  def self.discover_paths(unit, level, limit=999, path_through_enemies=false)
+     path_base(:discover, unit, level, limit, path_through_enemies, nil, nil)
+  end
+
+  def self.path_base(method, unit, level, limit, path_through_enemies, dx, dy)
     open_list = PQueue.new([Path.new(unit.x,unit.y, level)]) {|a, b| b.cost(unit) <=> a.cost(unit) }
     closed_list = []
     while open_list.size > 0
       current_path = open_list.pop
       path_x, path_y = current_path.last_point
+      return current_path if (method == :find) && (path_x == dx) && (path_y == dy)
       closed_list << current_path
       paths_to_consider = [
         current_path.dup.add(path_x+1, path_y),
@@ -64,8 +42,11 @@ class Path
         current_path.dup.add(path_x, path_y-1),
       ]
       paths_to_consider.reject! do |p|
+        # reject paths that push us over the limit
         p.cost(unit) > limit ||
+        # or, this point is already on the open list
         open_list.to_a.any?{|pp| pp.last_point == p.last_point} ||
+        # or, we're not pathing through enemies, and there's an enemy there.
         closed_list.any?{|pp| pp.last_point == p.last_point} ||
         (
           !path_through_enemies &&
@@ -77,7 +58,7 @@ class Path
         open_list.push p
       end
     end
-    closed_list
+    closed_list if (method == :discover)
   end
 
   def self.discover_unblocked_paths(unit, level, limit=99)
