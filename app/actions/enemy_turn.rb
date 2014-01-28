@@ -87,9 +87,9 @@ class EnemyTurn < Action
   end
 
   def distance_from_path_to_lord(p)
-    @lord_paths ||= Path.discover_paths(lord, @level, 1000, true)
+    @lord_paths ||= Path.discover_paths(lord, @level, 1000, :ignore)
     @distance_cache ||= {}
-    #@distance_cache[p] ||= Path.find(lord, *p.last_point, @level, 100, true).length
+    #@distance_cache[p] ||= Path.find(lord, *p.last_point, @level, 100, :ingore).length
     @distance_cache[p] ||= @lord_paths.find{|x| x.last_point == p.last_point}.length
     @distance_cache[p]
   end

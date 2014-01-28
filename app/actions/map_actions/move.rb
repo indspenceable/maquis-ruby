@@ -35,7 +35,8 @@ class Move < MapAction
     @path.dup.add(x,y).cost(@unit) <= @unit.movement &&
     adjacent_to_last_point?(x,y) &&
     ( @level.unit_at(x,y).nil? ||
-      @level.unit_at(x,y).team == @unit.team )
+      @level.unit_at(x,y).team == @unit.team ||
+      !@level.see?(x,y) )
   end
 
   def update(x,y)
@@ -46,7 +47,7 @@ class Move < MapAction
       if can_add_to_path?(x,y)
         @path.add(x,y)
       else
-        @path = Path.find(@unit, x, y, @level, @unit.movement) || @path
+        @path = Path.find(@unit, x, y, @level, @unit.movement, :block_seen) || @path
       end
 
     end
@@ -73,12 +74,39 @@ class Move < MapAction
 
   def activate
     if [@x,@y] == @path.last_point &&
-      @level.units.all? {|u| (u.x != @x || u.y != @y) || (u == @unit)}
+      @level.units.all? do |u|
+        (u.x != @x ||
+         u.y != @y ||
+         u == @unit ||
+         !@level.see?(@x, @y))
+      end
       # We've got a clear path to this location.
       # move the unit there
-      return ConfirmMove.new(@unit, @path, @level, self)
+
+      ee = early_end
+      if ee
+        @unit.x, @unit.y = ee.last_point
+        @unit.action_available = false
+        return UnitSelect.new(*ee.last_point, @level)
+      else
+        return ConfirmMove.new(@unit, @path, @level, self)
+      end
     end
     self
+  end
+
+  def early_end
+    last_good_point = nil
+    @path.each do |p|
+      u = @level.unit_at(*p)
+      if u && u.team != @unit.team
+        success_path = @path.dup
+        success_path.trim_to(*last_good_point)
+        return success_path
+      end
+      last_good_point = p
+    end
+    nil
   end
 
   def set_cursor(screen)

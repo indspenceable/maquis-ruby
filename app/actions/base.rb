@@ -36,10 +36,10 @@ class Action
 
   def squares_to_color_for_highlighting(c)
     return @squares_to_color_for_highlighting ||= begin
-      movements = Path.discover_paths(c, @level, c.movement).map(&:last_point)
+      movements = Path.discover_paths(c, @level, c.movement, :block_seen).map(&:last_point)
       movements_with_no_one_there = movements.reject do |m|
         u = @level.unit_at(*m)
-        (u && u != c)
+        (u && u != c && @level.see?(*m))
       end
       attack = []
       MAP_SIZE_X.times do |x|

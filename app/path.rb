@@ -19,15 +19,19 @@ class Path
     }
   end
 
-  def self.find(unit, dx, dy, level, limit=999, path_through_enemies=false)
-    path_base(:find, unit, level, limit, path_through_enemies, dx, dy)
+  def self.find(unit, dx, dy, level, limit=999, enemy_strategy=:block)
+    path_base(:find, unit, level, limit, enemy_strategy, dx, dy)
   end
 
-  def self.discover_paths(unit, level, limit=999, path_through_enemies=false)
-     path_base(:discover, unit, level, limit, path_through_enemies, nil, nil)
+  def self.discover_paths(unit, level, limit=999, enemy_strategy=:block)
+     path_base(:discover, unit, level, limit, enemy_strategy, nil, nil)
   end
 
-  def self.path_base(method, unit, level, limit, path_through_enemies, dx, dy)
+  def self.path_base(method, unit, level, limit, enemy_strategy, dx, dy)
+    unless [:ignore, :block, :block_seen].include?(enemy_strategy)
+      raise "invalid enemy strategy: #{enemy_strategy}"
+    end
+
     open_list = PQueue.new([Path.new(unit.x,unit.y, level)]) {|a, b| b.cost(unit) <=> a.cost(unit) }
     closed_list = []
     while open_list.size > 0
@@ -47,9 +51,13 @@ class Path
         # or, this point is already on the open list
         open_list.to_a.any?{|pp| pp.last_point == p.last_point} ||
         # or, we're not pathing through enemies, and there's an enemy there.
+        # or we're not pathing through seen enemies and we can't see that point
         closed_list.any?{|pp| pp.last_point == p.last_point} ||
         (
-          !path_through_enemies &&
+          (
+            (enemy_strategy == :block) ||
+            (enemy_strategy == :block_seen && level.see?(*p.last_point))
+          ) &&
           level.unit_at(*p.last_point) &&
           level.unit_at(*p.last_point).team != unit.team
         )
