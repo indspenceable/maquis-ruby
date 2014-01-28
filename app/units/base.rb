@@ -117,7 +117,7 @@ class Unit
   end
 
   def speed_for_info_str
-    "SPE: #{speed} (#{weapon_slow})"
+    "SPE: #{speed}"
   end
 
   def adjusted_armor(level, weapon)
@@ -141,7 +141,7 @@ class Unit
 
   # POWER
   def power_for_info_str
-    weapon ? "POW: #{power} + #{weapon.power}" : "POW: NA"
+    weapon ? "POW: #{power}" : "POW: NA"
   end
 
   def weapon_triangle(my_type, their_type)
@@ -233,7 +233,7 @@ class Unit
     end
   end
   def skill_for_info_str
-    weapon ? "HIT: #{skill} + #{weapon.to_hit}" : "HIT: NA"
+    weapon ? "HIT: #{skill}" : "HIT: NA"
   end
 
   # CRITICAL HITS
