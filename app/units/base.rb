@@ -94,7 +94,9 @@ class Unit
 
   def learn_skill(skill)
     skill.class.modifiers.each do |m|
-      raise "#{skill} modifies non-method #{m}!" unless respond_to?(m)
+      unless self.class.modifiable_methods.include?(m)
+        raise "#{skill} modifies non-method #{m} (not in#{self.class.modifiable_methods})!"
+      end
     end
     @skills.each do |s|
       if s.conflicts?(skill.identifier) || skill.conflicts?(s.identifier)
@@ -213,11 +215,11 @@ class Unit
   end
 
   def power_vs(vs, level)
-    [
+    [[
       power +
       (weapon.power + weapon_triangle_bonus_power(vs)) * weapon_effectiveness(vs) -
       vs.adjusted_armor(level, weapon),
-    0].max if weapon
+    0].max, vs.hp].min if weapon
   end
   def power_str(vs, level, at_range)
     if (at_range ? can_hit_range?(at_range) : can_hit?(vs))
@@ -235,7 +237,6 @@ class Unit
   def lose_life damage
     @hp -= damage
     if hp < 0
-      damage += hp
       @hp = 0
     end
     damage
@@ -388,8 +389,14 @@ class Unit
     []
   end
 
+  def self.modifiable_methods
+    @@modifiable_methods ||= []
+  end
+
   def self.modifiable(*methods)
+    @@modifiable_methods ||= []
     Array(methods).flatten.each do |meth|
+      @@modifiable_methods << meth
       original_method_name = "original_#{meth}"
       alias_method original_method_name, meth
       define_method(meth) do |*args|
