@@ -34,7 +34,7 @@ class PlayerArmy
       [Archer] * 2,
       [Fighter] * 2,
       [Mercenary] * 2,
-      [Cleric] * 1,
+      # [Cleric] * 1,
       [Mage] * 1,
       [Monk] * 1,
       [Nomad] * 1,
