@@ -38,7 +38,9 @@ TEAM_TO_COLOR = [
 
 require './app/game_runner'
 SAVE_FILE_PATH = File.expand_path(File.join('~', '.tarog'))
-previous_save = YAML.load(File.read(SAVE_FILE_PATH)) rescue nil
+previous_save = if File.exists?(SAVE_FILE_PATH)
+  YAML.load(File.read(SAVE_FILE_PATH))
+end
 
 class CursesDisplay
   include GameRunner
