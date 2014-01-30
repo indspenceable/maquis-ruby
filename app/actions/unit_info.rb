@@ -34,6 +34,8 @@ class UnitInfo < Action
       [unit.speed_for_info_str],
       [unit.resistance_for_info_str],
       [unit.weapon_name_str],
+      ["#{unit.constitution}"],
+      [unit.traits.map(&:to_s).join(', ')]
     ]
 
     character_inventory = unit.inventory.map do |item|
