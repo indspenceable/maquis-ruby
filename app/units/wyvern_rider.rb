@@ -1,4 +1,4 @@
-WyvernRider = create_class('w', 'Wyvern Rider', 7, 5, {
+WyvernRider = create_class('w', 'Wyvern Rider', {
   :max_hp => [50, 90],
   :power  => [40, 65],
   :skill  => [20, 55],
@@ -11,5 +11,9 @@ WyvernRider = create_class('w', 'Wyvern Rider', 7, 5, {
   :skill  => 2,
   :speed  => 2,
   :armor  => 3,
-  :resistance    => 0,
-}, [:lances], {:mountain => 1, :forest => 1, :fort => 1}, [:flying])
+  :resistance => 0,
+  :constitution => 13
+}, [
+  WieldLances.new,
+  PegasusRider.new,
+])

@@ -1,6 +1,7 @@
 require './app/permissive_fov'
 require './app/display/region'
 require './app/display/screen'
+require './app/skill'
 require './app/actions/base'
 require './app/actions/menu_action'
 require './app/actions/menu_actions/turn_menu'

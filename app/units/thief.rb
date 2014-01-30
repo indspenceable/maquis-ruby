@@ -1,4 +1,4 @@
-Thief = create_class('t', "Thief", 5, 5, {
+Thief = create_class('t', "Thief", {
   :max_hp => [40, 70],
   :power => [20, 30],
   :skill => [50, 60],
@@ -11,11 +11,10 @@ Thief = create_class('t', "Thief", 5, 5, {
   :skill  => 6,
   :speed  => 6,
   :armor  => 0,
-  :resistance    => 0,
-}, [:swords])
+  :resistance => 0,
+  :constitution => 5,
+}, [
+  Farsight.new,
+  WieldSwords.new,
+])
 
-class Thief
-  def los_distance
-    7
-  end
-end

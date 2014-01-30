@@ -1,4 +1,4 @@
-ArmorKnight = create_class('k', "Knight", 4, 14, {
+ArmorKnight = create_class('k', "Knight", {
   :max_hp =>[80, 100],
   :power => [30, 60],
   :skill => [20, 40],
@@ -11,5 +11,9 @@ ArmorKnight = create_class('k', "Knight", 4, 14, {
   :skill  => 2,
   :speed  => 2,
   :armor  => 5,
-  :resistance    => 0,
-}, [:lances])
+  :resistance => 0,
+  :constitution => 14,
+}, [
+  WieldLances.new,
+  Armor.new,
+])

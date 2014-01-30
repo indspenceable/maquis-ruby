@@ -1,4 +1,4 @@
-Fighter = create_class('f', 'Fighter', 5, 13, {
+Fighter = create_class('f', 'Fighter', {
   :max_hp => [75, 95],
   :power => [50, 60],
   :skill => [30, 45],
@@ -11,5 +11,8 @@ Fighter = create_class('f', 'Fighter', 5, 13, {
   :skill  => 2,
   :speed  => 2,
   :armor  => 4,
-  :resistance    => 0,
-}, [:axes])
+  :resistance => 0,
+  :constitution => 13,
+}, [
+  WieldAxes.new,
+])

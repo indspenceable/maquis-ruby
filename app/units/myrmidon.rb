@@ -1,4 +1,4 @@
-Myrmidon = create_class('y', "Myrmidon", 5, 5, {
+Myrmidon = create_class('y', "Myrmidon", {
   :max_hp => [60, 80],
   :power => [20, 30],
   :skill => [50, 70], # Wowee!
@@ -11,5 +11,8 @@ Myrmidon = create_class('y', "Myrmidon", 5, 5, {
   :skill  => 5,
   :speed  => 5,
   :armor  => 2,
-  :resistance    => 0,
-}, [:swords])
+  :resistance => 0,
+  :constitution => 5,
+}, [
+  WieldSwords.new,
+])

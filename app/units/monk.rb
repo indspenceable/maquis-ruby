@@ -1,4 +1,4 @@
-Monk = create_class('o', "Monk", 5, 3, {
+Monk = create_class('o', "Monk", {
   :max_hp =>[30, 55],
   :power => [40, 60],
   :skill => [20, 40],
@@ -11,5 +11,8 @@ Monk = create_class('o', "Monk", 5, 3, {
   :skill  => 2,
   :speed  => 2,
   :armor  => 1,
-  :resistance    => 3,
-}, [:light])
+  :resistance => 3,
+  :constitution => 3,
+}, [
+  CastLight.new,
+])

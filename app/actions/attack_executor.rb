@@ -78,10 +78,10 @@ class AttackExecutor < Action
     if rand(100) < attacker.accuracy(defender, @level)
       record_hit(attacker)
       if rand(100) < attacker.crit_chance
-        hit = defender.take_hit_from(attacker, level, 3)
+        hit = attacker.hit(defender, level, 3)
         messages << ["#{attacker.name} crits #{defender.name}, for #{hit} damage!", 0, Curses::A_BOLD]
       else
-        hit = defender.take_hit_from(attacker, level, 1)
+        hit = attacker.hit(defender, level, 1)
         messages << "#{attacker.name} hits #{defender.name}, for #{hit} damage."
       end
       check_life
@@ -100,8 +100,8 @@ class AttackExecutor < Action
   end
 
   def kill_experience(me, vs)
-    ((vs.level * vs.klass_exp_power) + 0) - #class relative power, ammend for promoted units
-    ((me.level * me.klass_exp_power) + 0)
+    ((vs.level * 3) + 0) - #class relative power, ammend for promoted units
+    ((me.level * 3) + 0)
   end
 
 

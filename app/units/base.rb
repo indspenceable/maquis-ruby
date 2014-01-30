@@ -18,9 +18,11 @@ class Unit
     :armor,
     :speed,
     :resistance,
+    :constitution,
   ]
 
   attr_reader *STATS
+
   attr_reader :level, :hp, :exp
 
   def growth_pct(stat)
@@ -39,8 +41,8 @@ class Unit
     @action_available = true
     STATS.each do |stat|
       self.instance_variable_set(:"@#{stat}", starting_stats[stat])
-      raise "#{stat} start undefined for #{self.class.name}!" unless starting_stats[stat]
-      raise "#{stat} growth undefined for #{self.class.name}!" unless class_growths[stat]
+      raise "#{stat} starting value undefined for #{self.class.name}!" unless starting_stats[stat]
+      raise "#{stat} growth undefined for #{self.class.name}!" unless class_growths[stat] || stat==:constitution
     end
 
     @growths = {}
@@ -59,6 +61,11 @@ class Unit
       @growths.keys.each do |k|
         @growths[k] += rand(3)*5
       end
+    end
+
+    @skills = []
+    starting_skills.each do |s|
+      learn_skill(s)
     end
 
     @hp = max_hp
@@ -81,6 +88,13 @@ class Unit
 
     @is_lord = is_lord
     @exp = 0
+  end
+
+  def learn_skill(skill)
+    skill.class.modifiers.each do |m|
+      raise unless respond_to?(m)
+    end
+    @skills << skill
   end
 
   def lord?
@@ -183,7 +197,7 @@ class Unit
     # Bows are good against fliers
     # Rapiers are good against armored and horseback
     # etc
-    if (weapon.targets & vs.qualities).any?
+    if (weapon.targets & vs.traits).any?
       3
     else
       1
@@ -205,10 +219,17 @@ class Unit
     end
   end
 
-  def take_hit_from(vs, level, multiplier)
-    damage = vs.power_vs(self, level)*multiplier
+  def hit(vs, level, multiplier)
+    damage = vs.lose_life(power_vs(self, level)*multiplier)
+    damage
+  end
+
+  def lose_life damage
     @hp -= damage
-    @hp = 0 if hp < 0
+    if hp < 0
+      damage += hp
+      @hp = 0
+    end
     damage
   end
 
@@ -312,10 +333,6 @@ class Unit
     end
   end
 
-  def klass_exp_power
-    3
-  end
-
   def level_up!
     @level += 1
     stats_grown = []
@@ -341,38 +358,71 @@ class Unit
     @level = level
   end
 
+  # base stats
+
+  def movement
+    5
+  end
+
   def los_distance
     3
   end
+
+  def movement_costs
+    Path.default_movement_costs
+  end
+
+  def weapon_skills
+    []
+  end
+
+  def traits
+    []
+  end
+
+  def self.modifiable(*methods)
+    Array(methods).flatten.each do |meth|
+      original_method_name = "original_#{meth}"
+      alias_method original_method_name, meth
+      define_method(meth) do |*args|
+        @skills.inject(self.__send__(original_method_name, *args)) do |val, skill|
+          unless skill.is_a?(Skill)
+            raise "Skill #{skill.inspect}/#{skill.class} in #{self.class} is not a skill!"
+          end
+          if skill.modifies?(meth)
+            skill.modify(meth, self, val)
+          else
+            val
+          end
+        end
+      end
+    end
+  end
+
+  # stats are adjusted by skills
+  modifiable(STATS + [
+    :traits,
+    :movement_costs,
+    :weapon_skills,
+    :los_distance,
+    :movement,
+    :hit
+  ])
 end
 
-def create_class(g, k, mv, con, growths, starting_stats, weapon_skills, movement_costs={}, qualities=[], klass_exp_power=3)
+def create_class(g, k, growths, starting_stats, starting_skills)
   Class.new(Unit) do
     glyph g
     klass k
+
     define_method :class_growths do
       growths
     end
     define_method :starting_stats do
       starting_stats
     end
-    define_method :movement do
-      mv
-    end
-    define_method :constitution do
-      con
-    end
-    define_method :weapon_skills do
-      weapon_skills
-    end
-    define_method :klass_exp_power do
-      klass_exp_power
-    end
-    define_method :movement_costs do
-      Path.default_movement_costs.merge(movement_costs)
-    end
-    define_method :qualities do
-      qualities
+    define_method :starting_skills do
+      starting_skills
     end
   end
 end

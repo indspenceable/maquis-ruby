@@ -1,4 +1,4 @@
-Brigand = create_class('b', "Brigand", 5, 12, {
+Brigand = create_class('b', "Brigand", {
   :max_hp =>[60, 60],
   :power => [20, 20],
   :skill => [20, 20],
@@ -11,5 +11,8 @@ Brigand = create_class('b', "Brigand", 5, 12, {
   :skill  => 1,
   :speed  => 3,
   :armor  => 1,
-  :resistance    => 0,
-}, [:axes], {:mountain => 3})
+  :resistance => 0,
+  :constitution => 12,
+}, [
+  WieldAxes.new,
+])
