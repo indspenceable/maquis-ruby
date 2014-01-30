@@ -72,9 +72,11 @@ end
 Screen.open do |s|
   loop do
     DISPLAY.execute
+    Curses::curs_set(0)
     DISPLAY.display(s)
     DISPLAY.move_to_correct_space(s)
     save_game
+    Curses::curs_set(1)
     DISPLAY.key(s.win.getch)
   end
 end

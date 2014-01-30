@@ -8,6 +8,7 @@ class Screen
       Curses::noecho
       Curses::refresh
       Curses::start_color
+      Curses.ESCDELAY=200
 
       # INIT colors
       Curses::init_pair(BLUE, Curses::COLOR_BLUE, Curses::COLOR_BLACK)
