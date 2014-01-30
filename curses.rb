@@ -1,5 +1,6 @@
+#!/usr/bin/env ruby
+
 require 'curses'
-require 'pry'
 require 'yaml'
 
 KEYS = if ARGV[0] == 'vi'
