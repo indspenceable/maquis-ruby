@@ -76,8 +76,10 @@ class Unit
       IronBow.new,
       Lightning.new,
       Flux.new,
-      Fire.new].shuffle
-    @inventory = available_weapons
+      Fire.new,].shuffle
+    # @inventory = available_weapons
+    @inventory << SkillToken.new(all_skills.shuffle.pop.new)
+
     @level = 0
     if average
       jump_to_level(level)
@@ -92,8 +94,14 @@ class Unit
 
   def learn_skill(skill)
     skill.class.modifiers.each do |m|
-      raise unless respond_to?(m)
+      raise "#{skill} modifies non-method #{m}!" unless respond_to?(m)
     end
+    @skills.each do |s|
+      if s.conflicts?(skill.identifier) || skill.conflicts?(s.identifier)
+        raise "#{skill} conflicts with #{s}"
+      end
+    end
+    raise "Already have #{skill}" if @skills.any?{|s| s.identifier == skill.identifier}
     @skills << skill
   end
 

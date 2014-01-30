@@ -6,7 +6,6 @@ class PlayerArmy
     @army = [
       lord
     ]
-    lord.learn_skill(Vampirism.new)
     @army += size.times.map do |x|
       klasses.pop.new(PLAYER_TEAM, Names.generate, 1)
     end

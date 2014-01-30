@@ -18,6 +18,26 @@ class Consumable
   end
 end
 
+class SkillToken < Consumable
+  def initialize(skill)
+    @skill = skill
+    super(1)
+  end
+
+  def name
+    "Skill token #{@skill.identifier}"
+  end
+
+  def consume(unit)
+    unit.learn_skill(@skill)
+    true
+  end
+
+  def color_for(unit)
+    GREEN
+  end
+end
+
 class Vulnerary < Consumable
   def initialize
     super(3)
