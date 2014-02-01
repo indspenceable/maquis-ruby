@@ -1,12 +1,11 @@
-class AttackTargetSelect < MenuAction
-  attr_reader :level
-
-  def initialize unit, level, targets, path, prev_action
+class TargetSelect < MenuAction
+  def initialize unit, level, targets, path, prev_action, &next_action
     @unit = unit
     @level = level
     @targets = targets
     @prev_action = prev_action
     @path = path
+    @next_action = next_action
     super Array.new(@targets.length){:confirm}
   end
 
@@ -19,8 +18,7 @@ class AttackTargetSelect < MenuAction
   end
 
   def confirm
-    # MoveAndAttackAttack.new(@unit, @targets[@index], @level, @path)
-    AttackWeaponSelect.new(@unit, @targets[@index], @level, @path, self)
+    @next_action.call(@targets[@index])
   end
 
   def cancel
@@ -32,5 +30,24 @@ class AttackTargetSelect < MenuAction
   end
 
   def draw_special(screen)
+  end
+end
+
+class AttackTargetSelect < TargetSelect
+  def initialize unit, level, targets, path, prev_action
+    super(unit, level, targets, path, prev_action) do |t|
+      AttackWeaponSelect.new(@unit, t, @level, @path, self)
+    end
+  end
+end
+
+class TradeTargetSelect < TargetSelect
+  def initialize unit, level, targets, path, prev_action
+    super(unit, level, targets, path, prev_action) do |t|
+      Trade.new(unit, t, self) do
+        unit.action_available = false
+        UnitSelect.new(unit.x, unit.y, level)
+      end
+    end
   end
 end

@@ -75,7 +75,7 @@ class Planning < Action
       @army.units << current_item
       Planning.new(@difficulty, @army, false, @generator)
     else
-      self
+      Trade.new(current_item, @army, self) { self }
     end
   end
 

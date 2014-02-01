@@ -8,7 +8,8 @@ class ConfirmMove < MenuAction
       :attack => "Attack",
       :items => "Item",
       :confirm => ["End", GREEN],
-      :cancel => ["Cancel", RED],
+      :trade => ["Trade", GREEN],
+      # :cancel => ["Cancel", RED],
     }
   end
 
@@ -18,15 +19,17 @@ class ConfirmMove < MenuAction
     @prev_action = prev_action
     @path = path
     opts = []
+    @start_x, @start_y = @unit.x, @unit.y
+    @unit.x, @unit.y = @path.last_point
     if enemies_in_range.any? && unit.weapon
       opts << :attack
     end
+    if friends_adjacent.any?
+      opts << :trade
+    end
     opts << :items
     opts << :confirm
-    opts << :cancel
     super(opts)
-    @start_x, @start_y = @unit.x, @unit.y
-    @unit.x, @unit.y = @path.last_point
   end
 
   def units_for_info_panel
@@ -36,7 +39,13 @@ class ConfirmMove < MenuAction
   def enemies_in_range
     @enemies_in_range ||= @level.units.select do |u|
       u.team != @unit.team &&
-      @unit.available_weapons.any?{|w| w.in_range?(Path.dist(u.x, u.y, *@path.last_point))}
+      @unit.available_weapons.any?{|w| w.in_range?(Path.unit_dist(@unit, u))}
+    end
+  end
+
+  def friends_adjacent
+    @friends_adjacent ||= @level.units.select do |u|
+      (u.team == @unit.team) && (Path.unit_dist(u, @unit) == 1)
     end
   end
 
@@ -60,6 +69,10 @@ class ConfirmMove < MenuAction
   def cancel
     @unit.x, @unit.y = @start_x, @start_y
     @prev_action
+  end
+
+  def trade
+    TradeTargetSelect.new(@unit, @level, friends_adjacent,@path, self)
   end
 
   def unit_for_map_highlighting

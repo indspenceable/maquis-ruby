@@ -1,4 +1,9 @@
 class PlayerArmy
+  attr_reader :inventory
+  def name
+    "Stash"
+  end
+
   def initialize(size)
     # build an army of size units, plus the lord.
 
@@ -12,6 +17,8 @@ class PlayerArmy
     @army.each do |u|
       u.inventory << Vulnerary.new
     end
+
+    @inventory = Array.new(10) { SkillToken.new(all_skills.shuffle.pop.new) }
   end
 
   def next_level!
