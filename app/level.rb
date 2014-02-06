@@ -21,18 +21,18 @@ class Level
     @difficulty = d
   end
 
-  def armor_bonus_at(x,y)
-    {
+  def self.armor_bonus_for_terrain
+    Hash.new(0).merge({
       :forest => 1,
       :fort => 2,
-    }[map(x,y)] || 0
+    })
   end
 
-  def evade_bonus_at(x,y)
-    {
+  def self.evade_bonus_for_terrain
+    Hash.new(0).merge({
       :forest => 20,
       :fort => 20,
-    }[map(x,y)] || 0
+    })
   end
 
   GOALS = [:seize_throne, :kill_enemies]
@@ -80,14 +80,18 @@ class Level
     @map[x][y] || :wall rescue :wall
   end
 
-  def map_to_str(x,y)
+  def self.terrain_sym_to_str
     {
       :plains => ' ',
       :mountain => '^',
       :forest => '7',
       :fort => '#',
       :wall => 'x',
-    }[map(x,y)] || (raise "Oops #{map(x,y)}")
+    }
+  end
+
+  def map_to_str(x,y)
+    self.class.terrain_sym_to_str[map(x,y)] || (raise "Oops #{map(x,y)}")
   end
 
   def raw_map

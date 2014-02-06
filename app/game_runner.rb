@@ -47,7 +47,7 @@ module GameRunner
   end
 
   def execute
-    @current_action = @current_action.execute if @current_action.respond_to?(:execute)
+    # @current_action = @current_action.execute if @current_action.respond_to?(:execute)
   end
 
   def move_to_correct_space(screen)

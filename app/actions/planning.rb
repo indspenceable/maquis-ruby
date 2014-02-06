@@ -70,6 +70,7 @@ class Planning < Action
       self
     elsif current_item == "Next Level"
       l = @generator.generate(@army, @difficulty+1)
+      @army.units.each{|x| x.current_level = l}
       UnitSelect.new(l.lord.x, l.lord.y, l)
     elsif !@army.units.include?(current_item)
       @army.units << current_item
@@ -93,7 +94,7 @@ class Planning < Action
     screen.map.set_xy(0,0)
     @menu_items.each_with_index do |item, index|
       str = if item.is_a?(Unit)
-        "#{item.name} (#{item.klass} #{item.level})"
+        "#{item.name} (#{item.klass} #{item.exp_level})"
       else
         item
       end

@@ -30,7 +30,7 @@ class AttackExecutor < Action
         @next_state
       end
     else
-      self
+      execute
     end
   end
 
@@ -75,13 +75,13 @@ class AttackExecutor < Action
   end
 
   def combat_round(attacker, defender, messages)
-    if rand(100) < attacker.accuracy(defender, @level)
+    if rand(100) < attacker.accuracy(defender)
       record_hit(attacker)
       if rand(100) < attacker.crit_chance
-        hit = attacker.hit(defender, level, 3)
+        hit = attacker.hit(defender, 3)
         messages << ["#{attacker.name} crits #{defender.name}, for #{hit} damage!", 0, Curses::A_BOLD]
       else
-        hit = attacker.hit(defender, level, 1)
+        hit = attacker.hit(defender, 1)
         messages << "#{attacker.name} hits #{defender.name}, for #{hit} damage."
       end
       check_life
@@ -96,12 +96,12 @@ class AttackExecutor < Action
 
   def hit_experience(me, vs)
     # this doesn't ammend level for promoted units
-    (31 + vs.level - me.level) / 3
+    (31 + vs.exp_level - me.exp_level) / 3
   end
 
   def kill_experience(me, vs)
-    ((vs.level * 3) + 0) - #class relative power, ammend for promoted units
-    ((me.level * 3) + 0)
+    ((vs.exp_level * 3) + 0) - #class relative power, ammend for promoted units
+    ((me.exp_level * 3) + 0)
   end
 
 

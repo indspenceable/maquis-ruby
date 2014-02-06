@@ -153,7 +153,7 @@ module LevelGenerator
       baddie_area.shuffle!
       return false unless place_units_in_area(player_units, player_area, level)
       return false unless place_units_in_area(baddie_units, baddie_area, level)
-      level.units.concat(baddie_units)
+      level.units.concat(baddie_units.each{|u| u.current_level = level})
 
       return true
     end
@@ -179,7 +179,7 @@ module LevelGenerator
       return false unless place_units_in_area(player_units, player_area, level)
       return false unless place_units_in_area(baddie_units, baddie_area, level)
       baddie_boss.x, baddie_boss.y = bx, by
-      level.units.concat(baddie_units + [baddie_boss])
+      level.units.concat((baddie_units + [baddie_boss]).each{|u| u.current_level = level})
 
       return true
     end

@@ -25,6 +25,7 @@ class PlayerArmy
     purge_dead!
     heal_all_units!
     ready_all_units!
+    @units.each{|u| u.current_level = nil}
   end
 
   def lord_klasses

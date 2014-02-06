@@ -37,7 +37,7 @@ class EnemyTurn < Action
   end
 
   def key(c)
-    self
+    execute
   end
 
   def next_unit!
@@ -97,10 +97,10 @@ class EnemyTurn < Action
   def choose_target
     ts = possible_targets
     @target = ts.find do |u|
-      @unit.power_vs(u, @level) > u.hp
+      @unit.power_vs(u) > u.hp
     end
     @target ||= ts.inject do |u1, u2|
-      if u1.hp - @unit.power_vs(u1, @level) > u2.hp - @unit.power_vs(u2, @level)
+      if u1.hp - @unit.power_vs(u1) > u2.hp - @unit.power_vs(u2)
         u1
       else
         u2

@@ -1,7 +1,6 @@
 require 'pry'
-
 class Unit
-  attr_accessor :team, :x, :y, :action_available
+  attr_accessor :team, :x, :y, :action_available, :current_level
 
   def name
     if lord?
@@ -23,7 +22,7 @@ class Unit
 
   attr_reader *STATS
 
-  attr_reader :level, :hp, :exp
+  attr_reader :exp_level, :hp, :exp
 
   def growth_pct(stat)
     @growths[stat]
@@ -31,12 +30,12 @@ class Unit
 
   LEVEL_UPS_FOR_LEVEL_ONE = 3
 
-  def initialize team, name, level = 1, is_lord=false, average=false
+  def initialize team, name, exp_level = 1, is_lord=false, average=false
     @team, @name = team, name
     @x, @y = 0, 0
 
-    #ensure everyone is level 1 at least.
-    level = 1 if level < 1
+    #ensure everyone is exp_level 1 at least.
+    exp_level = 1 if exp_level < 1
 
     @action_available = true
     STATS.each do |stat|
@@ -79,13 +78,13 @@ class Unit
       Fire.new,].shuffle
     @inventory = available_weapons
 
-    @level = 0
+    @exp_level = 0
     if average
-      jump_to_level(level)
+      jump_to_exp_level(exp_level)
     else
-      (level + LEVEL_UPS_FOR_LEVEL_ONE - 1).times { level_up! }
+      (exp_level + LEVEL_UPS_FOR_LEVEL_ONE - 1).times { exp_level_up! }
     end
-    @level = level
+    @exp_level = exp_level
 
     @is_lord = is_lord
     @exp = 0
@@ -143,16 +142,29 @@ class Unit
     "SPE: #{speed}"
   end
 
-  def adjusted_armor(level, weapon)
-    level.armor_bonus_at(x, y) + if weapon.magic?
+  def terrain
+    @current_level.map(x,y) if @current_level
+  end
+
+  def terrain_armor_bonus
+    Level.armor_bonus_for_terrain[terrain]
+  end
+
+  def terrain_evade_bonus
+    Level.evade_bonus_for_terrain[terrain]
+  end
+
+  def adjusted_armor(weapon)
+    # puts "terrain armor is #{terrain_armor_bonus} and weapon is #{weapon.power} and resist = #{resistance} and armor = #{armor}"
+    terrain_armor_bonus + if weapon.magic?
       resistance
     else
       armor
     end
   end
 
-  def adjusted_evade(level)
-    evade + level.evade_bonus_at(x,y)
+  def adjusted_evade
+    evade + terrain_evade_bonus
   end
 
   def can_hit?(vs)
@@ -213,23 +225,24 @@ class Unit
     end
   end
 
-  def power_vs(vs, level)
+  def power_vs(vs)
+    # binding.pry
     [[
       power +
       (weapon.power + weapon_triangle_bonus_power(vs)) * weapon_effectiveness(vs) -
-      vs.adjusted_armor(level, weapon),
+      vs.adjusted_armor(weapon),
     0].max, vs.hp].min if weapon
   end
-  def power_str(vs, level, at_range)
+  def power_str(vs, at_range)
     if (at_range ? can_hit_range?(at_range) : can_hit?(vs))
-      power_vs(vs, level).to_s
+      power_vs(vs).to_s
     else
       "NA"
     end
   end
 
-  def hit(vs, level, multiplier)
-    damage = vs.lose_life(power_vs(self, level)*multiplier)
+  def hit(vs, multiplier)
+    damage = vs.lose_life(power_vs(vs)*multiplier)
     damage
   end
 
@@ -251,12 +264,14 @@ class Unit
   def weapon_triangle_bonus_accuracy(vs)
     weapon_triangle(weapon_type, vs.weapon_type) * 15
   end
-  def accuracy(vs, level)
-    to_hit + weapon_triangle_bonus_accuracy(vs) - vs.adjusted_evade(level) if weapon
+
+  def accuracy(vs)
+    to_hit + weapon_triangle_bonus_accuracy(vs) - vs.adjusted_evade if weapon
   end
-  def accuracy_str(vs, level, at_range)
+
+  def accuracy_str(vs, at_range)
     if (at_range ? can_hit_range?(at_range) : can_hit?(vs))
-      "#{accuracy(vs, level)}%"
+      "#{accuracy(vs)}%"
     else
       "NA"
     end
@@ -328,21 +343,21 @@ class Unit
     @hp = max_hp if @hp > max_hp
   end
 
-  def self.create(level, *args)
+  def self.create(exp_level, *args)
     unit = self.new(*args)
-    (level+3).times {|u| u.level_up!(:silent => true)}
+    (exp_level+3).times {|u| u.exp_level_up!(:silent => true)}
   end
 
   def gain_experience n
     @exp += n
     if @exp >= 100
       @exp -= 100
-      return level_up!
+      return exp_level_up!
     end
   end
 
-  def level_up!
-    @level += 1
+  def exp_level_up!
+    @exp_level += 1
     stats_grown = []
     @growths.each do |stat, growth|
       if rand(100) < growth
@@ -356,14 +371,14 @@ class Unit
     stats_grown
   end
 
-  def jump_to_level(level)
+  def jump_to_exp_level(exp_level)
     @growths.each do |stat, growth|
-      amount_to_grow = growth*level/100
+      amount_to_grow = growth*exp_level/100
       current_val = instance_variable_get(:"@#{stat}")
       instance_variable_set(:"@#{stat}", current_val + amount_to_grow)
       @hp += amount_to_grow if stat == :max_hp
     end
-    @level = level
+    @exp_level = exp_level
   end
 
   # base stats

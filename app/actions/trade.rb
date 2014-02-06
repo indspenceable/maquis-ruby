@@ -11,26 +11,10 @@ class Trade
   end
 
   def display(screen)
-    screen.full.clear
-
-    [@u1, @u2].map do |u|
-      [u.name] + u.inventory.map do |i|
-        if i == highlighted_item
-          "* #{i.name}"
-        else
-          "  #{i.name}"
-        end
-      end
-    end.each_with_index do |c, x|
-      c.each_with_index do |str, i|
-        screen.full.set_xy(x*20, i)
-        screen.full.draw_str(*str)
-      end
-    end
+    screen.show_trade(@u1, @u2, highlighted_item)
   end
 
   def set_cursor(screen)
-
   end
 
   def key(c)
