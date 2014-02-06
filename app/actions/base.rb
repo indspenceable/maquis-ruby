@@ -8,7 +8,7 @@ class Action
     display_map(screen)
     display_character_info_panel(screen)
     display_messages(screen)
-    draw_special(screen)
+    # draw_special(screen)
   end
 
   def draw_special(screen)
@@ -22,12 +22,15 @@ class Action
     if c
       highlight_spaces = squares_to_color_for_highlighting(c)
     end
-    # lit_spaces = nil
+    # this should actually just place all of the terrain tiles
     MAP_SIZE_X.times do |x|
       MAP_SIZE_Y.times do |y|
         add_map_location(screen,x,y, highlight_spaces)
       end
     end
+    # then, look through all units
+    # then place the cursor
+    screen.draw_cursor(*cursor_xy)
   end
 
   def precalculate!
@@ -64,14 +67,11 @@ class Action
 
   # this method figures out the right glyph to draw, and draws it
   def add_map_location(screen, x, y, highlight_squares)
-    if @level.see?(x,y)
-      c = @level.unit_at(x,y)
-      if c
-        return screen.draw_char_at(x, y, c, highlight_squares)
-      end
+    if @level.see?(x,y) && @level.unit_at(x,y)
+      screen.draw_char_at(x, y, @level.unit_at(x,y), highlight_squares)
+    else
+      screen.draw_terrain(x, y, @level.map(x,y), highlight_squares, @level.see?(x,y))
     end
-    seen = @level.see?(x,y)
-    screen.draw_terrain(x,y, @level.map(x,y), highlight_squares, seen)
   end
 
   def display_character_info_panel(screen)

@@ -89,22 +89,7 @@ class Planning < Action
   end
 
   def display_map(screen)
-    # this is going to be different than other ations! woot.
-    screen.map.clear
-    screen.map.set_xy(0,0)
-    @menu_items.each_with_index do |item, index|
-      str = if item.is_a?(Unit)
-        "#{item.name} (#{item.klass} #{item.exp_level})"
-      else
-        item
-      end
-      screen.map.set_xy(0,index)
-      if current_item == item
-        screen.map.draw_str "* #{str}"
-      else
-        screen.map.draw_str "  #{str}"
-      end
-    end
+    screen.character_list_for_planning(@menu_items, current_item)
   end
 
   def set_cursor(screen)

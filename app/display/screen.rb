@@ -133,6 +133,30 @@ class Screen
     end
   end
 
+  def character_list_for_planning(menu_items, current_item)
+    map.clear
+    map.set_xy(0,0)
+    menu_items.each_with_index do |item, index|
+      str = if item.is_a?(Unit)
+        "#{item.name} (#{item.klass} #{item.exp_level})"
+      else
+        item
+      end
+      map.set_xy(0,index)
+      if current_item == item
+        map.draw_str "* #{str}"
+      else
+        map.draw_str "  #{str}"
+      end
+    end
+  end
+
+  def draw_cursor(_,_)
+    # no_op
+  end
+
+  private
+
   def display_character_info_for(unit, i, vs, ignore_range)
     x = i*20
 
