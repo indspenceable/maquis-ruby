@@ -79,7 +79,7 @@ class Planning < Action
     end
   end
 
-  def display(window)
+  def draw(window)
     window.character_list_for_planning(@menu_items, current_item)
     window.add_messages(@messages) if @messages.any?
     @messages = []

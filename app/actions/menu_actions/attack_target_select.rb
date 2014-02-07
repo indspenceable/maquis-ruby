@@ -21,7 +21,7 @@ class TargetSelect < MenuAction
     @prev_action
   end
 
-  def display(window)
+  def draw(window)
     draw_map(window)
     window.highlight(Hash[@targets.map{|t| [[t.x, t.y], color]}])
   end

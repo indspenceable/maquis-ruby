@@ -47,7 +47,7 @@ class GosuDisplay < Gosu::Window
 
   def draw
     @main_screen_draw = false
-    @current_action.display(self)
+    @current_action.draw(self)
   end
 
   def main_screen_draw
@@ -135,7 +135,7 @@ class GosuDisplay < Gosu::Window
     quad(10, 10 + index*14+1, 5, 12, Gosu::Color::RED, 21)
   end
 
-  def display_character_info(u1, u2, ignore_range)
+  def draw_character_info(u1, u2, ignore_range)
   end
 
   def show_trade(u1, u2, highlighted_item)

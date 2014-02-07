@@ -10,7 +10,7 @@ class Trade
     @next_action = blk
   end
 
-  def display(window)
+  def draw(window)
     window.show_trade(@u1, @u2, highlighted_item)
   end
 

@@ -53,7 +53,7 @@ class ConfirmMove < MenuAction
     AttackTargetSelect.new(@unit, @level, enemies_in_range, @path, self)
   end
 
-  def display(window)
+  def draw(window)
     draw_map(window)
     window.draw_path(@path)
     window.draw_menu(@choices, @index)

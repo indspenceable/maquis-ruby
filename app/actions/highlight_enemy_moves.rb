@@ -13,7 +13,7 @@ class HighlightEnemyMoves < MapAction
     ].compact.uniq
   end
 
-  def display(window)
+  def draw(window)
     draw_map(window)
     window.highlight(squares_to_color_for_highlighting(@unit))
   end

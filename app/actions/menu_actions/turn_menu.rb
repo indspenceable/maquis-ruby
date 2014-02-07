@@ -19,8 +19,8 @@ class TurnMenu < MenuAction
     []
   end
 
-  def display(window)
-    @prev_action.display(window)
+  def draw(window)
+    @prev_action.draw(window)
     window.draw_menu(@choices, @index)
   end
 end

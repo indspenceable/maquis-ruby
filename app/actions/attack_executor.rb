@@ -17,7 +17,7 @@ class AttackExecutor < Action
     [@unit, @target]
   end
 
-  def display(window)
+  def draw(window)
     nil
   end
 

@@ -111,7 +111,7 @@ class Move < MapAction
     @level.calculate_simple_fov(PLAYER_TEAM) if @level.fog_of_war
   end
 
-  def display(window)
+  def draw(window)
     draw_map(window, cursor_xy)
     window.draw_path(@path)
     window.highlight(squares_to_color_for_highlighting(@unit))

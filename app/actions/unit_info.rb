@@ -20,7 +20,7 @@ class UnitInfo < Action
     @prev_action
   end
 
-  def display(window)
+  def draw(window)
     window.extended_character_info(@team[@index])
   end
 end

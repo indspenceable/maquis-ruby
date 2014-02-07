@@ -16,7 +16,7 @@ class AttackWeaponSelect < MenuAction
     [@unit, @target]
   end
 
-  def display(window)
+  def draw(window)
     draw_map(window)
     window.draw_menu(@available_weapons.map(&:class).map(&:name), @index)
   end

@@ -3,8 +3,8 @@ class Action
     raise "trying to initialize abstract class Action!"
   end
 
-  def display(window)
-    raise "#{self.class.name} doesn't implement #display!"
+  def draw(window)
+    raise "#{self.class.name} doesn't implement #draw!"
   end
 
   # Releys on @level
@@ -57,9 +57,9 @@ class Action
     end
   end
 
-  def display_character_info_panel(window)
+  def draw_character_info_panel(window)
     a,b = units_for_info_panel
-    window.display_character_info(a,b, ignore_range)
+    window.draw_character_info(a,b, ignore_range)
   end
 
   def ignore_range

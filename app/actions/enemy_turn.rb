@@ -27,7 +27,7 @@ class EnemyTurn < Action
     @level.finish_turn(COMPUTER_TEAM)
   end
 
-  def display(window)
+  def draw(window)
     nil
   end
 

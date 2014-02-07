@@ -42,6 +42,6 @@ class Inventory < MenuAction
     [@unit]
   end
 
-  def display(window)
+  def draw(window)
   end
 end
