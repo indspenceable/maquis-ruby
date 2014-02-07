@@ -36,7 +36,7 @@ class UnitSelect < MapAction
     @level.calculate_simple_fov(PLAYER_TEAM) if @level.fog_of_war
   end
 
-  def display(window)
+  def draw(window)
     draw_map(window, cursor_xy)
   end
 end

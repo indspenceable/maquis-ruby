@@ -2,6 +2,40 @@
 require 'gosu'
 require 'yaml'
 
+require './app/skill'
+require './app/actions/base'
+require './app/actions/menu_action'
+require './app/actions/menu_actions/turn_menu'
+require './app/actions/map_action'
+require './app/actions/map_actions/unit_select'
+require './app/actions/map_actions/move'
+require './app/actions/attack_executor'
+require './app/actions/menu_actions/attack_target_select'
+require './app/actions/menu_actions/attack_weapon_select'
+require './app/actions/menu_actions/confirm_move'
+require './app/actions/menu_actions/inventory'
+require './app/actions/unit_info'
+require './app/actions/planning'
+require './app/actions/enemy_turn'
+require './app/actions/highlight_enemy_moves'
+require './app/actions/trade'
+require './app/level_generator'
+require './app/level'
+require './app/names'
+require './app/items/weapon'
+require './app/items/vulnerary'
+require './app/units/base'
+require './app/player_army'
+
+#constants go here too, cause yolo
+
+MAP_SIZE_X = 20
+MAP_SIZE_Y = 15
+
+PLAYER_TEAM = 0
+COMPUTER_TEAM = 1
+
+
 KEYS = {
   :left => Gosu::KbLeft,
   :right => Gosu::KbRight,
@@ -12,19 +46,18 @@ KEYS = {
   :info => Gosu::KbI,
 }
 
-
-require './app/game_runner'
 SAVE_FILE_PATH = File.expand_path(File.join('~', '.tarog'))
 previous_save = if File.exists?(SAVE_FILE_PATH)
   YAML.load(File.read(SAVE_FILE_PATH))
 end
 
 class GosuDisplay < Gosu::Window
-  include GameRunner
+  attr_reader :current_action
 
   def initialize(previous_save)
     super(640, 480, false)
-    setup(nil)
+    action = nil
+    @current_action = action || Planning.new(-1, PlayerArmy.new(6))
     @font = Gosu::Font.new(self, "courier", 12)
   end
 
@@ -36,7 +69,6 @@ class GosuDisplay < Gosu::Window
     if id == KEYS[:cancel]
       @current_action = @current_action.cancel
     else
-      puts (KEYS.invert)[id]
       @current_action = @current_action.key(id)
     end
 
