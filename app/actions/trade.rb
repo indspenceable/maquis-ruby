@@ -10,11 +10,8 @@ class Trade
     @next_action = blk
   end
 
-  def display(screen)
-    screen.show_trade(@u1, @u2, highlighted_item)
-  end
-
-  def set_cursor(screen)
+  def display(window)
+    window.show_trade(@u1, @u2, highlighted_item)
   end
 
   def key(c)

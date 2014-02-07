@@ -9,10 +9,6 @@ class TargetSelect < MenuAction
     super Array.new(@targets.length){:confirm}
   end
 
-  def set_cursor(screen)
-    screen.map.set_xy(@targets[@index].x, @targets[@index].y)
-  end
-
   def units_for_info_panel
     [@unit, @targets[@index]]
   end
@@ -25,11 +21,9 @@ class TargetSelect < MenuAction
     @prev_action
   end
 
-  def unit_for_map_highlighting
-    nil
-  end
-
-  def draw_special(screen)
+  def display(window)
+    draw_map(window)
+    window.highlight(Hash[@targets.map{|t| [[t.x, t.y], color]}])
   end
 end
 
@@ -38,6 +32,9 @@ class AttackTargetSelect < TargetSelect
     super(unit, level, targets, path, prev_action) do |t|
       AttackWeaponSelect.new(@unit, t, @level, @path, self)
     end
+  end
+  def color
+    :red
   end
 end
 
@@ -49,5 +46,8 @@ class TradeTargetSelect < TargetSelect
         UnitSelect.new(unit.x, unit.y, level)
       end
     end
+  end
+  def color
+    :blue
   end
 end

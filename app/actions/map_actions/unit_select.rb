@@ -28,15 +28,15 @@ class UnitSelect < MapAction
     Array(@level.see?(@x,@y) && current_unit)
   end
 
-  def unit_for_map_highlighting
-    nil
-  end
-
   def cursor_xy
     [@x, @y]
   end
 
-  def set_cursor(screen)
-    screen.map.set_xy(@x,@y)
+  def precalculate!
+    @level.calculate_simple_fov(PLAYER_TEAM) if @level.fog_of_war
+  end
+
+  def display(window)
+    draw_map(window, cursor_xy)
   end
 end

@@ -41,4 +41,7 @@ class Inventory < MenuAction
   def units_for_info_panel
     [@unit]
   end
+
+  def display(window)
+  end
 end

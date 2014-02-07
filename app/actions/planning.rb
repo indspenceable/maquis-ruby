@@ -13,7 +13,6 @@ class Planning < Action
     #   @menu_items += [@seperator] + army.possible_recruits(difficulty)
     # end
     @menu_items += [@seperator, "Fortune Teller", "Next Level"]
-    @pending_messages = []
     @messages = []
     @generator = generator
   end
@@ -34,14 +33,6 @@ class Planning < Action
     end
   end
   def key(c)
-    if @pending_messages.any?
-      @messages << @pending_messages.shift
-      return self
-    else
-      @messages = []
-    end
-
-
     if c == KEYS[:down]
       next!
     elsif c == KEYS[:up]
@@ -65,8 +56,8 @@ class Planning < Action
     if current_item == "Fortune Teller"
       # raise "Fortune teller isn't implemented at this point in time"
       @messages << @generator.terrain_fortune
-      @pending_messages << @generator.theme.fortune
-      @pending_messages += @generator.fog_fortune
+      @messages << @generator.theme.fortune
+      @messages += @generator.fog_fortune
       self
     elsif current_item == "Next Level"
       l = @generator.generate(@army, @difficulty+1)
@@ -88,21 +79,10 @@ class Planning < Action
     end
   end
 
-  def display_map(screen)
-    screen.character_list_for_planning(@menu_items, current_item)
-  end
-
-  def set_cursor(screen)
-    screen.map.set_xy(0,@index)
-  end
-
-  def draw_special(screen)
-    screen.messages.set_xy(0,0)
-    ms = @messages + (@pending_messages.any?? ["---More---"] : [])
-    ms.each_with_index do |message, i|
-      screen.messages.set_xy(0, i)
-      screen.messages.draw_str(message)
-    end
+  def display(window)
+    window.character_list_for_planning(@menu_items, current_item)
+    window.add_messages(@messages) if @messages.any?
+    @messages = []
   end
 
   def cancel

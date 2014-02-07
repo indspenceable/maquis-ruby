@@ -65,13 +65,6 @@ class Move < MapAction
     UnitSelect.new(@x, @y, @level)
   end
 
-  def draw_special(screen)
-    @path.each_but_first do |x,y|
-      screen.map.set_xy(x,y)
-      screen.map.draw_str('*', GREEN)
-    end
-  end
-
   def activate
     if [@x,@y] == @path.last_point &&
       @level.units.all? do |u|
@@ -109,11 +102,18 @@ class Move < MapAction
     nil
   end
 
-  def set_cursor(screen)
-    screen.map.set_xy(@x, @y)
+  def cursor_xy
+    [@x, @y]
   end
 
-  def unit_for_map_highlighting
-    @unit
+  def precalculate!
+    squares_to_color_for_highlighting(@unit)
+    @level.calculate_simple_fov(PLAYER_TEAM) if @level.fog_of_war
+  end
+
+  def display(window)
+    draw_map(window, cursor_xy)
+    window.draw_path(@path)
+    window.highlight(squares_to_color_for_highlighting(@unit))
   end
 end

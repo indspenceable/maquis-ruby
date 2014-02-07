@@ -263,7 +263,7 @@ module LevelGenerator
     end
 
     def fog_of_war
-      false
+      true
     end
 
     def min_distance
@@ -317,7 +317,7 @@ module LevelGenerator
     end
 
     def fog_of_war
-      false
+      true
     end
   end
 end

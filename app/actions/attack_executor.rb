@@ -17,6 +17,10 @@ class AttackExecutor < Action
     [@unit, @target]
   end
 
+  def display(window)
+    nil
+  end
+
   def key(c)
     if @finished
       # Did the players lord die?
@@ -31,15 +35,8 @@ class AttackExecutor < Action
       end
     else
       execute
+      key(c)
     end
-  end
-
-  def set_cursor(screen)
-    return
-  end
-
-  def unit_for_map_highlighting
-    nil
   end
 
   private

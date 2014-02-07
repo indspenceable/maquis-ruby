@@ -1,7 +1,6 @@
 require 'set'
 
 class Level
-  include PermissiveFieldOfView
   attr_reader :units, :log, :difficulty, :army, :goal
   attr_accessor :fog_of_war
   def initialize(w,h)
@@ -40,14 +39,6 @@ class Level
     raise "Already have a goal!" if @goal
     raise "#{g} is not a recognized goal" unless GOALS.include?(g)
     @goal = g
-  end
-
-  def calculate_fov(units)
-    @lit = []
-    units.each do |u|
-      do_fov( u.x, u.y, 5 )
-    end
-    @lit
   end
 
   def calculate_simple_fov(team)
@@ -100,10 +91,6 @@ class Level
 
   def blocked?(x,y)
     @map[x][y] == :wall
-  end
-
-  def light(x,y)
-    @lit << [x,y]
   end
 
   def fill

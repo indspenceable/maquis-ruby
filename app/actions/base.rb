@@ -1,40 +1,23 @@
 class Action
-
   def initialize
     raise "trying to initialize abstract class Action!"
   end
 
-  def display(screen)
-    display_map(screen)
-    display_character_info_panel(screen)
-    display_messages(screen)
-    # draw_special(screen)
+  def display(window)
+    raise "#{self.class.name} doesn't implement #display!"
   end
 
-  def draw_special(screen)
-  end
-
-  # Releys on @level, #unit_for_map_highlihgting
-  def display_map(screen)
-    #at this point, discover what paths we can go to.
-    highlight_spaces = {}
-    c = unit_for_map_highlighting
-    if c
-      highlight_spaces = squares_to_color_for_highlighting(c)
-    end
+  # Releys on @level
+  def draw_map(window, cursor_location = nil)
     # this should actually just place all of the terrain tiles
     MAP_SIZE_X.times do |x|
       MAP_SIZE_Y.times do |y|
-        add_map_location(screen,x,y, highlight_spaces)
+        add_map_location(window,x,y)
       end
     end
     # then, look through all units
     # then place the cursor
-    screen.draw_cursor(*cursor_xy)
-  end
-
-  def precalculate!
-    @level.calculate_simple_fov(PLAYER_TEAM) if @level && @level.fog_of_war
+    window.draw_cursor(*cursor_location) if cursor_location
   end
 
   def squares_to_color_for_highlighting(c)
@@ -56,32 +39,27 @@ class Action
       attack -= @level.units.select{|u| u.team == c.team }.map{|u| [u.x, u.y]}
       rtn = {}
       movements.each do |x,y|
-        rtn[[x,y]] = BLUE
+        rtn[[x,y]] = :blue
       end
       attack.each do |x,y|
-        rtn[[x,y]] = RED
+        rtn[[x,y]] = :red
       end
       rtn
     end
   end
 
   # this method figures out the right glyph to draw, and draws it
-  def add_map_location(screen, x, y, highlight_squares)
-    if @level.see?(x,y) && @level.unit_at(x,y)
-      screen.draw_char_at(x, y, @level.unit_at(x,y), highlight_squares)
+  def add_map_location(window, x, y)
+    if @level.unit_at(x,y) && (@level.unit_at(x,y).team == PLAYER_TEAM || @level.see?(x,y))
+      window.draw_char_at(x, y, @level.unit_at(x,y))
     else
-      screen.draw_terrain(x, y, @level.map(x,y), highlight_squares, @level.see?(x,y))
+      window.draw_terrain(x, y, @level.map(x,y), @level.see?(x,y))
     end
   end
 
-  def display_character_info_panel(screen)
+  def display_character_info_panel(window)
     a,b = units_for_info_panel
-    screen.display_character_info(a,b, ignore_range)
-  end
-
- # uses @messages, releys on nothing.
-  def display_messages(screen)
-    screen.draw_messages(@messages) if @messages
+    window.display_character_info(a,b, ignore_range)
   end
 
   def ignore_range

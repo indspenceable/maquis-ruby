@@ -25,8 +25,8 @@ require './app/player_army'
 
 #constants go here too, cause yolo
 
-MAP_SIZE_X = 40
-MAP_SIZE_Y = 20
+MAP_SIZE_X = 20
+MAP_SIZE_Y = 15
 
 PLAYER_TEAM = 0
 COMPUTER_TEAM = 1
@@ -45,9 +45,5 @@ module GameRunner
 
   def execute
     # @current_action = @current_action.execute if @current_action.respond_to?(:execute)
-  end
-
-  def move_to_correct_space(screen)
-    @current_action.set_cursor(screen)
   end
 end

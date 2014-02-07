@@ -27,17 +27,14 @@ class EnemyTurn < Action
     @level.finish_turn(COMPUTER_TEAM)
   end
 
-  def draw_special(screen)
-    @path.each do |x,y|
-      if @level.see?(x,y)
-        screen.map.set_xy(x,y)
-        screen.map.draw_str('*', RED)
-      end
-    end if @path
+  def display(window)
+    nil
   end
 
-  def key(c)
-    execute
+  def key(k)
+    c = execute
+    return c if c != self
+    key(k)
   end
 
   def next_unit!
@@ -66,18 +63,19 @@ class EnemyTurn < Action
   def attack_unit
   end
 
-  def unit_for_map_highlighting
-    nil
-  end
-
   def units_for_info_panel
     [@unit]
   end
 
-  def set_cursor(screen)
-    return screen.map.set_xy(*@path.last_point) if @path && @level.see?(*@path.last_point)
-    return screen.map.set_xy(@unit.x, @unit.y) if @unit && @level.see?(@unit.x, @unit.y)
-    return screen.map.set_xy(level.lord.x, level.lord.y)
+  def cursor_xy
+    case
+    when @path && @level.see?(*@path.last_point)
+      @path.last_point
+    when @unit && @level.see?(@unit.x, @unit.y)
+      [@unit.x, @unit.y]
+    else
+      nil
+    end
   end
 
   private

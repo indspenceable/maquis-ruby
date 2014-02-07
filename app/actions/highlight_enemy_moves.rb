@@ -13,8 +13,9 @@ class HighlightEnemyMoves < MapAction
     ].compact.uniq
   end
 
-  def unit_for_map_highlighting
-    @unit
+  def display(window)
+    draw_map(window)
+    window.highlight(squares_to_color_for_highlighting(@unit))
   end
 
   def cancel
@@ -23,9 +24,5 @@ class HighlightEnemyMoves < MapAction
 
   def activate
     @prev
-  end
-
-  def set_cursor(screen)
-    screen.map.set_xy(@x, @y)
   end
 end

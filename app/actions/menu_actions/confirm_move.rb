@@ -53,12 +53,10 @@ class ConfirmMove < MenuAction
     AttackTargetSelect.new(@unit, @level, enemies_in_range, @path, self)
   end
 
-  def draw_special(screen)
-    @path.each_but_last do |x,y|
-      screen.map.set_xy(x,y)
-      screen.map.draw_str('*', BLUE)
-    end
-    super(screen)
+  def display(window)
+    draw_map(window)
+    window.draw_path(@path)
+    window.draw_menu(@choices, @index)
   end
 
   def confirm
@@ -73,10 +71,6 @@ class ConfirmMove < MenuAction
 
   def trade
     TradeTargetSelect.new(@unit, @level, friends_adjacent,@path, self)
-  end
-
-  def unit_for_map_highlighting
-    nil
   end
 
   def items
