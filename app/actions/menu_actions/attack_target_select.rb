@@ -23,7 +23,7 @@ class TargetSelect < MenuAction
 
   def draw(window)
     draw_map(window)
-    window.highlight(Hash[@targets.map{|t| [[t.x, t.y], color]}])
+    window.highlight(Hash[@targets.map{|t| [[t.x, t.y], effect]}])
   end
 end
 
@@ -33,8 +33,8 @@ class AttackTargetSelect < TargetSelect
       AttackWeaponSelect.new(@unit, t, @level, @path, self)
     end
   end
-  def color
-    :red
+  def effect
+    :red_selector
   end
 end
 
@@ -47,7 +47,7 @@ class TradeTargetSelect < TargetSelect
       end
     end
   end
-  def color
+  def effect
     :blue
   end
 end
