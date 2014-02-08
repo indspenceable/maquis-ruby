@@ -7,10 +7,12 @@ class AttackExecutor < Action
   end
 
   def execute
-    @current_state ||= :attack
-    @current_state = self.send(@current_state)
-    done if @current_state == :done
-    self
+    until @finished
+      @current_state ||= :attack
+      @current_state = self.send(@current_state)
+      done if @current_state == :done
+    end
+    @enacted = true
   end
 
   def units_for_info_panel
@@ -18,11 +20,18 @@ class AttackExecutor < Action
   end
 
   def draw(window)
-    nil
+    draw_map(window)
+    @animation_finished = window.draw_battle_animation(@unit, @target)
   end
 
-  def key(c)
-    if @finished
+  def auto
+    # has the battle been run?
+    unless @finished
+      execute
+      return self
+    end
+
+    if @animation_finished
       # Did the players lord die?
       if @level.lord.nil?
         # Kill our savegame.
@@ -34,9 +43,12 @@ class AttackExecutor < Action
         @next_state
       end
     else
-      execute
-      key(c)
+      self
     end
+  end
+
+  def key(c)
+    self
   end
 
   private

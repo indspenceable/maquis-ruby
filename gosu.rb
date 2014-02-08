@@ -29,8 +29,8 @@ require './app/player_army'
 
 #constants go here too, cause yolo
 
-MAP_SIZE_X = 20
-MAP_SIZE_Y = 15
+MAP_SIZE_X = 40
+MAP_SIZE_Y = 30
 
 PLAYER_TEAM = 0
 COMPUTER_TEAM = 1
@@ -92,13 +92,15 @@ class GosuDisplay < Gosu::Window
     :menu_background => 100,
     :menu_text => 101,
     :menu_select => 102,
+
+    :animation_overlay => 200,
   }
 
 
-  TILE_SIZE_X = 32
-  TILE_SIZE_Y = 32
+  TILE_SIZE_X = 16
+  TILE_SIZE_Y = 16
 
-  FONT_SIZE = 32
+  FONT_SIZE = 16
   FONT_BUFFER = 2
 
   attr_reader :current_action
@@ -141,9 +143,17 @@ class GosuDisplay < Gosu::Window
     @units.define!(Shaman,        [2, 5], 2, 1)
     @units.define!(Soldier,       [2, 6], 2, 1)
     @units.define!(Brigand,       [4, 0], 2, 1)
+
+    @battle_animations = TileSet.new(self, './battle.png', 320, 240, 1)
+    @battle_animations.define!(:battle, [0,0], 1, 1)
   end
 
   def update
+    old_action = @current_action
+    @current_action= @current_action.auto if @current_action.respond_to?(:auto)
+    if old_action != @current_action && @current_action.respond_to?(:precalculate!)
+      @current_action.precalculate!
+    end
   end
 
   def button_down(id)
@@ -153,7 +163,6 @@ class GosuDisplay < Gosu::Window
     else
       @current_action = @current_action.key(id)
     end
-
     if old_action != @current_action && @current_action.respond_to?(:precalculate!)
       @current_action.precalculate!
     end
@@ -281,6 +290,27 @@ class GosuDisplay < Gosu::Window
       if m == current_item
         quad(0, i*(FONT_SIZE+FONT_BUFFER), 16, 16, Gosu::Color::WHITE, 1)
       end
+    end
+  end
+
+  def draw_battle_animation(unit1, unit2)
+    if @drawing_battle_animation == [unit1, unit2]
+      @animation_frame += 1
+    else
+      @animation_frame = 0
+    end
+    @drawing_battle_animation = [unit1, unit2]
+
+    @battle_animations.fetch(:battle, @animation_frame).draw_as_quad(
+        160+0,   120+0, Gosu::Color::WHITE,
+      160+320,   120+0, Gosu::Color::WHITE,
+      160+320, 120+240, Gosu::Color::WHITE,
+        160+0, 120+240, Gosu::Color::WHITE,
+      Z_RANGE[:animation_overlay])
+
+    if @animation_frame >= 30
+      @drawing_battle_animation = nil
+      return true
     end
   end
 

@@ -196,6 +196,7 @@ module LevelGenerator
         tries += 1
         return fill_in_level(army, difficulty, generate_map) if tries > 5
       end
+      puts "done!"
 
       # set important level stats
       level.goal = goal
