@@ -39,6 +39,7 @@ class ConfirmMove < MenuAction
   def enemies_in_range
     @enemies_in_range ||= @level.units.select do |u|
       u.team != @unit.team &&
+      @level.see?(u.x, u.y) &&
       @unit.available_weapons.any?{|w| w.in_range?(Path.unit_dist(@unit, u))}
     end
   end
