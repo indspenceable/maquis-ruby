@@ -80,7 +80,7 @@ end
 module LevelGenerator
   class Base
     def border?(x,y)
-      x == 0 || x == MAP_SIZE_X-1 || y == 0 || y == MAP_SIZE_Y-1
+      x < 0 || x >= MAP_SIZE_X || y < 0 || y >= MAP_SIZE_Y
     end
 
     def generate(army, difficulty)
@@ -239,7 +239,7 @@ module LevelGenerator
                   count += 1 if l.map(x+i,y+j) == :mountain
                 end
               end
-              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>75) ? :mountain : :plains
+              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>85) ? :mountain : :plains
             end
           end
           l.fill { |x,y| other_map[x][y] }
