@@ -67,8 +67,6 @@ class TileSet
   def fetch(name, animation_frame)
     #todo frames per second
     image_index, frames, frames_per_second = @store.fetch(name)
-    # puts (animation_frame/10)%frames
-    puts (image_index + (animation_frame/10)%frames)
     @images[image_index + (animation_frame/10)%frames]
   end
 end
@@ -82,6 +80,27 @@ def tile_set(images, w, names)
 end
 
 class GosuDisplay < Gosu::Window
+  Z_RANGE = {
+    :terrain => 0,
+    :fog => 1,
+    :path => 10,
+    :char => 5,
+    :current_char => 20,
+    :highlight => 7,
+    :effects => 30,
+
+    :menu_background => 100,
+    :menu_text => 101,
+    :menu_select => 102,
+  }
+
+
+  TILE_SIZE_X = 32
+  TILE_SIZE_Y = 32
+
+  FONT_SIZE = 32
+  FONT_BUFFER = 2
+
   attr_reader :current_action
 
   def initialize(previous_save)
@@ -89,7 +108,7 @@ class GosuDisplay < Gosu::Window
     action = nil
     @current_action = action || Planning.new(-1, PlayerArmy.new(6))
 
-    @font = Gosu::Font.new(self, "courier", 12)
+    @font = Gosu::Font.new(self, "futura", FONT_SIZE)
 
     @tiles = tile_set(
       Gosu::Image.load_tiles(self, './tiles.png', 32, 32, true),
@@ -103,24 +122,25 @@ class GosuDisplay < Gosu::Window
       }
     )
     @effects = TileSet.new(self, './effects.png', 32, 32, 10)
-    @effects.define!(:cursor, [0,0], 2, 1)
-    @effects.define!(:red_selector, [0,1], 2, 1)
+    @effects.define!(:cursor, [0,0], 4, 1)
+    @effects.define!(:red_selector, [0,1], 1, 1)
 
     @units = TileSet.new(self, './units.png', 32, 32, 10)
-    @units.define!(Fighter,      [0, 0], 2, 1)
-    @units.define!(Cavalier,     [0, 1], 2, 1)
-    @units.define!(ArmorKnight,  [0, 2], 2, 1)
-    @units.define!(Mage,         [0, 3], 2, 1)
-    @units.define!(Archer,       [0, 4], 2, 1)
-    @units.define!(PegasusKnight,[0, 5], 2, 1)
-    @units.define!(Myrmidon,     [0, 6], 2, 1)
-    @units.define!(Nomad,        [2, 0], 2, 1)
-    @units.define!(WyvernRider,  [2, 1], 2, 1)
-    @units.define!(Thief,        [2, 2], 2, 1)
-    @units.define!(Monk,         [2, 3], 2, 1)
-    @units.define!(Mercenary,    [2, 4], 2, 1)
-    @units.define!(Shaman,       [2, 5], 2, 1)
-    @units.define!(Soldier,      [2, 6], 2, 1)
+    @units.define!(Fighter,       [0, 0], 2, 1)
+    @units.define!(Cavalier,      [0, 1], 2, 1)
+    @units.define!(ArmorKnight,   [0, 2], 2, 1)
+    @units.define!(Mage,          [0, 3], 2, 1)
+    @units.define!(Archer,        [0, 4], 2, 1)
+    @units.define!(PegasusKnight, [0, 5], 2, 1)
+    @units.define!(Myrmidon,      [0, 6], 2, 1)
+    @units.define!(Nomad,         [2, 0], 2, 1)
+    @units.define!(WyvernRider,   [2, 1], 2, 1)
+    @units.define!(Thief,         [2, 2], 2, 1)
+    @units.define!(Monk,          [2, 3], 2, 1)
+    @units.define!(Mercenary,     [2, 4], 2, 1)
+    @units.define!(Shaman,        [2, 5], 2, 1)
+    @units.define!(Soldier,       [2, 6], 2, 1)
+    @units.define!(Brigand,       [4, 0], 2, 1)
   end
 
   def update
@@ -145,28 +165,21 @@ class GosuDisplay < Gosu::Window
     @current_action.draw(self)
   end
 
-  TILE_SIZE_X = 32
-  TILE_SIZE_Y = 32
-
-  def draw_char_at(x, y, unit)
+  def draw_char_at(x, y, unit, current)
     c = if unit.team == PLAYER_TEAM
       Gosu::Color::BLUE
     else
       Gosu::Color::RED
     end
-    if @units.keys.include?(unit.class)
-      @units.fetch(unit.class, @frame).draw_as_quad(
-        (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
-        (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
-        (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
-        (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c, 1)
-    else
-      draw_quad(
-        (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
-        (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
-        (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
-        (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c, 1)
-    end
+
+    layer = current ? :current_char : :char
+
+    @units.fetch(unit.class, @frame * (current ? 2 : 1)).draw_as_quad(
+      (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
+      (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
+      (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
+      (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
+      Z_RANGE[layer])
   end
 
   def draw_terrain(x,y, terrain, seen)
@@ -175,13 +188,15 @@ class GosuDisplay < Gosu::Window
       (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
       (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
       (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
-      (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE, 0)
+      (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
+      Z_RANGE[:terrain])
 
     draw_quad(
       (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, 0x55000000,
       (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, 0x55000000,
       (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, 0x55000000,
-      (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, 0x55000000, 0) unless seen
+      (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, 0x55000000,
+      Z_RANGE[:fog]) unless seen
   end
 
   def highlight(hash_of_space_to_color)
@@ -191,7 +206,8 @@ class GosuDisplay < Gosu::Window
           (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
           (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
           (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
-          (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE, 10)
+          (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
+          Z_RANGE[:effects])
       else
         c = case color
         when :red
@@ -203,32 +219,33 @@ class GosuDisplay < Gosu::Window
           (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
           (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
           (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
-          (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c, 0)
+          (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c, Z_RANGE[:highlight])
       end
     end
   end
 
   def draw_path(path)
     path.each do |x,y|
-      quad(x*TILE_SIZE_X+5, y*TILE_SIZE_Y+5, TILE_SIZE_X-10, TILE_SIZE_Y-10, Gosu::Color::BLACK, 2)
+      quad(x*TILE_SIZE_X+10, y*TILE_SIZE_Y+10, TILE_SIZE_X-20, TILE_SIZE_Y-20, 0xff00ff88, Z_RANGE[:path])
     end
   end
 
   def draw_cursor(x,y)
     c = Gosu::Color::CYAN
     @effects.fetch(:cursor, @frame).draw_as_quad(
-      (x+0)*TILE_SIZE_X+1, (y+0)*TILE_SIZE_Y+1, c,
-      (x+1)*TILE_SIZE_X-1, (y+0)*TILE_SIZE_Y+1, c,
-      (x+1)*TILE_SIZE_X-1, (y+1)*TILE_SIZE_Y-1, c,
-      (x+0)*TILE_SIZE_X+1, (y+1)*TILE_SIZE_Y-1, c, 3)
+      (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
+      (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
+      (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
+      (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c, Z_RANGE[:effects])
   end
 
   def draw_menu(options, index)
-    quad(10, 10, 50, options.count*14, Gosu::Color::WHITE, 10)
+    xo,yo = 10, 10
+    quad(xo, yo, 200, options.count*(FONT_SIZE+FONT_BUFFER), Gosu::Color::WHITE, Z_RANGE[:menu_background])
     options.each_with_index do |o,i|
-      @font.draw(o, 15, 10+ i*14 + 1, 20, 1, 1, Gosu::Color::BLACK)
+      @font.draw(o, xo+5, yo + i*(FONT_SIZE+FONT_BUFFER) + 1, Z_RANGE[:menu_text], 1, 1, Gosu::Color::BLACK)
     end
-    quad(10, 10 + index*14+1, 5, 12, Gosu::Color::RED, 21)
+    quad(xo, yo + index*(FONT_SIZE+FONT_BUFFER)+1, 5, FONT_SIZE, Gosu::Color::RED, Z_RANGE[:menu_select])
   end
 
   def draw_character_info(u1, u2, ignore_range)
@@ -260,9 +277,9 @@ class GosuDisplay < Gosu::Window
   def character_list_for_planning(menu_items, current_item)
     # OH MAN this is bad looking. Fixit!
     menu_items.each_with_index do |m,i|
-      @font.draw(m.inspect, 10, i*16, 1)
+      @font.draw(m.inspect, 10, i*(FONT_SIZE+FONT_BUFFER), 1)
       if m == current_item
-        quad(0, i*16, 16, 16, Gosu::Color::WHITE, 1)
+        quad(0, i*(FONT_SIZE+FONT_BUFFER), 16, 16, Gosu::Color::WHITE, 1)
       end
     end
   end
@@ -280,6 +297,8 @@ class GosuDisplay < Gosu::Window
 end
 
 DISPLAY = GosuDisplay.new(previous_save)
+Gosu::enable_undocumented_retrofication
+
 
 def save_game
   File.open(SAVE_FILE_PATH, 'w+', 0644) do |f|

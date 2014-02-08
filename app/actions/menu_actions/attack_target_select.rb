@@ -9,6 +9,10 @@ class TargetSelect < MenuAction
     super Array.new(@targets.length){:confirm}
   end
 
+  def selected_target
+    @targets[@index]
+  end
+
   def units_for_info_panel
     [@unit, @targets[@index]]
   end
@@ -24,6 +28,8 @@ class TargetSelect < MenuAction
   def draw(window)
     draw_map(window)
     window.highlight(Hash[@targets.map{|t| [[t.x, t.y], effect]}])
+    window.highlight([selected_target.x, selected_target.y] => :cursor)
+    # window.draw_unit_fight_compare(@unit, selected_target)
   end
 end
 
@@ -34,7 +40,7 @@ class AttackTargetSelect < TargetSelect
     end
   end
   def effect
-    :red_selector
+    :red
   end
 end
 
