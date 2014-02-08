@@ -188,8 +188,13 @@ module LevelGenerator
       baddie_units = select_enemy_units(difficulty)
       player_units = army.units
       success = false
+      puts "placing baddies."
+      tries = 0
       until success == true
+        print '.'
         success = place_units_with_baddies_scattered(level, baddie_units, player_units)
+        tries += 1
+        return fill_in_level(army, difficulty, generate_map) if tries > 5
       end
 
       # set important level stats
