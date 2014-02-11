@@ -163,11 +163,13 @@ class AttackExecutor < Action
 
   def double_attack
     combat_round(@unit, @target, @messages)
+    return :death unless both_alive?
     :done
   end
 
   def double_counter
     combat_round(@target, @unit, @messages)
+    return :death unless both_alive?
     :done
   end
 

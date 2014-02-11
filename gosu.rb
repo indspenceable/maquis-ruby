@@ -57,17 +57,25 @@ class TileSet
     @images = Gosu::Image.load_tiles(window, filename, tile_width, tile_height, false)
     @tiles_per_row = tiles_per_row
   end
-  def define!(name, xy, frames=1, frames_per_second=1)
+  def define!(name, xy, frames=1, ticks_per_frame=1, repeat=true)
     x,y = xy
-    @store[name] = [@tiles_per_row*y+x, frames, frames_per_second]
+    @store[name] = [@tiles_per_row*y+x, frames, ticks_per_frame, repeat]
   end
   def keys
     @store.keys
   end
   def fetch(name, animation_frame)
-    #todo frames per second
-    image_index, frames, frames_per_second = @store.fetch(name)
-    @images[image_index + (animation_frame/10)%frames]
+    image_index, frames, ticks_per_frame, repeat = @store.fetch(name)
+    frame_number = if repeat
+      (animation_frame/ticks_per_frame)%frames
+    else
+      [(animation_frame/ticks_per_frame), frames-1].min
+    end
+    @images[image_index + frame_number]
+  end
+  def finished?(name, animation_frame)
+    _, frames, ticks_per_frame = @store.fetch(name)
+    animation_frame >= (frames*ticks_per_frame)-1
   end
 end
 
@@ -124,28 +132,28 @@ class GosuDisplay < Gosu::Window
       }
     )
     @effects = TileSet.new(self, './effects.png', 32, 32, 10)
-    @effects.define!(:cursor, [0,0], 4, 1)
-    @effects.define!(:red_selector, [0,1], 1, 1)
+    @effects.define!(:cursor, [0,0], 4, 5)
+    @effects.define!(:red_selector, [0,1], 1, 30)
 
     @units = TileSet.new(self, './units.png', 32, 32, 10)
-    @units.define!(:fighter,        [0, 0], 2, 1)
-    @units.define!(:cavalier,       [0, 1], 2, 1)
-    @units.define!(:knight,         [0, 2], 2, 1)
-    @units.define!(:mage,           [0, 3], 2, 1)
-    @units.define!(:archer,         [0, 4], 2, 1)
-    @units.define!(:pegasus_knight, [0, 5], 2, 1)
-    @units.define!(:myrmidon,       [0, 6], 2, 1)
-    @units.define!(:nomad,          [2, 0], 2, 1)
-    @units.define!(:wyvern_rider,   [2, 1], 2, 1)
-    @units.define!(:thief,          [2, 2], 2, 1)
-    @units.define!(:monk,           [2, 3], 2, 1)
-    @units.define!(:mercenary,      [2, 4], 2, 1)
-    @units.define!(:shaman,         [2, 5], 2, 1)
-    @units.define!(:soldier,        [2, 6], 2, 1)
-    @units.define!(:brigand,        [4, 0], 2, 1)
-    @units.define!(:attack,         [4, 1], 3, 1)
-    @units.define!(:get_hit,        [4, 2], 3, 1)
-    @units.define!(:death,          [4, 3], 3, 1)
+    @units.define!(:fighter,        [0, 0], 2, 30)
+    @units.define!(:cavalier,       [0, 1], 2, 30)
+    @units.define!(:knight,         [0, 2], 2, 30)
+    @units.define!(:mage,           [0, 3], 2, 30)
+    @units.define!(:archer,         [0, 4], 2, 30)
+    @units.define!(:pegasus_knight, [0, 5], 2, 30)
+    @units.define!(:myrmidon,       [0, 6], 2, 30)
+    @units.define!(:nomad,          [2, 0], 2, 30)
+    @units.define!(:wyvern_rider,   [2, 1], 2, 30)
+    @units.define!(:thief,          [2, 2], 2, 30)
+    @units.define!(:monk,           [2, 3], 2, 30)
+    @units.define!(:mercenary,      [2, 4], 2, 30)
+    @units.define!(:shaman,         [2, 5], 2, 30)
+    @units.define!(:soldier,        [2, 6], 2, 30)
+    @units.define!(:brigand,        [4, 0], 2, 30)
+    @units.define!(:attack,         [4, 1], 3, 20, false)
+    @units.define!(:get_hit,        [4, 2], 3, 10, false)
+    @units.define!(:death,          [4, 3], 3, 60, false)
   end
 
   def update
@@ -174,7 +182,7 @@ class GosuDisplay < Gosu::Window
     @current_action.draw(self)
   end
 
-  def draw_char_at(x, y, unit, current, animation)
+  def draw_char_at(x, y, unit, current, animation, frame=@frame)
     c = if unit.team == PLAYER_TEAM
       Gosu::Color::BLUE
     else
@@ -183,12 +191,13 @@ class GosuDisplay < Gosu::Window
 
     layer = current ? :current_char : :char
 
-    @units.fetch(unit.__send__(animation), @frame).draw_as_quad(
+    @units.fetch(unit.__send__(animation), frame).draw_as_quad(
       (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
       (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
       (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
       (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
       Z_RANGE[layer])
+    return @units.finished?(unit.__send__(animation), frame)
   end
 
   def draw_terrain(x,y, terrain, seen)
@@ -309,22 +318,20 @@ class GosuDisplay < Gosu::Window
     #   160+320, 120+240, color,
     #     160+0, 120+240, color,
     #   Z_RANGE[:animation_overlay])
-    case damage
+    finished = case damage
     when Fixnum
-      draw_char_at(unit1.x, unit1.y, unit1, true, :attack_animation)
-      draw_char_at(unit2.x, unit2.y, unit2, true, :hit_animation)
+      [draw_char_at(unit1.x, unit1.y, unit1, true, :attack_animation, @animation_frame),
+      draw_char_at(unit2.x, unit2.y, unit2, true, :hit_animation, @animation_frame)]
     when :miss
-      draw_char_at(unit1.x, unit1.y, unit1, true, :attack_animation)
-      draw_char_at(unit2.x, unit2.y, unit2, true, :idle_animation)
+      [draw_char_at(unit1.x, unit1.y, unit1, true, :attack_animation, @animation_frame),
+      draw_char_at(unit2.x, unit2.y, unit2, true, :idle_animation, @animation_frame)]
     when :death
-      draw_char_at(unit1.x, unit1.y, unit1, true, :death_animation)
-      draw_char_at(unit2.x, unit2.y, unit2, true, :idle_animation)
-    end
+      [draw_char_at(unit1.x, unit1.y, unit1, true, :death_animation, @animation_frame),
+      draw_char_at(unit2.x, unit2.y, unit2, true, :idle_animation, @animation_frame)]
+    end.all?
     @font.draw(damage.to_s, 160, 120,  Z_RANGE[:animation_overlay]+1)
-    if @animation_frame >= 30
-      @drawing_battle_animation = nil
-      return true
-    end
+    puts "finsihed! #{finished}"
+    return finished
   end
 
   private

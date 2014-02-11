@@ -32,10 +32,11 @@ class EnemyTurn < Action
     draw_all_units(window)
   end
 
+  def auto
+    execute
+  end
+
   def key(k)
-    c = execute
-    return c if c != self
-    key(k)
   end
 
   def next_unit!
