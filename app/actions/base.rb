@@ -59,7 +59,7 @@ class Action
 
   def draw_units(units, window)
     units.each do |u|
-      window.draw_char_at(u.x, u.y, u, false) if u.team == PLAYER_TEAM || @level.see?(u.x,u.y)
+      window.draw_char_at(u.x, u.y, u, @unit == u, :idle_animation) if u.team == PLAYER_TEAM || @level.see?(u.x,u.y)
     end
   end
 

@@ -1,6 +1,10 @@
 class Archer < Unit
   glyph 'a'
   klass "Archer"
+  def animation
+    :archer
+  end
+
   def class_growths
     {
       :max_hp =>[50, 70],

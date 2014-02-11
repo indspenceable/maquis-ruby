@@ -30,7 +30,7 @@ class AttackExecutor < Action
 
   def draw(window)
     draw_map(window)
-    draw_all_units(window)
+    draw_units(@level.units - [@unit, @target], window)
 
     if @current_hit
       if window.draw_battle_animation(*@current_hit)
@@ -69,8 +69,8 @@ class AttackExecutor < Action
 
   private
 
-  def check_life
-    @unit.alive? && target.alive?
+  def both_alive?
+    @unit.alive? && @target.alive?
   end
 
   def can_attack(attacker, defender)
@@ -138,7 +138,7 @@ class AttackExecutor < Action
   end
 
   def determine_next_state(current_state)
-    return :death unless check_life
+    return :death unless both_alive?
     case current_state
     when :attack
       return :counter if can_attack(@target, @unit)
@@ -173,10 +173,10 @@ class AttackExecutor < Action
 
   def death
     if @unit.alive?
-      @current_hit = [@target, nil, :death]
+      @current_hit = [@target, @unit, :death]
       @level.units.delete(@target)
     else
-      @current_hit = [@unit, nil, :death]
+      @current_hit = [@unit, @target, :death]
       @level.units.delete(@unit)
     end
     :done

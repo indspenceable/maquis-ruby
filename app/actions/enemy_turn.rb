@@ -28,7 +28,8 @@ class EnemyTurn < Action
   end
 
   def draw(window)
-    nil
+    draw_map(window)
+    draw_all_units(window)
   end
 
   def key(k)

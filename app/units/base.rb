@@ -428,6 +428,22 @@ class Unit
     end
   end
 
+  def idle_animation
+    animation
+  end
+
+  def attack_animation
+    :attack
+  end
+
+  def hit_animation
+    :get_hit
+  end
+
+  def death_animation
+    :death
+  end
+
   # stats are adjusted by skills
   modifiable(STATS + [
     :traits,
@@ -452,6 +468,9 @@ def create_class(g, k, growths, starting_stats, starting_skills)
     end
     define_method :starting_skills do
       starting_skills
+    end
+    define_method :animation do
+      k.downcase.gsub(' ', '_').to_sym
     end
   end
 end

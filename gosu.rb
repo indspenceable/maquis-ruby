@@ -128,24 +128,24 @@ class GosuDisplay < Gosu::Window
     @effects.define!(:red_selector, [0,1], 1, 1)
 
     @units = TileSet.new(self, './units.png', 32, 32, 10)
-    @units.define!(Fighter,       [0, 0], 2, 1)
-    @units.define!(Cavalier,      [0, 1], 2, 1)
-    @units.define!(ArmorKnight,   [0, 2], 2, 1)
-    @units.define!(Mage,          [0, 3], 2, 1)
-    @units.define!(Archer,        [0, 4], 2, 1)
-    @units.define!(PegasusKnight, [0, 5], 2, 1)
-    @units.define!(Myrmidon,      [0, 6], 2, 1)
-    @units.define!(Nomad,         [2, 0], 2, 1)
-    @units.define!(WyvernRider,   [2, 1], 2, 1)
-    @units.define!(Thief,         [2, 2], 2, 1)
-    @units.define!(Monk,          [2, 3], 2, 1)
-    @units.define!(Mercenary,     [2, 4], 2, 1)
-    @units.define!(Shaman,        [2, 5], 2, 1)
-    @units.define!(Soldier,       [2, 6], 2, 1)
-    @units.define!(Brigand,       [4, 0], 2, 1)
-
-    @battle_animations = TileSet.new(self, './battle.png', 320, 240, 1)
-    @battle_animations.define!(:battle, [0,0], 1, 1)
+    @units.define!(:fighter,        [0, 0], 2, 1)
+    @units.define!(:cavalier,       [0, 1], 2, 1)
+    @units.define!(:knight,         [0, 2], 2, 1)
+    @units.define!(:mage,           [0, 3], 2, 1)
+    @units.define!(:archer,         [0, 4], 2, 1)
+    @units.define!(:pegasus_knight, [0, 5], 2, 1)
+    @units.define!(:myrmidon,       [0, 6], 2, 1)
+    @units.define!(:nomad,          [2, 0], 2, 1)
+    @units.define!(:wyvern_rider,   [2, 1], 2, 1)
+    @units.define!(:thief,          [2, 2], 2, 1)
+    @units.define!(:monk,           [2, 3], 2, 1)
+    @units.define!(:mercenary,      [2, 4], 2, 1)
+    @units.define!(:shaman,         [2, 5], 2, 1)
+    @units.define!(:soldier,        [2, 6], 2, 1)
+    @units.define!(:brigand,        [4, 0], 2, 1)
+    @units.define!(:attack,         [4, 1], 3, 1)
+    @units.define!(:get_hit,        [4, 2], 3, 1)
+    @units.define!(:death,          [4, 3], 3, 1)
   end
 
   def update
@@ -174,7 +174,7 @@ class GosuDisplay < Gosu::Window
     @current_action.draw(self)
   end
 
-  def draw_char_at(x, y, unit, current)
+  def draw_char_at(x, y, unit, current, animation)
     c = if unit.team == PLAYER_TEAM
       Gosu::Color::BLUE
     else
@@ -183,7 +183,7 @@ class GosuDisplay < Gosu::Window
 
     layer = current ? :current_char : :char
 
-    @units.fetch(unit.class, @frame * (current ? 2 : 1)).draw_as_quad(
+    @units.fetch(unit.__send__(animation), @frame).draw_as_quad(
       (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
       (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
       (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
@@ -303,15 +303,24 @@ class GosuDisplay < Gosu::Window
 
     color = (unit1.team == PLAYER_TEAM) ? Gosu::Color::BLUE : Gosu::Color::RED
 
-    @battle_animations.fetch(:battle, @animation_frame).draw_as_quad(
-        160+0,   120+0, color,
-      160+320,   120+0, color,
-      160+320, 120+240, color,
-        160+0, 120+240, color,
-      Z_RANGE[:animation_overlay])
-
+    # @battle_animations.fetch(:battle, @animation_frame).draw_as_quad(
+    #     160+0,   120+0, color,
+    #   160+320,   120+0, color,
+    #   160+320, 120+240, color,
+    #     160+0, 120+240, color,
+    #   Z_RANGE[:animation_overlay])
+    case damage
+    when Fixnum
+      draw_char_at(unit1.x, unit1.y, unit1, true, :attack_animation)
+      draw_char_at(unit2.x, unit2.y, unit2, true, :hit_animation)
+    when :miss
+      draw_char_at(unit1.x, unit1.y, unit1, true, :attack_animation)
+      draw_char_at(unit2.x, unit2.y, unit2, true, :idle_animation)
+    when :death
+      draw_char_at(unit1.x, unit1.y, unit1, true, :death_animation)
+      draw_char_at(unit2.x, unit2.y, unit2, true, :idle_animation)
+    end
     @font.draw(damage.to_s, 160, 120,  Z_RANGE[:animation_overlay]+1)
-
     if @animation_frame >= 30
       @drawing_battle_animation = nil
       return true
