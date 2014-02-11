@@ -428,24 +428,12 @@ class Unit
     end
   end
 
-  def idle_animation
-    animation
-  end
-
-  def attack_animation
-    :attack
-  end
-
-  def hit_animation
-    :get_hit
-  end
-
-  def death_animation
-    :death
+  def klass_sym
+    @klass_sym ||= klass.downcase.gsub(' ', '_')
   end
 
   def animation_for(anim)
-    self.__send__("#{anim}_animation")
+    "#{klass_sym}_#{anim}".to_sym
   end
 
   def summary
