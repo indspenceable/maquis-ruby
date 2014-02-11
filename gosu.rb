@@ -97,10 +97,10 @@ class GosuDisplay < Gosu::Window
   }
 
 
-  TILE_SIZE_X = 16
-  TILE_SIZE_Y = 16
+  TILE_SIZE_X = 32
+  TILE_SIZE_Y = 32
 
-  FONT_SIZE = 16
+  FONT_SIZE = 32
   FONT_BUFFER = 2
 
   attr_reader :current_action
@@ -293,20 +293,24 @@ class GosuDisplay < Gosu::Window
     end
   end
 
-  def draw_battle_animation(unit1, unit2)
-    if @drawing_battle_animation == [unit1, unit2]
+  def draw_battle_animation(unit1, unit2, damage)
+    if @drawing_battle_animation == [unit1]
       @animation_frame += 1
     else
       @animation_frame = 0
     end
-    @drawing_battle_animation = [unit1, unit2]
+    @drawing_battle_animation = [unit1]
+
+    color = (unit1.team == PLAYER_TEAM) ? Gosu::Color::BLUE : Gosu::Color::RED
 
     @battle_animations.fetch(:battle, @animation_frame).draw_as_quad(
-        160+0,   120+0, Gosu::Color::WHITE,
-      160+320,   120+0, Gosu::Color::WHITE,
-      160+320, 120+240, Gosu::Color::WHITE,
-        160+0, 120+240, Gosu::Color::WHITE,
+        160+0,   120+0, color,
+      160+320,   120+0, color,
+      160+320, 120+240, color,
+        160+0, 120+240, color,
       Z_RANGE[:animation_overlay])
+
+    @font.draw(damage.to_s, 160, 120,  Z_RANGE[:animation_overlay]+1)
 
     if @animation_frame >= 30
       @drawing_battle_animation = nil

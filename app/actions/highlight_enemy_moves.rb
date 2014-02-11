@@ -15,6 +15,7 @@ class HighlightEnemyMoves < MapAction
 
   def draw(window)
     draw_map(window)
+    draw_all_units(window)
     window.highlight(squares_to_color_for_highlighting(@unit))
   end
 

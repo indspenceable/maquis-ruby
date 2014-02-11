@@ -113,6 +113,7 @@ class Move < MapAction
 
   def draw(window)
     draw_map(window, cursor_xy)
+    draw_all_units(window)
     window.draw_path(@path)
     window.highlight(squares_to_color_for_highlighting(@unit))
   end

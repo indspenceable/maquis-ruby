@@ -1,3 +1,14 @@
+# Create
+# * precalculate - does the first attack.
+# * call draw until the animation is done. This will set finished_animating
+#    to true, eventually, and then do the next attack
+# * when doing an attack, it will always set @current_hit to something.
+# * if there's ever a case where @current_hit is nil, then auto will move to
+# the correct next state
+#
+# Actaully doing attacks
+# #execute will do the next one, if we're not already one.
+
 class AttackExecutor < Action
   attr_reader :level
 
@@ -7,12 +18,10 @@ class AttackExecutor < Action
   end
 
   def execute
-    until @finished
-      @current_state ||= :attack
-      @current_state = self.send(@current_state)
-      done if @current_state == :done
-    end
-    @enacted = true
+    return if @current_state == :done
+    @current_state ||= :attack
+    @current_state = self.send(@current_state)
+    done if @current_state == :done
   end
 
   def units_for_info_panel
@@ -21,29 +30,36 @@ class AttackExecutor < Action
 
   def draw(window)
     draw_map(window)
-    @animation_finished = window.draw_battle_animation(@unit, @target)
+    draw_all_units(window)
+
+    if @current_hit
+      if window.draw_battle_animation(*@current_hit)
+        @current_hit = nil
+        @finished_animating = true
+        execute
+        self
+      else
+        @finished_animating = false
+      end
+    else
+      puts "LOL"
+    end
+  end
+
+  def precalculate!
+    execute
   end
 
   def auto
-    # has the battle been run?
-    unless @finished
-      execute
-      return self
-    end
-
-    if @animation_finished
-      # Did the players lord die?
-      if @level.lord.nil?
-        # Kill our savegame.
-        `rm #{SAVE_FILE_PATH}`
-        raise "lord died!"
-      elsif @level.units.none?{|u| u.team == COMPUTER_TEAM }
-        @level.finish_turn(COMPUTER_TEAM)
-      else
-        @next_state
-      end
+    return self if @current_hit
+    if @level.lord.nil?
+      # Kill our savegame.
+      `rm #{SAVE_FILE_PATH}`
+      raise "lord died!"
+    elsif @level.units.none?{|u| u.team == COMPUTER_TEAM }
+      @level.finish_turn(COMPUTER_TEAM)
     else
-      self
+      @next_state
     end
   end
 
@@ -53,20 +69,8 @@ class AttackExecutor < Action
 
   private
 
-  def check_life(add_messages=true)
-    unless @unit.alive?
-      @messages << "#{@unit.name} dies!" if add_messages
-      @level.units.delete(@unit)
-      return false
-    end
-
-    unless @target.alive?
-      @messages << "#{@target.name} dies!" if add_messages
-      @level.units.delete(@target)
-      return false
-    end
-
-    true
+  def check_life
+    @unit.alive? && target.alive?
   end
 
   def can_attack(attacker, defender)
@@ -86,16 +90,12 @@ class AttackExecutor < Action
   def combat_round(attacker, defender, messages)
     if rand(100) < attacker.accuracy(defender)
       record_hit(attacker)
-      if rand(100) < attacker.crit_chance
-        hit = attacker.hit(defender, 3)
-        messages << ["#{attacker.name} crits #{defender.name}, for #{hit} damage!", 0, Curses::A_BOLD]
-      else
-        hit = attacker.hit(defender, 1)
-        messages << "#{attacker.name} hits #{defender.name}, for #{hit} damage."
-      end
-      check_life
+      crit = !!(rand(100) < attacker.crit_chance)
+      damage_dealt = attacker.hit(defender, crit ? 3 : 1)
+
+      @current_hit = [attacker, defender, damage_dealt]
     else
-      messages << "#{attacker.name} misses!"
+      @current_hit = [attacker, defender, :miss]
     end
   end
 
@@ -138,7 +138,7 @@ class AttackExecutor < Action
   end
 
   def determine_next_state(current_state)
-    return :done unless check_life(false)
+    return :death unless check_life
     case current_state
     when :attack
       return :counter if can_attack(@target, @unit)
@@ -171,12 +171,24 @@ class AttackExecutor < Action
     :done
   end
 
+  def death
+    if @unit.alive?
+      @current_hit = [@target, nil, :death]
+      @level.units.delete(@target)
+    else
+      @current_hit = [@unit, nil, :death]
+      @level.units.delete(@unit)
+    end
+    :done
+  end
+
   def done
     a,b = @unit, @target
     a,b = b,a if @target.team == PLAYER_TEAM
     gain_exp(a, b)
     @unit.action_available = false
     @finished = true
+    @finished_animating = false
   end
 
 end

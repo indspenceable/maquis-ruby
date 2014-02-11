@@ -51,8 +51,15 @@ class Action
   # this method figures out the right glyph to draw, and draws it
   def add_map_location(window, x, y)
     window.draw_terrain(x, y, @level.map(x,y), @level.see?(x,y))
-    if @level.unit_at(x,y) && (@level.unit_at(x,y).team == PLAYER_TEAM || @level.see?(x,y))
-      window.draw_char_at(x, y, @level.unit_at(x,y), @unit == @level.unit_at(x,y))
+  end
+
+  def draw_all_units(window)
+    draw_units(@level.units, window)
+  end
+
+  def draw_units(units, window)
+    units.each do |u|
+      window.draw_char_at(u.x, u.y, u, false) if u.team == PLAYER_TEAM || @level.see?(u.x,u.y)
     end
   end
 

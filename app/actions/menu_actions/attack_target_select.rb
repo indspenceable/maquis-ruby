@@ -27,6 +27,7 @@ class TargetSelect < MenuAction
 
   def draw(window)
     draw_map(window)
+    draw_all_units(window)
     window.highlight(Hash[@targets.map{|t| [[t.x, t.y], effect]}])
     window.highlight([selected_target.x, selected_target.y] => :cursor)
     # window.draw_unit_fight_compare(@unit, selected_target)

@@ -38,5 +38,6 @@ class UnitSelect < MapAction
 
   def draw(window)
     draw_map(window, cursor_xy)
+    draw_all_units(window)
   end
 end
