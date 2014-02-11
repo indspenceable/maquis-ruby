@@ -152,8 +152,8 @@ class GosuDisplay < Gosu::Window
     @units.define!(:soldier,        [2, 6], 2, 30)
     @units.define!(:brigand,        [4, 0], 2, 30)
     @units.define!(:attack,         [4, 1], 3, 20, false)
-    @units.define!(:get_hit,        [4, 2], 3, 10, false)
-    @units.define!(:death,          [4, 3], 3, 60, false)
+    @units.define!(:get_hit,        [4, 2], 3, 20, false)
+    @units.define!(:death,          [4, 3], 4, 20, false)
   end
 
   def update
@@ -320,21 +320,41 @@ class GosuDisplay < Gosu::Window
     #   Z_RANGE[:animation_overlay])
     finished = case damage
     when Fixnum
-      [draw_char_at(unit1.x, unit1.y, unit1, true, :attack_animation, @animation_frame),
-      draw_char_at(unit2.x, unit2.y, unit2, true, :hit_animation, @animation_frame)]
+      [
+        draw_char_at(unit1.x, unit1.y, unit1, true, :attack_animation, @animation_frame),
+        draw_char_at(unit2.x, unit2.y, unit2, true, :hit_animation, @animation_frame),
+        draw_rising_text(unit2.x, unit2.y, damage.to_s, 15, @animation_frame, 2)
+      ]
     when :miss
-      [draw_char_at(unit1.x, unit1.y, unit1, true, :attack_animation, @animation_frame),
-      draw_char_at(unit2.x, unit2.y, unit2, true, :idle_animation, @animation_frame)]
+      [
+        draw_char_at(unit1.x, unit1.y, unit1, true, :attack_animation, @animation_frame),
+        draw_char_at(unit2.x, unit2.y, unit2, true, :idle_animation, @animation_frame),
+        draw_rising_text(unit2.x, unit2.y, "Miss!", 15, @animation_frame, 2)
+      ]
     when :death
-      [draw_char_at(unit1.x, unit1.y, unit1, true, :death_animation, @animation_frame),
-      draw_char_at(unit2.x, unit2.y, unit2, true, :idle_animation, @animation_frame)]
+      [
+        draw_char_at(unit1.x, unit1.y, unit1, true, :death_animation, @animation_frame),
+        draw_char_at(unit2.x, unit2.y, unit2, true, :idle_animation, @animation_frame),
+      ]
     end.all?
-    @font.draw(damage.to_s, 160, 120,  Z_RANGE[:animation_overlay]+1)
-    puts "finsihed! #{finished}"
-    return finished
   end
 
+
   private
+
+  def draw_rising_text(tx, ty, text, frames, current_frame, speed)
+    return true if current_frame >= frames
+    color = Gosu::Color.rgba(255, 255, 255, 255-((128.0/frames)*current_frame).to_i)
+    @font.draw_rel(text,
+      (tx+0.5)*TILE_SIZE_X,
+      (ty+0.5)*TILE_SIZE_Y - speed*current_frame ,
+      Z_RANGE[:animation_overlay],
+      0.5, 0.5,
+      1, 1,
+      color
+    )
+    false
+  end
 
   def quad(x,y,w,h,c,z)
     draw_quad(
