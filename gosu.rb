@@ -191,13 +191,13 @@ class GosuDisplay < Gosu::Window
 
     layer = current ? :current_char : :char
 
-    @units.fetch(unit.__send__(animation), frame).draw_as_quad(
+    @units.fetch(unit.animation_for(animation), frame).draw_as_quad(
       (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
       (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
       (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
       (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
       Z_RANGE[layer])
-    return @units.finished?(unit.__send__(animation), frame)
+    return @units.finished?(unit.animation_for(animation), frame)
   end
 
   def draw_terrain(x,y, terrain, seen)
@@ -293,11 +293,17 @@ class GosuDisplay < Gosu::Window
   end
 
   def character_list_for_planning(menu_items, current_item)
+    quad(0,0,640,480,Gosu::Color::WHITE,0)
     # OH MAN this is bad looking. Fixit!
     menu_items.each_with_index do |m,i|
-      @font.draw(m.inspect, 10, i*(FONT_SIZE+FONT_BUFFER), 1)
+      if m.is_a?(Unit)
+        draw_char_at(1, i, m, false, :idle)
+        @font.draw(m.summary, TILE_SIZE_X*2, i*(TILE_SIZE_Y), 1, 1, 1, Gosu::Color::BLACK)
+      else
+        @font.draw(m.to_s, TILE_SIZE_X, i*(TILE_SIZE_Y), 1, 1, 1, Gosu::Color::BLACK)
+      end
       if m == current_item
-        quad(0, i*(FONT_SIZE+FONT_BUFFER), 16, 16, Gosu::Color::WHITE, 1)
+        quad(0, TILE_SIZE_Y*i, TILE_SIZE_X, TILE_SIZE_Y, Gosu::Color::BLACK, 1)
       end
     end
   end
@@ -321,20 +327,20 @@ class GosuDisplay < Gosu::Window
     finished = case damage
     when Fixnum
       [
-        draw_char_at(unit1.x, unit1.y, unit1, true, :attack_animation, @animation_frame),
-        draw_char_at(unit2.x, unit2.y, unit2, true, :hit_animation, @animation_frame),
+        draw_char_at(unit1.x, unit1.y, unit1, true, :attack, @animation_frame),
+        draw_char_at(unit2.x, unit2.y, unit2, true, :hit, @animation_frame),
         draw_rising_text(unit2.x, unit2.y, damage.to_s, 15, @animation_frame, 2)
       ]
     when :miss
       [
-        draw_char_at(unit1.x, unit1.y, unit1, true, :attack_animation, @animation_frame),
-        draw_char_at(unit2.x, unit2.y, unit2, true, :idle_animation, @animation_frame),
+        draw_char_at(unit1.x, unit1.y, unit1, true, :attack, @animation_frame),
+        draw_char_at(unit2.x, unit2.y, unit2, true, :idle, @animation_frame),
         draw_rising_text(unit2.x, unit2.y, "Miss!", 15, @animation_frame, 2)
       ]
     when :death
       [
-        draw_char_at(unit1.x, unit1.y, unit1, true, :death_animation, @animation_frame),
-        draw_char_at(unit2.x, unit2.y, unit2, true, :idle_animation, @animation_frame),
+        draw_char_at(unit1.x, unit1.y, unit1, true, :death, @animation_frame),
+        draw_char_at(unit2.x, unit2.y, unit2, true, :idle, @animation_frame),
       ]
     end.all?
   end

@@ -444,6 +444,14 @@ class Unit
     :death
   end
 
+  def animation_for(anim)
+    self.__send__("#{anim}_animation")
+  end
+
+  def summary
+    "#{name} (#{klass}: #{exp_level})"
+  end
+
   # stats are adjusted by skills
   modifiable(STATS + [
     :traits,
