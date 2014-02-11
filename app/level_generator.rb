@@ -163,7 +163,7 @@ module LevelGenerator
       begin
         px, py, bx, by = rand(MAP_SIZE_X), rand(MAP_SIZE_Y), rand(MAP_SIZE_X) ,rand(MAP_SIZE_Y)
         player_area = Path.discover_paths(FakeUnit.new(px,py), level, 4)
-        baddie_area = Path.discover_paths(FakeUnit.new(bx,by), level, 200)
+        baddie_area = Path.discover_paths(FakeUnit.new(bx,by), level, 20)
         path_between = Path.find(FakeUnit.new(px,py), bx, by, level, 70, :ignore)
       end while false ||
         player_area.count < player_units.size ||
@@ -194,7 +194,7 @@ module LevelGenerator
         print '.'
         success = place_units_with_baddies_scattered(level, baddie_units, player_units)
         tries += 1
-        return fill_in_level(army, difficulty, generate_map) if tries > 5
+        return fill_in_level(army, difficulty, generate_map) if tries > 1
       end
       puts "done!"
 
