@@ -71,6 +71,10 @@ class Level
     @map[x][y] || :wall rescue :wall
   end
 
+  def set_map(x,y,v)
+    @map[x][y] = v
+  end
+
   def self.terrain_sym_to_str
     {
       :plains => ' ',

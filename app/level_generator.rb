@@ -80,7 +80,7 @@ end
 module LevelGenerator
   class Base
     def border?(x,y)
-      x < 0 || x >= MAP_SIZE_X || y < 0 || y >= MAP_SIZE_Y
+      x == 0 || x == MAP_SIZE_X-1 || y == 0 || y == MAP_SIZE_Y-1
     end
 
     def generate(army, difficulty)
@@ -128,10 +128,10 @@ module LevelGenerator
 
     def place_units_in_area(units, area, level)
       units.each do |u|
-        return false if area.none?
         begin
+          return false if area.none?
           u.x, u.y = area.pop
-        end while level.map(u.x, u.y) == :mountain
+        end while level.map(u.x, u.y) != :plains
       end
     end
 
@@ -160,18 +160,23 @@ module LevelGenerator
 
     def place_units_with_baddies_scattered(level, baddie_units, player_units)
       baddie_boss = baddie_units.shift
+      whole_map = MAP_SIZE_X.times.to_a.product(MAP_SIZE_Y.times.to_a)
+
       begin
         px, py, bx, by = rand(MAP_SIZE_X), rand(MAP_SIZE_Y), rand(MAP_SIZE_X) ,rand(MAP_SIZE_Y)
         player_area = Path.discover_paths(FakeUnit.new(px,py), level, 4)
-        baddie_area = Path.discover_paths(FakeUnit.new(bx,by), level, 20)
-        path_between = Path.find(FakeUnit.new(px,py), bx, by, level, 70, :ignore)
-      end while false ||
-        player_area.count < player_units.size ||
-        baddie_area.count < baddie_units.size ||
-        !path_between || path_between.length < min_distance
+        baddie_area = whole_map.select{|(x,y)| level.map(x,y) == :plains} - player_area
+      end while player_area.count < player_units.size ||
+                baddie_area.count < baddie_units.size ||
+                level.map(px, py) != :plains ||
+                level.map(bx, by) != :plains ||
+                (px == bx && py == by)
+
       player_area.map!(&:last_point)
+      # incase theres possible movement off of the map
+      player_area &= whole_map
       # remove the boss' location from the baddies area.
-      baddie_area.map!(&:last_point).delete([bx,by])
+      baddie_area.delete([bx,by])
       player_area.shuffle!
       baddie_area.shuffle!
       baddie_area -= Path.discover_paths(FakeUnit.new(px,py), level, 7).map(&:last_point)
@@ -188,15 +193,10 @@ module LevelGenerator
       baddie_units = select_enemy_units(difficulty)
       player_units = army.units
       success = false
-      puts "placing baddies."
       tries = 0
-      until success == true
-        print '.'
-        success = place_units_with_baddies_scattered(level, baddie_units, player_units)
-        tries += 1
-        return fill_in_level(army, difficulty, generate_map) if tries > 1
+
+      until place_units_with_baddies_scattered(level, baddie_units, player_units)
       end
-      puts "done!"
 
       # set important level stats
       level.goal = goal
@@ -216,22 +216,49 @@ module LevelGenerator
   end
 
   class Mountain < Base
+    # MIN_DISTANCE_X = MAP_SIZE_X/2
+    # MIN_DISTANCE_Y = MAP_SIZE_Y/2
+    NUM_POINTS = 7
+    DECAY_ITERATIONS = 5
+    def round(x)
+      (x + 0.5).to_i
+    end
+
     def generate_map
       # might not generate a good map the first time, so loop until we do.
       while true
         # start with an empy level, fill it with tiles randomly
         l = Level.new(MAP_SIZE_X, MAP_SIZE_Y)
-        l.fill do |x,y|
-          border?(x,y) ? :mountain :
-            rand(100) < 45   ? :mountain : :plains
+        l.fill { :mountain }
+
+
+        # selet a number of random points. Ensure they've got a total distance
+        # large enough. Draw lines of plains between them.
+        c = false
+        points = []
+
+        until c
+          points = NUM_POINTS.times.map{ [rand(MAP_SIZE_X), rand(MAP_SIZE_Y)] }.uniq
+          c = (points.map(&:first).max-points.map(&:first).min) > MAP_SIZE_X/1.2 &&
+              (points.map(&:last).max-points.map(&:last).min) > MAP_SIZE_Y/1.2 &&
+              points.length == NUM_POINTS
         end
 
-        # use cellular attomata to iterate 5 times over this map
+        (points.count-1).times do |i|
+          (fx, fy), (lx, ly) = points[i], points[i+1]
+          fx += 1 if (fx - lx).abs == (fy - ly).abs
+          100.times do |j|
+            cx = round(fx + (lx - fx)* (j / 100.0))
+            cy = round(fy + (ly - fy)* (j / 100.0))
+            l.set_map(cx,cy,:plains) if cx < MAP_SIZE_X && cy < MAP_SIZE_Y
+          end
+        end
+
+        # Erode away from plains.
         other_map = Array.new(MAP_SIZE_X){ Array.new(MAP_SIZE_Y) }
-        5.times do
+        DECAY_ITERATIONS.times do
           (MAP_SIZE_X).times do |x|
             (MAP_SIZE_Y).times do |y|
-              next other_map[x][y] = :mountain if border?(x,y)
               count = 0
               3.times do |_i|
                 i = _i-1
@@ -240,22 +267,69 @@ module LevelGenerator
                   count += 1 if l.map(x+i,y+j) == :mountain
                 end
               end
-              other_map[x][y] = (count >= 5) || (count <= 2 && rand(100)>85) ? :mountain : :plains
+
+              other_map[x][y] =
+              if l.map(x,y) != :mountain
+                :plains
+              elsif border?(x,y)
+                if rand < count/4.0
+                  :mountain
+                else
+                  :plains
+                end
+              elsif rand < (1.05 * count/8.0)**1.2 # (slghtly over a 1 in count chance)
+                :mountain
+              else
+                :plains
+              end
             end
           end
           l.fill { |x,y| other_map[x][y] }
         end
 
-        l.fill do |x,y|
-          next :wall if border?(x,y)
-
-          case other_map[x][y]
-          when :plains
-            :mountain
-          when :mountain
-            rand(100) > 95 ? :forest : (rand(100) > 95 ? :fort : :plains)
+        new_walls = []
+        (MAP_SIZE_X).times do |x|
+          (MAP_SIZE_Y).times do |y|
+            next unless l.map(x,y) == :mountain
+            count = 0
+            5.times do |_i|
+              i = _i-2
+              5.times do |_j|
+                j = _j-2
+                if [:mountain, :wall].include?(l.map(x+i, y+j))
+                  count += 1
+                end
+              end
+            end
+            new_walls << [x,y] if count >= 23
           end
         end
+        new_walls.each do |(x,y)|
+          l.set_map(x,y,:wall) if rand(100) > 20
+        end
+
+        # TODO - on the ground, fill in roads + forest.
+        new_forests = []
+        new_forts = []
+        (MAP_SIZE_X).times do |x|
+          (MAP_SIZE_Y).times do |y|
+            next unless l.map(x,y) == :plains
+            r = rand(100)
+            case
+            when r < 6
+              new_forests << [x,y]
+            when r < 10
+              new_forts << [x,y]
+            end
+          end
+        end
+        new_forts.each do |(x,y)|
+          l.set_map(x,y,:fort)
+        end
+        new_forests.each do |(x,y)|
+          l.set_map(x,y,:forest)
+        end
+
         return l
       end
     end
