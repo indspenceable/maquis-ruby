@@ -463,5 +463,7 @@ def save_game
   end
 end
 
-DISPLAY.show
+if $0 == __FILE__
+  DISPLAY.show
+end
 
