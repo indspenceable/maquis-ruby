@@ -21,6 +21,17 @@ class TargetSelect < MenuAction
     @next_action.call(@targets[@index])
   end
 
+  def key(k)
+    super(case k
+    when KEYS[:left]
+      KEYS[:up]
+    when KEYS[:right]
+      KEYS[:down]
+    else
+      k
+    end)
+  end
+
   def cancel
     @prev_action
   end
