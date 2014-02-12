@@ -131,6 +131,36 @@ class GosuDisplay < Gosu::Window
         :fort => [3,0],
       }
     )
+
+    @path = TileSet.new(self, './path.png', 33, 32, 15)
+    @path.define!(:right_right, [0,0], 1, 1)
+    @path.define!(:left_left,   [0,0], 1, 1)
+    @path.define!(:up_up,       [1,0], 1, 1)
+    @path.define!(:down_down,   [1,0], 1, 1)
+    @path.define!(:start_end,   [2,0], 1, 1)
+
+    @path.define!(:left_end,  [0,1], 1, 1)
+    @path.define!(:down_end,  [1,1], 1, 1)
+    @path.define!(:right_end, [2,1], 1, 1)
+    @path.define!(:up_end,    [3,1], 1, 1)
+
+    @path.define!(:start_right, [0,1], 1, 1)
+    @path.define!(:start_up,    [1,1], 1, 1)
+    @path.define!(:start_left,  [2,1], 1, 1)
+    @path.define!(:start_down,  [3,1], 1, 1)
+
+    @path.define!(:up_right,  [0,2], 1, 1)
+    @path.define!(:left_down, [0,2], 1, 1)
+
+    @path.define!(:up_left,    [1,2], 1, 1)
+    @path.define!(:right_down, [1,2], 1, 1)
+
+    @path.define!(:down_right, [2,2], 1, 1)
+    @path.define!(:left_up,    [2,2], 1, 1)
+
+    @path.define!(:down_left, [3,2], 1, 1)
+    @path.define!(:right_up,  [3,2], 1, 1)
+
     @effects = TileSet.new(self, './effects.png', 32, 32, 10)
     @effects.define!(:cursor, [0,0], 4, 5)
     @effects.define!(:red_selector, [0,1], 1, 30)
@@ -288,8 +318,14 @@ class GosuDisplay < Gosu::Window
   end
 
   def draw_path(path)
-    path.each do |x,y|
-      quad(x*TILE_SIZE_X+10, y*TILE_SIZE_Y+10, TILE_SIZE_X-20, TILE_SIZE_Y-20, 0xff00ff88, Z_RANGE[:path])
+    path.each_with_direction do |(x,y), direction|
+      p direction
+      @path.fetch(direction, @frame).draw_as_quad(
+        (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
+        (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
+        (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
+        (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
+        Z_RANGE[:path])
     end
   end
 

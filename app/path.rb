@@ -108,6 +108,37 @@ class Path
   def last_point
     (@path.last || [@sx, @sy])
   end
+
+  # Assumes adjacency
+  def direction_for(cx, cy, nx, ny)
+
+    if nx > cx
+      :right
+    elsif nx < cx
+      :left
+    elsif ny > cy
+      :down
+    else
+      :up
+    end
+  end
+
+  def each_with_direction
+    @path.size.times do |i|
+      d1 = if i == 0
+        :start
+      else
+        direction_for(*@path[i-1], *@path[i])
+      end
+      d2 = if i == @path.size-1
+        :end
+      else
+        direction_for(*@path[i], *@path[i+1])
+      end
+      yield @path[i], :"#{d1}_#{d2}"
+    end
+  end
+
   def each &blk
     @path.each(&blk)
   end
