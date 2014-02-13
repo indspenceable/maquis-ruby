@@ -54,7 +54,7 @@ class EnemyTurn < Action
       unit, target = @unit, @target
       next_unit!
       displayed_anything = true
-      AttackExecutor.new(unit, target, @level, self)
+      AttackExecutor.new(unit, target, @level) { self }
     else
       @unit.action_available = false
       next_unit!

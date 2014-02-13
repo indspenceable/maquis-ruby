@@ -12,7 +12,7 @@
 class AttackExecutor < Action
   attr_reader :level
 
-  def initialize unit, target, level, next_state
+  def initialize unit, target, level, &next_state
     @unit, @target, @level, @next_state = unit, target, level, next_state
     @messages = []
   end
@@ -41,8 +41,6 @@ class AttackExecutor < Action
       else
         @finished_animating = false
       end
-    else
-      puts "LOL"
     end
   end
 
@@ -59,7 +57,7 @@ class AttackExecutor < Action
     elsif @level.units.none?{|u| u.team == COMPUTER_TEAM }
       @level.finish_turn(COMPUTER_TEAM)
     else
-      @next_state
+      @next_state.call
     end
   end
 
