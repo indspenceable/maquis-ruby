@@ -387,16 +387,16 @@ class GosuDisplay < Gosu::Window
 
   def move_camera(x,y)
     if x > screen_right_tile-3
-      @camera_x += (x - screen_right_tile+3)*TILE_SIZE_X / 13.0
+      @camera_x += (x - screen_right_tile+3)*TILE_SIZE_X / 3.0
     elsif x < screen_left_tile+3
-      @camera_x -= (screen_left_tile+3 - x)*TILE_SIZE_X / 13.0
+      @camera_x -= (screen_left_tile+3 - x)*TILE_SIZE_X / 3.0
     end
     @camera_x = [[@camera_x, 0].max, (MAP_SIZE_X - WINDOW_TILES_X)*TILE_SIZE_X].min
 
     if y > screen_bottom_tile-3
-      @camera_y += (y - screen_bottom_tile+3)*TILE_SIZE_Y / 13.0
+      @camera_y += (y - screen_bottom_tile+3)*TILE_SIZE_Y / 3.0
     elsif y < screen_top_tile+3
-      @camera_y -= (screen_top_tile+3 - y)*TILE_SIZE_Y / 13.0
+      @camera_y -= (screen_top_tile+3 - y)*TILE_SIZE_Y / 3.0
     end
     @camera_y = [@camera_y, 0].max
     @camera_y = [@camera_y, (MAP_SIZE_Y - WINDOW_TILES_Y)*TILE_SIZE_Y].min
