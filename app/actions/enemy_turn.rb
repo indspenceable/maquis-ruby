@@ -37,6 +37,7 @@ class EnemyTurn < Action
   end
 
   def key(k)
+    self
   end
 
   def next_unit!
