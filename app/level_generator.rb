@@ -216,13 +216,10 @@ module LevelGenerator
   end
 
   class Mountain < Base
-    # MIN_DISTANCE_X = MAP_SIZE_X/2
-    # MIN_DISTANCE_Y = MAP_SIZE_Y/2
-    NUM_POINTS = 7
-    DECAY_ITERATIONS = 5
-    def round(x)
-      (x + 0.5).to_i
-    end
+    MIN_DISTANCE_X = MAP_SIZE_X/1.2
+    MIN_DISTANCE_Y = MAP_SIZE_Y/1.2
+    NUM_POINTS = MAP_SIZE_Y/2
+    DECAY_ITERATIONS = MAP_SIZE_Y/6
 
     def generate_map
       # might not generate a good map the first time, so loop until we do.
@@ -239,8 +236,8 @@ module LevelGenerator
 
         until c
           points = NUM_POINTS.times.map{ [rand(MAP_SIZE_X), rand(MAP_SIZE_Y)] }.uniq
-          c = (points.map(&:first).max-points.map(&:first).min) > MAP_SIZE_X/1.2 &&
-              (points.map(&:last).max-points.map(&:last).min) > MAP_SIZE_Y/1.2 &&
+          c = (points.map(&:first).max-points.map(&:first).min) > MIN_DISTANCE_X &&
+              (points.map(&:last).max-points.map(&:last).min) > MIN_DISTANCE_Y &&
               points.length == NUM_POINTS
         end
 
@@ -318,7 +315,7 @@ module LevelGenerator
             case
             when r < 6
               new_forests << [x,y]
-            when r < 10
+            when r < 8
               new_forts << [x,y]
             end
           end
