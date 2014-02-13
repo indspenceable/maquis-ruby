@@ -2,6 +2,11 @@
 require 'gosu'
 require 'yaml'
 
+#constants go here too, cause yolo
+
+MAP_SIZE_X = 40
+MAP_SIZE_Y = 30
+
 require './app/skill'
 require './app/actions/base'
 require './app/actions/menu_action'
@@ -27,14 +32,13 @@ require './app/items/vulnerary'
 require './app/units/base'
 require './app/player_army'
 
-#constants go here too, cause yolo
-
-MAP_SIZE_X = 20
-MAP_SIZE_Y = 15
 
 PLAYER_TEAM = 0
 COMPUTER_TEAM = 1
 
+def round(x)
+  (x + 0.5).to_i
+end
 
 KEYS = {
   :left => Gosu::KbLeft,
@@ -54,7 +58,7 @@ end
 class TileSet
   def initialize(window, filename, tile_width, tile_height, tiles_per_row)
     @store = {}
-    @images = Gosu::Image.load_tiles(window, filename, tile_width, tile_height, false)
+    @images = Gosu::Image.load_tiles(window, filename, tile_width, tile_height, true)
     @tiles_per_row = tiles_per_row
   end
   def define!(name, xy, frames=1, ticks_per_frame=1, repeat=true)
@@ -107,19 +111,37 @@ class GosuDisplay < Gosu::Window
 
   TILE_SIZE_X = 32
   TILE_SIZE_Y = 32
-
   FONT_SIZE = 32
   FONT_BUFFER = 2
+
+  WINDOW_SIZE_X = 640
+  WINDOW_SIZE_Y = 480
+  WINDOW_TILES_X = WINDOW_SIZE_X / TILE_SIZE_X
+  WINDOW_TILES_Y =  WINDOW_SIZE_Y / TILE_SIZE_Y
+
 
   attr_reader :current_action
 
   def initialize(previous_save)
-    super(640, 480, false)
+    super(WINDOW_SIZE_X, WINDOW_SIZE_Y, false)
     action = nil
     @current_action = action || Planning.new(-1, PlayerArmy.new(6))
 
     @font = Gosu::Font.new(self, "futura", FONT_SIZE)
+    define_tile_sets
+    @camera_x = 0
+    @camera_y = 0
 
+    @camera_target_x = 0
+    @camera_target_y = 0
+  end
+
+  # def on_camera?(x,y)
+  #   (@camera_x..@camera_x/TILE_SIZE_X+WINDOW_TILES_X).include?(x) &&
+  #   (@camera_y..@camera_x/TILE_SIZE_Y+WINDOW_TILES_Y).include?(y)
+  # end
+
+  def define_tile_sets
     @tiles = tile_set(
       Gosu::Image.load_tiles(self, './tiles.png', 32, 32, true),
       10,
@@ -128,7 +150,7 @@ class GosuDisplay < Gosu::Window
         :forest => [1,0],
         :mountain => [2,0],
         :wall => [3,0],
-        :fort => [3,0],
+        :fort => [4,0],
       }
     )
 
@@ -254,7 +276,21 @@ class GosuDisplay < Gosu::Window
   def draw
     @frame ||= 0
     @frame += 1
-    @current_action.draw(self)
+
+    @ccx, @ccy = round(@camera_x), round(@camera_y)
+    translate(-@ccx, -@ccy) do
+      @current_action.draw(self)
+    end
+  end
+
+  def self.no_camera(meth)
+    original_method_name = "original_#{meth}"
+    alias_method original_method_name, meth
+    define_method(meth) do |*args|
+      translate(@ccx, @ccy) do
+        self.__send__(original_method_name, *args)
+      end
+    end
   end
 
   def draw_char_at(x, y, unit, current, animation, frame=@frame)
@@ -274,23 +310,31 @@ class GosuDisplay < Gosu::Window
       Z_RANGE[layer])
     return @units.finished?(unit.animation_for(animation), frame)
   end
+  # camera_function :draw_char_at
 
-  def draw_terrain(x,y, terrain, seen)
-    # TODO this lives somewhere else.
-    @tiles.fetch(terrain).draw_as_quad(
-      (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
-      (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
-      (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
-      (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
-      Z_RANGE[:terrain])
+  def draw_map(level)
+    (screen_left_tile.to_i-1..screen_right_tile.to_i+1).each do |x|
+      (screen_top_tile.to_i-1..screen_bottom_tile.to_i+1).each do |y|
+        terrain = level.map(x,y)
+        seen = level.see?(x,y)
+        # TODO this lives somewhere else.
+        @tiles.fetch(terrain).draw_as_quad(
+          (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
+          (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
+          (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
+          (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
+          Z_RANGE[:terrain])
 
-    draw_quad(
-      (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, 0x55000000,
-      (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, 0x55000000,
-      (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, 0x55000000,
-      (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, 0x55000000,
-      Z_RANGE[:fog]) unless seen
+        draw_quad(
+          (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, 0x55000000,
+          (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, 0x55000000,
+          (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, 0x55000000,
+          (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, 0x55000000,
+          Z_RANGE[:fog]) unless seen
+      end
+    end
   end
+  # no_camera :draw_terrain
 
   def highlight(hash_of_space_to_color)
     hash_of_space_to_color.each do |(x,y), color|
@@ -319,7 +363,6 @@ class GosuDisplay < Gosu::Window
 
   def draw_path(path)
     path.each_with_direction do |(x,y), direction|
-      p direction
       @path.fetch(direction, @frame).draw_as_quad(
         (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
         (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
@@ -329,7 +372,38 @@ class GosuDisplay < Gosu::Window
     end
   end
 
+  def screen_left_tile
+    @camera_x/TILE_SIZE_X
+  end
+  def screen_right_tile
+    (@camera_x + WINDOW_SIZE_X)/TILE_SIZE_X
+  end
+  def screen_top_tile
+    @camera_y/TILE_SIZE_Y
+  end
+  def screen_bottom_tile
+    (@camera_y + WINDOW_SIZE_Y)/TILE_SIZE_Y
+  end
+
+  def move_camera(x,y)
+    if x > screen_right_tile-3
+      @camera_x += (x - screen_right_tile+3)*TILE_SIZE_X / 13.0
+    elsif x < screen_left_tile+3
+      @camera_x -= (screen_left_tile+3 - x)*TILE_SIZE_X / 13.0
+    end
+    @camera_x = [[@camera_x, 0].max, (MAP_SIZE_X - WINDOW_TILES_X)*TILE_SIZE_X].min
+
+    if y > screen_bottom_tile-3
+      @camera_y += (y - screen_bottom_tile+3)*TILE_SIZE_Y / 13.0
+    elsif y < screen_top_tile+3
+      @camera_y -= (screen_top_tile+3 - y)*TILE_SIZE_Y / 13.0
+    end
+    @camera_y = [@camera_y, 0].max
+    @camera_y = [@camera_y, (MAP_SIZE_Y - WINDOW_TILES_Y)*TILE_SIZE_Y].min
+  end
+
   def draw_cursor(x,y)
+    move_camera(x,y)
     c = Gosu::Color::CYAN
     @effects.fetch(:cursor, @frame).draw_as_quad(
       (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
@@ -346,6 +420,7 @@ class GosuDisplay < Gosu::Window
     end
     quad(xo, yo + index*(FONT_SIZE+FONT_BUFFER)+1, 5, FONT_SIZE, Gosu::Color::RED, Z_RANGE[:menu_select])
   end
+  no_camera :draw_menu
 
   def draw_character_info(u1, u2, ignore_range)
   end
@@ -372,9 +447,10 @@ class GosuDisplay < Gosu::Window
       @font.draw string, 10, i*16, 1
     end
   end
+  no_camera :extended_character_info
 
   def character_list_for_planning(menu_items, current_item)
-    quad(0,0,640,480,Gosu::Color::WHITE,0)
+    quad(0,0,WINDOW_SIZE_X,WINDOW_SIZE_Y,Gosu::Color::WHITE,0)
     # OH MAN this is bad looking. Fixit!
     menu_items.each_with_index do |m,i|
       if m.is_a?(Unit)
@@ -388,6 +464,8 @@ class GosuDisplay < Gosu::Window
       end
     end
   end
+
+  no_camera :character_list_for_planning
 
   def draw_battle_animation(unit1, unit2, damage)
     if @drawing_battle_animation == [unit1]
