@@ -10,11 +10,13 @@ class Action
   # Releys on @level
   def draw_map(window, cursor_location = nil)
     # this should actually just place all of the terrain tiles
-    MAP_SIZE_X.times do |x|
-      MAP_SIZE_Y.times do |y|
-        add_map_location(window,x,y)
-      end
-    end
+    window.draw_map(@level)
+
+    # MAP_SIZE_X.times do |x|
+    #   MAP_SIZE_Y.times do |y|
+    #     add_map_location(window,x,y)
+    #   end
+    # end
     # then, look through all units
     # then place the cursor
     window.draw_cursor(*cursor_location) if cursor_location
@@ -27,9 +29,14 @@ class Action
         u = @level.unit_at(*m)
         (u && u != c && @level.see?(*m))
       end
+      max_x = movements.map(&:first).max+2
+      max_y = movements.map(&:last).max+2
+      min_x = movements.map(&:first).min-2
+      min_y = movements.map(&:last).min-2
+
       attack = []
-      MAP_SIZE_X.times do |x|
-        MAP_SIZE_Y.times do |y|
+      (min_x..max_x).each do |x|
+        (min_y..max_y).each do |y|
           attack << [x,y] if movements_with_no_one_there.any? do |_x,_y|
             c.weapons_that_hit_at(Path.dist(x, y, _x, _y)).any?
           end
