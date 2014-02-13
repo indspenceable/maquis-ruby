@@ -24,6 +24,8 @@ class MapAction < Action
         return rtn if rtn
       end
     end
+    @x = [[@x, MAP_SIZE_X-1].min, 0].max
+    @y = [[@y, MAP_SIZE_Y-1].min, 0].max
     self
   end
 end
