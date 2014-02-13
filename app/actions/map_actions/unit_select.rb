@@ -28,6 +28,16 @@ class UnitSelect < MapAction
     Array(@level.see?(@x,@y) && current_unit)
   end
 
+  def key(k)
+    if k == KEYS[:info] && !current_unit
+      u = @level.units.find{|c| c.team == PLAYER_TEAM && c.action_available}
+      @x, @y = u.x, u.y if u
+      self
+    else
+      super(k)
+    end
+  end
+
   def cursor_xy
     [@x, @y]
   end
