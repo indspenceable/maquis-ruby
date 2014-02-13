@@ -531,9 +531,8 @@ class GosuDisplay < Gosu::Window
   end
 end
 
-DISPLAY = GosuDisplay.new(previous_save)
 Gosu::enable_undocumented_retrofication
-
+DISPLAY = GosuDisplay.new(previous_save)
 
 def save_game
   File.open(SAVE_FILE_PATH, 'w+', 0644) do |f|
