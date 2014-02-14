@@ -182,15 +182,16 @@ class GosuDisplay < Gosu::Window
     # )
 
     @land_tiles = SingleImageTileSet.new(self, './DawnLike/Objects/Floors.png', 16, 16, 21)
-    @land_tiles.define!(:plains, [8,7], 1, 1)
+    @land_tiles.define!(:plains, [8, 7], 1, 1)
+    @land_tiles.define!(:mountain, [15, 7])
+    @land_tiles.define!(:wall, [15, 10])
 
     @tree_tiles = MultiImageTileSet.new(self, [
         './DawnLike/Objects/Trees0.png',
         './DawnLike/Objects/Trees1.png',
       ], 16, 16, 8)
     @tree_tiles.define!(:forest, [3,0])
-    @tree_tiles.define!(:wall, [4,0])
-    @tree_tiles.define!(:mountain, [5,0])
+
     @tree_tiles.define!(:fort, [1,1])
 
 
