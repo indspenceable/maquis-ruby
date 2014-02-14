@@ -9,7 +9,7 @@ class EnemyTurn < Action
   def initialize level
     @level = level
     @level.units.each{|u| u.action_available = true }
-    @ai = ZerkAI.new
+    @ai = CautiousAI.new
   end
 
   def auto

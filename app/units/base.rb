@@ -225,13 +225,21 @@ class Unit
     end
   end
 
+  def at(x,y,&blk)
+    ox, oy = @x, @y
+    @x, @y = x, y
+    rtn = blk.call
+    @x, @y = ox, oy
+    rtn
+  end
+
   def power_vs(vs)
     # binding.pry
-    [[
+    [
       power +
       (weapon.power + weapon_triangle_bonus_power(vs)) * weapon_effectiveness(vs) -
       vs.adjusted_armor(weapon),
-    0].max, vs.hp].min if weapon
+    0].max if weapon
   end
   def power_str(vs, at_range)
     if (at_range ? can_hit_range?(at_range) : can_hit?(vs))
