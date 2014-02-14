@@ -7,31 +7,9 @@ require 'yaml'
 MAP_SIZE_X = 20
 MAP_SIZE_Y = 15
 
-require './app/skill'
-require './app/actions/base'
-require './app/actions/menu_action'
-require './app/actions/menu_actions/turn_menu'
-require './app/actions/map_action'
-require './app/actions/map_actions/unit_select'
-require './app/actions/map_actions/move'
-require './app/actions/attack_executor'
-require './app/actions/menu_actions/attack_target_select'
-require './app/actions/menu_actions/attack_weapon_select'
-require './app/actions/menu_actions/confirm_move'
-require './app/actions/menu_actions/inventory'
-require './app/actions/unit_info'
-require './app/actions/planning'
-require './app/actions/enemy_turn'
-require './app/actions/highlight_enemy_moves'
-require './app/actions/trade'
-require './app/level_generator'
-require './app/level'
-require './app/names'
-require './app/items/weapon'
-require './app/items/vulnerary'
-require './app/units/base'
-require './app/player_army'
-
+Dir[File.join(File.dirname(__FILE__), "app/**/*.rb")].sort.each do |f|
+  require f
+end
 
 MILD_BLUE = Gosu::Color.new(255, 175, 175, 255)
 USED_BLUE = Gosu::Color.new(255, 100, 100, 100)
