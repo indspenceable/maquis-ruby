@@ -72,7 +72,7 @@ class GenericAI
 
   def score_nearest_opponent(option, friends, foes)
     foes.map{|f| Path.dist(*option.path.last_point, f.x, f.y)}.min *
-    nearest_unit_weight
+    nearest_opponent_weight
   end
 
   def score_distance_travelled(option, friends, foes)
@@ -118,7 +118,7 @@ class ZerkAI < GenericAI
   def has_target_weight
     1000
   end
-  def nearest_unit_weight
+  def nearest_opponent_weight
     -10
   end
   def vs_lord_weight
