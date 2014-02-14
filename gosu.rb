@@ -73,8 +73,6 @@ class TileSetProxy
     end
   end
   def fetch(name, *args)
-    puts "store is #{@store.keys}"
-    puts "name is #{name}"
     @store[name].fetch(name, *args)
   end
   def finished?(name, *args)
@@ -127,9 +125,7 @@ class MultiImageTileSet < SingleImageTileSet
   end
   def define!(name, xy, ticks_per_frame=1, repeat=true)
     x,y = xy
-    puts "name is #{name} xy is #{xy} x is #{x} y is #{y}"
     xy = [@frame_count*x, y]
-    puts "xy is now #{xy}"
     super(name, xy, @frame_count, ticks_per_frame, repeat)
   end
   def mass_define(ticks_per_frame, repeat, name_to_xy)
@@ -255,71 +251,6 @@ class GosuDisplay < Gosu::Window
     @effects.define!(:cursor, [0,0], 4, 5)
     @effects.define!(:red_selector, [0,1], 1, 30)
 
-    @units = SingleImageTileSet.new(self, './units.png', 32, 32, 10)
-    # @units.define!(:fighter_idle,          [0, 0], 2, 30)
-    # @units.define!(:cavalier_idle,         [0, 1], 2, 30)
-    # @units.define!(:knight_idle,           [0, 2], 2, 30)
-    # @units.define!(:mage_idle,             [0, 3], 2, 30)
-    # @units.define!(:archer_idle,           [0, 4], 2, 30)
-    # @units.define!(:pegasus_knight_idle,   [0, 5], 2, 30)
-    # @units.define!(:myrmidon_idle,         [0, 6], 2, 30)
-    # @units.define!(:nomad_idle,            [2, 0], 2, 30)
-    # @units.define!(:wyvern_rider_idle,     [2, 1], 2, 30)
-    # @units.define!(:thief_idle,            [2, 2], 2, 30)
-    # @units.define!(:monk_idle,             [2, 3], 2, 30)
-    # @units.define!(:mercenary_idle,        [2, 4], 2, 30)
-    # @units.define!(:shaman_idle,           [2, 5], 2, 30)
-    # @units.define!(:soldier_idle,          [2, 6], 2, 30)
-    # @units.define!(:brigand_idle,          [4, 0], 2, 30)
-
-    # @units.define!(:fighter_attack,        [4, 1], 5, 10)
-    # @units.define!(:cavalier_attack,       [4, 1], 5, 10)
-    # @units.define!(:knight_attack,         [4, 1], 5, 10)
-    # @units.define!(:mage_attack,           [4, 1], 5, 10)
-    # @units.define!(:archer_attack,         [4, 1], 5, 10)
-    # @units.define!(:pegasus_knight_attack, [4, 1], 5, 10)
-    # @units.define!(:myrmidon_attack,       [4, 1], 5, 10)
-    # @units.define!(:nomad_attack,          [4, 1], 5, 10)
-    # @units.define!(:wyvern_rider_attack,   [4, 1], 5, 10)
-    # @units.define!(:thief_attack,          [4, 1], 5, 10)
-    # @units.define!(:monk_attack,           [4, 1], 5, 10)
-    # @units.define!(:mercenary_attack,      [4, 1], 5, 10)
-    # @units.define!(:shaman_attack,         [4, 1], 5, 10)
-    # @units.define!(:soldier_attack,        [4, 1], 5, 10)
-    # @units.define!(:brigand_attack,        [4, 1], 5, 10)
-
-    # @units.define!(:fighter_hit,           [4, 2], 3, 10)
-    # @units.define!(:cavalier_hit,          [4, 2], 3, 10)
-    # @units.define!(:knight_hit,            [4, 2], 3, 10)
-    # @units.define!(:mage_hit,              [4, 2], 3, 10)
-    # @units.define!(:archer_hit,            [4, 2], 3, 10)
-    # @units.define!(:pegasus_knight_hit,    [4, 2], 3, 10)
-    # @units.define!(:myrmidon_hit,          [4, 2], 3, 10)
-    # @units.define!(:nomad_hit,             [4, 2], 3, 10)
-    # @units.define!(:wyvern_rider_hit,      [4, 2], 3, 10)
-    # @units.define!(:thief_hit,             [4, 2], 3, 10)
-    # @units.define!(:monk_hit,              [4, 2], 3, 10)
-    # @units.define!(:mercenary_hit,         [4, 2], 3, 10)
-    # @units.define!(:shaman_hit,            [4, 2], 3, 10)
-    # @units.define!(:soldier_hit,           [4, 2], 3, 10)
-    # @units.define!(:brigand_hit,           [4, 2], 3, 10)
-
-    # @units.define!(:fighter_death,         [4, 3], 3, 10)
-    # @units.define!(:cavalier_death,        [4, 3], 3, 10)
-    # @units.define!(:knight_death,          [4, 3], 3, 10)
-    # @units.define!(:mage_death,            [4, 3], 3, 10)
-    # @units.define!(:archer_death,          [4, 3], 3, 10)
-    # @units.define!(:pegasus_knight_death,  [4, 3], 3, 10)
-    # @units.define!(:myrmidon_death,        [4, 3], 3, 10)
-    # @units.define!(:nomad_death,           [4, 3], 3, 10)
-    # @units.define!(:wyvern_rider_death,    [4, 3], 3, 10)
-    # @units.define!(:thief_death,           [4, 3], 3, 10)
-    # @units.define!(:monk_death,            [4, 3], 3, 10)
-    # @units.define!(:mercenary_death,       [4, 3], 3, 10)
-    # @units.define!(:shaman_death,          [4, 3], 3, 10)
-    # @units.define!(:soldier_death,         [4, 3], 3, 10)
-    # @units.define!(:brigand_death,         [4, 3], 3, 10)
-    # (window, filenames, tile_width, tile_height, tiles_per_row)
     @people = MultiImageTileSet.new(self, [
       './DawnLike/Characters/Player0.png',
       './DawnLike/Characters/Player1.png'
@@ -639,7 +570,4 @@ def save_game
   end
 end
 
-if $0 == __FILE__
-  DISPLAY.show
-end
-
+DISPLAY.show
