@@ -311,11 +311,16 @@ class GosuDisplay < Gosu::Window
     layer = current ? :current_char : :char
 
     @all_units.fetch(unit.animation_for(animation), frame).draw_as_quad(
-      (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
-      (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
-      (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
-      (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
+      (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
+      (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
+      (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
+      (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
       Z_RANGE[layer])
+    quad(TILE_SIZE_X*x, TILE_SIZE_Y*y, TILE_SIZE_X, 1, c, Z_RANGE[layer])
+    quad(TILE_SIZE_X*x, TILE_SIZE_Y*(y+1)-1, TILE_SIZE_X, 1, c, Z_RANGE[layer])
+    quad(TILE_SIZE_X*(x+1)-1, TILE_SIZE_Y*y, 1, TILE_SIZE_Y, c, Z_RANGE[layer])
+    quad(TILE_SIZE_X*x, TILE_SIZE_Y*y, 1, TILE_SIZE_Y, c, Z_RANGE[layer])
+
     return @all_units.finished?(unit.animation_for(animation), frame)
   end
   # camera_function :draw_char_at
