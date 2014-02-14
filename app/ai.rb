@@ -136,17 +136,21 @@ class CautiousAI < GenericAI
   def has_target_weight
     30
   end
+
   def damage_dealt_weight
-    2
+    1
   end
+
   def damage_taken_weight
-    -3
+    -1
   end
+
   def distance_from_pack_weight
-    -6
+    -2
   end
-  def distance_from_player_pack_weight
-    -3
+
+  def nearest_opponent_weight
+    -1
   end
 end
 
