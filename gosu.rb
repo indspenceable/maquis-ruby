@@ -515,15 +515,15 @@ class GosuDisplay < Gosu::Window
 
   no_camera :character_list_for_planning
 
-  def draw_battle_animation(unit1, unit2, damage)
-    if @drawing_battle_animation == [unit1]
+  def draw_battle_animation(unit1, unit2, damage, identifier)
+    if @drawing_battle_animation == identifier
       @animation_frame += 1
     else
       @animation_frame = 0
     end
-    @drawing_battle_animation = [unit1]
+    @drawing_battle_animation = identifier
 
-    color = (unit1.team == PLAYER_TEAM) ? Gosu::Color::BLUE : Gosu::Color::RED
+    # color = (unit1.team == PLAYER_TEAM) ? Gosu::Color::BLUE : Gosu::Color::RED
 
     # @battle_animations.fetch(:battle, @animation_frame).draw_as_quad(
     #     160+0,   120+0, color,
@@ -532,22 +532,23 @@ class GosuDisplay < Gosu::Window
     #     160+0, 120+240, color,
     #   Z_RANGE[:animation_overlay])
     finished = case damage
-    when Fixnum
+    when Fixnum,String
       [
-        draw_char_at(unit1.x, unit1.y, unit1, true, :attack, @animation_frame),
-        draw_char_at(unit2.x, unit2.y, unit2, true, :hit, @animation_frame),
-        draw_rising_text(unit2.x, unit2.y, damage.to_s, 15, @animation_frame, 2)
+        draw_char_at(unit1.x, unit1.y, unit1, true, :attack, @frame),
+        draw_char_at(unit2.x, unit2.y, unit2, true, :hit, @frame),
+        draw_rising_text(unit2.x, unit2.y, damage.to_s, 30, @animation_frame, 2),
       ]
     when :miss
       [
-        draw_char_at(unit1.x, unit1.y, unit1, true, :attack, @animation_frame),
-        draw_char_at(unit2.x, unit2.y, unit2, true, :idle, @animation_frame),
-        draw_rising_text(unit2.x, unit2.y, "Miss!", 15, @animation_frame, 2)
+        draw_char_at(unit1.x, unit1.y, unit1, true, :attack, @frame),
+        draw_char_at(unit2.x, unit2.y, unit2, true, :idle, @frame),
+        draw_rising_text(unit2.x, unit2.y, "Miss!", 30, @animation_frame, 2),
       ]
     when :death
       [
-        draw_char_at(unit1.x, unit1.y, unit1, true, :death, @animation_frame),
-        draw_char_at(unit2.x, unit2.y, unit2, true, :idle, @animation_frame),
+        draw_char_at(unit1.x, unit1.y, unit1, true, :death, @frame),
+        # draw_char_at(unit2.x, unit2.y, unit2, true, :idle, @animation_frame),
+        draw_rising_text(unit1.x, unit1.y, "Death!", 30, @animation_frame, 2),
       ]
     end.all?
   end

@@ -1,13 +1,7 @@
-# Create
-# * precalculate - does the first attack.
-# * call draw until the animation is done. This will set finished_animating
-#    to true, eventually, and then do the next attack
-# * when doing an attack, it will always set @current_hit to something.
-# * if there's ever a case where @current_hit is nil, then auto will move to
-# the correct next state
-#
-# Actaully doing attacks
-# #execute will do the next one, if we're not already one.
+# This runs an attack. Every time it runs #auto:
+# if animating something (@animating isn't nil) - return
+# if we're not finished, run the next step of battle.
+# if neither of those are true, then determine the correct next state.
 
 class AttackExecutor < Action
   attr_reader :level
@@ -15,13 +9,11 @@ class AttackExecutor < Action
   def initialize unit, target, level, &next_state
     @unit, @target, @level, @next_state = unit, target, level, next_state
     @messages = []
+    @current_state = :attack
   end
 
-  def execute
-    return if @current_state == :done
-    @current_state ||= :attack
+  def next_phase_of_battle
     @current_state = self.send(@current_state)
-    done if @current_state == :done
   end
 
   def units_for_info_panel
@@ -30,26 +22,18 @@ class AttackExecutor < Action
 
   def draw(window)
     draw_map(window)
-    draw_units(@level.units - [@unit, @target], window)
-
-    if @current_hit
-      if window.draw_battle_animation(*@current_hit)
-        @current_hit = nil
-        @finished_animating = true
-        execute
-        self
-      else
-        @finished_animating = false
-      end
-    end
-  end
-
-  def precalculate!
-    execute
+    draw_units(@level.units, window)
   end
 
   def auto
-    return self if @current_hit
+    return @animation if @animation
+    unless @current_state == :done
+      next_phase_of_battle
+      return self
+    end
+
+    done
+
     if @level.lord.nil?
       # Kill our savegame.
       `rm #{SAVE_FILE_PATH}`
@@ -91,10 +75,25 @@ class AttackExecutor < Action
       record_hit(attacker)
       crit = !!(rand(100) < attacker.crit_chance)
       damage_dealt = attacker.hit(defender, crit ? 3 : 1)
-
-      @current_hit = [attacker, defender, damage_dealt]
+      @animation = AttackAnimation.new(
+        attacker,
+        defender,
+        "#{damage_dealt}#{crit ? '!' : ''}",
+        @level
+      ) do
+        @animation = nil
+        self
+      end
     else
-      @current_hit = [attacker, defender, :miss]
+      @animation = AttackAnimation.new(
+        attacker,
+        defender,
+        :miss,
+        @level
+      ) do
+        @animation = nil
+        self
+      end
     end
   end
 
@@ -172,10 +171,12 @@ class AttackExecutor < Action
 
   def death
     if @unit.alive?
-      @current_hit = [@target, @unit, :death]
+      # @animation = [@target, @unit, :death]
+      @animation = DeathAnimation.new(@target, @level) { @animation = nil; self }
       @level.units.delete(@target)
     else
-      @current_hit = [@unit, @target, :death]
+      # @animation = [@unit, @target, :death]
+      @animation = DeathAnimation.new(@unit, @level) { @animation = nil; self }
       @level.units.delete(@unit)
     end
     :done
