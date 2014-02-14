@@ -1,17 +1,17 @@
 class GenericAI
-  def score(option, friends, foes)
-    score_target(option, friends, foes) + score_path(option, friends, foes)
+  def score(option, level)
+    score_target(option, level) + score_path(option, level)
   end
 
-  def score_target(option, friends, foes)
+  def score_target(option, level)
     option.unit.at(*option.path.last_point) do
       if option.target
         [
-          score_has_target(option, friends, foes),
-          score_damage_dealt(option, friends, foes),
-          score_damage_taken(option, friends, foes),
-          score_kill(option, friends, foes),
-          score_death(option, friends, foes),
+          score_has_target(option, level),
+          score_damage_dealt(option, level),
+          score_damage_taken(option, level),
+          score_kill(option, level),
+          score_death(option, level),
         ].inject(:+)
       else
         0
@@ -19,25 +19,25 @@ class GenericAI
     end
   end
 
-  def score_has_target(option, friends, foes)
+  def score_has_target(option, level)
     option.target ? has_target_weight : 0
   end
 
-  def score_damage_dealt(option, friends, foes)
+  def score_damage_dealt(option, level)
     (option.unit.power_vs(option.target)) *
     (option.unit.double_attack?(option.target) ? 2 : 1) *
     (option.target.can_hit?(option.unit) ? 1 : 0) *
     (damage_dealt_weight)
   end
 
-  def score_damage_taken(option, friends, foes)
+  def score_damage_taken(option, level)
     (option.target.power_vs(option.unit)) *
     (option.target.double_attack?(option.unit) ? 2 : 1) *
     (option.target.can_hit?(option.unit) ? 1 : 0) *
     (damage_taken_weight)
   end
 
-  def score_kill(option, friends, foes)
+  def score_kill(option, level)
     if option.unit.power_vs(option.target) > option.target.hp
       kill_weight
     else
@@ -45,7 +45,7 @@ class GenericAI
     end
   end
 
-  def score_death(option, friends, foes)
+  def score_death(option, level)
     if option.target.power_vs(option.unit) > option.unit.hp
       death_weight
     else
@@ -53,7 +53,7 @@ class GenericAI
     end
   end
 
-  def score_vs_lord(option, friends, foes)
+  def score_vs_lord(option, level)
     if option.target.lord?
       vs_lord_weight
     else
@@ -61,38 +61,43 @@ class GenericAI
     end
   end
 
-  def score_path(option, friends, foes)
+  def score_path(option, level)
     [
-      score_nearest_opponent(option, friends, foes),
-      score_distance_travelled(option, friends, foes),
-      score_distance_from_pack(option, friends, foes),
-      score_distance_from_player_pack(option, friends, foes),
+      score_nearest_opponent(option, level),
+      score_distance_travelled(option, level),
+      score_distance_from_pack(option, level),
+      score_distance_from_player_pack(option, level),
     ].inject(:+)
   end
 
-  def score_nearest_opponent(option, friends, foes)
+  def score_nearest_opponent(option, level)
+    foes = level.units.select{|u| u.team == PLAYER_TEAM}
     foes.map{|f| Path.dist(*option.path.last_point, f.x, f.y)}.min *
     nearest_opponent_weight
   end
 
-  def score_distance_travelled(option, friends, foes)
+  def score_distance_travelled(option, level)
     option.path.length * distance_travelled_weight
   end
 
-  def score_distance_from_pack(option, friends, foes)
+  def score_distance_from_pack(option, level)
+    friends = level.units.select{|u| u.team != PLAYER_TEAM} - [option.unit]
+
     return 0 if friends.length == 1
     ((option.path.last_point[0] -
-      round((friends - [option.unit]).map(&:x).inject(:+) / (friends.count-1).to_f)).abs +
+      round(friends.map(&:x).inject(:+) / friends.count.to_f)).abs +
      (option.path.last_point[1] -
-      round((friends - [option.unit]).map(&:y).inject(:+) / (friends.count-1).to_f)).abs) *
+      round(friends.map(&:x).inject(:+) / friends.count.to_f)).abs) *
     distance_from_pack_weight
   end
-  def score_distance_from_player_pack(option, friends, foes)
-  ((option.path.last_point[0] -
-    round(foes.map(&:x).inject(:+) / foes.count.to_f)).abs +
-   (option.path.last_point[1] -
-    round(foes.map(&:y).inject(:+) / foes.count.to_f)).abs) *
-    distance_from_player_pack_weight
+  def score_distance_from_player_pack(option, level)
+    foes = level.units.select{|u| u.team == PLAYER_TEAM}
+
+    ((option.path.last_point[0] -
+      round(foes.map(&:x).inject(:+) / foes.count.to_f)).abs +
+     (option.path.last_point[1] -
+      round(foes.map(&:y).inject(:+) / foes.count.to_f)).abs) *
+      distance_from_player_pack_weight
   end
 
   def method_missing(sym, *args)

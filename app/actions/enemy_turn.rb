@@ -18,7 +18,7 @@ class EnemyTurn < Action
     current_unit = select_a_unit(my_units)
     if current_unit
       options = find_all_options_for_unit(current_unit)
-      current_option = options.max_by{|o| @ai.score(o, my_units, player_units) }
+      current_option = options.max_by{|o| @ai.score(o, @level) }
       execute_option(current_option)
     else
       @level.finish_turn(COMPUTER_TEAM)
