@@ -548,7 +548,7 @@ class GosuDisplay < Gosu::Window
       [
         draw_char_at(unit1.x, unit1.y, unit1, true, :death, @frame),
         # draw_char_at(unit2.x, unit2.y, unit2, true, :idle, @animation_frame),
-        draw_rising_text(unit1.x, unit1.y, "Death!", 30, @animation_frame, 2),
+        draw_rising_text(unit1.x, unit1.y, "Death!", 30, @animation_frame, 0),
       ]
     end.all?
   end
