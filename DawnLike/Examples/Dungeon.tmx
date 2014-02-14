@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="15" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="Walls" tilewidth="16" tileheight="16">
+  <image source="../Objects/Walls.png" width="320" height="432"/>
+ </tileset>
+ <tileset firstgid="541" name="Floors" tilewidth="16" tileheight="16">
+  <image source="../Objects/Floors.png" width="336" height="432"/>
+ </tileset>
+ <tileset firstgid="1108" name="Pits0" tilewidth="16" tileheight="16">
+  <image source="../Objects/Pits1.png" width="128" height="352"/>
+ </tileset>
+ <tileset firstgid="1284" name="Doors0" tilewidth="16" tileheight="16">
+  <image source="../Objects/Doors1.png" width="128" height="80"/>
+ </tileset>
+ <tileset firstgid="1324" name="Decor0" tilewidth="16" tileheight="16">
+  <image source="../Objects/Decor1.png" width="128" height="288"/>
+ </tileset>
+ <tileset firstgid="1468" name="Foliage" tilewidth="16" tileheight="16">
+  <image source="../Objects/Foliage.png" width="128" height="48"/>
+ </tileset>
+ <tileset firstgid="1492" name="Player0" tilewidth="16" tileheight="16">
+  <image source="../Characters/Player1.png" width="128" height="224"/>
+ </tileset>
+ <tileset firstgid="1604" name="Pests0" tilewidth="16" tileheight="16">
+  <image source="../Characters/Pests1.png" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="1668" name="Rodents0" tilewidth="16" tileheight="16">
+  <image source="../Characters/Rodents1.png" width="128" height="64"/>
+ </tileset>
+ <tileset firstgid="1700" name="Undead0" tilewidth="16" tileheight="16">
+  <image source="../Characters/Undead1.png" width="128" height="144"/>
+ </tileset>
+ <tileset firstgid="1772" name="Money" tilewidth="16" tileheight="16">
+  <image source="../Items/Money.png" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="1836" name="Containers0" tilewidth="16" tileheight="16">
+  <image source="../Items/Containers1.png" width="128" height="48"/>
+ </tileset>
+ <layer name="Tiles" width="20" height="15">
+  <data encoding="csv">
+551,551,551,551,551,551,551,551,551,551,551,551,551,551,551,551,551,551,551,551,
+551,181,182,182,182,182,182,182,182,182,182,182,182,182,182,182,182,183,551,551,
+551,201,730,731,731,731,732,752,755,756,756,756,756,756,756,756,732,201,551,551,
+551,201,751,752,752,752,753,181,182,182,182,182,182,182,182,183,754,201,551,551,
+551,201,751,752,752,752,753,223,551,551,551,551,551,551,551,201,754,201,551,551,
+551,201,751,752,982,983,984,381,551,181,182,182,182,182,182,182,775,182,183,551,
+551,201,772,773,1003,1004,1026,381,551,201,1124,1125,1125,1125,1125,1125,1076,1126,201,551,
+551,221,182,182,363,1026,361,403,551,201,1132,1133,1133,1133,1133,1133,1076,1134,201,551,
+551,551,551,551,401,362,403,551,551,201,1132,1052,1078,1078,1078,1078,1096,1134,201,551,
+181,182,182,182,182,182,182,183,551,201,1132,1076,1133,1133,1133,1133,1133,1134,201,551,
+201,730,731,731,731,732,1055,201,551,201,1132,1076,1133,1133,1133,1133,1133,1134,201,551,
+201,751,752,752,752,753,1076,201,551,221,183,733,181,182,182,182,182,182,223,551,
+201,772,773,773,773,774,1076,201,551,551,201,754,201,551,551,551,551,551,551,551,
+221,182,182,182,182,183,1076,201,551,551,201,754,201,551,551,551,551,551,551,551,
+551,551,551,551,551,201,1076,201,551,551,201,754,201,551,551,551,551,551,551,551
+</data>
+ </layer>
+ <layer name="Sprites" width="20" height="15">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,1460,0,0,0,0,0,0,0,1460,0,0,0,0,0,0,0,
+0,0,1473,0,0,0,0,1285,0,0,2147485396,0,0,0,0,0,1473,0,0,0,
+0,0,0,1776,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,1775,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,2147485485,0,2147485276,0,1482,0,0,0,0,1460,0,0,1460,0,1286,0,0,0,
+0,0,0,1473,1471,1475,1677,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1684,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,1653,0,0,0,0,0,
+0,0,1460,0,1460,0,0,0,0,0,0,2147485165,0,0,0,0,0,0,0,0,
+0,1452,0,1379,1346,1301,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,2147485365,0,0,1305,0,0,0,0,0,1284,0,0,0,0,0,0,0,0,
+0,1340,1372,1373,0,1301,0,0,0,0,0,1472,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,1292,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,2147485325,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="15" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="Walls" tilewidth="16" tileheight="16">
+  <image source="../Objects/Walls.png" width="320" height="432"/>
+ </tileset>
+ <tileset firstgid="541" name="Floors" tilewidth="16" tileheight="16">
+  <image source="../Objects/Floors.png" width="336" height="432"/>
+ </tileset>
+ <tileset firstgid="1108" name="Pits0" tilewidth="16" tileheight="16">
+  <image source="../Objects/Pits1.png" width="128" height="352"/>
+ </tileset>
+ <tileset firstgid="1284" name="Doors0" tilewidth="16" tileheight="16">
+  <image source="../Objects/Doors1.png" width="128" height="80"/>
+ </tileset>
+ <tileset firstgid="1324" name="Decor0" tilewidth="16" tileheight="16">
+  <image source="../Objects/Decor1.png" width="128" height="288"/>
+ </tileset>
+ <tileset firstgid="1468" name="Foliage" tilewidth="16" tileheight="16">
+  <image source="../Objects/Foliage.png" width="128" height="48"/>
+ </tileset>
+ <tileset firstgid="1492" name="Player0" tilewidth="16" tileheight="16">
+  <image source="../Characters/Player1.png" width="128" height="224"/>
+ </tileset>
+ <tileset firstgid="1604" name="Tiles" tilewidth="16" tileheight="16">
+  <image source="../Objects/Tiles.png" width="128" height="80"/>
+ </tileset>
+ <tileset firstgid="1644" name="Demons0" tilewidth="16" tileheight="16">
+  <image source="../Characters/Demons1.png" width="128" height="144"/>
+ </tileset>
+ <tileset firstgid="1716" name="Dogs0" tilewidth="16" tileheight="16">
+  <image source="../Characters/Dogs1.png" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="1780" name="Trees0" tilewidth="16" tileheight="16">
+  <image source="../Objects/Trees1.png" width="128" height="432"/>
+ </tileset>
+ <tileset firstgid="1996" name="Money" tilewidth="16" tileheight="16">
+  <image source="../Items/Money.png" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="2060" name="Books" tilewidth="16" tileheight="16">
+  <image source="../Items/Books.png" width="128" height="144"/>
+ </tileset>
+ <tileset firstgid="2132" name="Necklace" tilewidth="16" tileheight="16">
+  <image source="../Items/Necklace.png" width="128" height="48"/>
+ </tileset>
+ <tileset firstgid="2156" name="Elementals0" tilewidth="16" tileheight="16">
+  <image source="../Characters/Elementals1.png" width="128" height="160"/>
+ </tileset>
+ <tileset firstgid="2236" name="Pests0" tilewidth="16" tileheight="16">
+  <image source="../Characters/Pests1.png" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="2300" name="Containers0" tilewidth="16" tileheight="16">
+  <image source="../Items/Containers1.png" width="128" height="48"/>
+ </tileset>
+ <layer name="Tiles" width="20" height="15">
+  <data encoding="csv">
+10,261,754,261,241,285,285,285,285,285,285,285,285,285,285,243,261,754,261,10,
+10,261,754,261,261,793,794,819,819,819,819,819,819,794,795,261,261,754,261,10,
+10,261,754,261,261,814,262,730,731,731,731,731,732,262,816,261,261,754,261,10,
+10,261,754,281,283,814,816,751,752,752,752,752,753,814,816,281,283,754,261,10,
+285,283,754,818,819,836,262,751,752,752,752,752,753,262,836,819,820,754,281,285,
+756,756,773,756,756,756,756,773,773,752,752,773,773,756,756,756,756,773,756,756,
+285,243,793,794,794,794,795,1252,1254,751,753,1252,1254,793,794,794,794,795,241,285,
+10,261,835,836,815,836,837,1260,1262,751,753,1260,1262,835,836,815,836,837,261,10,
+10,281,285,285,836,285,285,1260,1259,1253,1253,1257,1262,285,285,836,285,285,283,10,
+135,177,982,983,983,983,984,1260,1262,751,753,1260,1262,982,983,983,984,175,137,10,
+155,982,1004,1004,1004,1004,1005,1260,1262,751,753,1260,1262,1003,1004,1004,1004,1005,155,10,
+177,1024,1025,1004,1004,1004,1005,1260,1262,751,753,1260,1262,1003,1004,1004,1026,135,177,10,
+1252,1253,1254,1024,1025,1025,1026,1260,1262,751,753,1260,1262,1003,1004,1005,135,160,10,10,
+1261,1261,1259,1253,1253,1253,1253,1257,1259,1253,753,1260,1262,1003,1004,1005,175,179,137,10,
+1261,1261,1261,1261,1262,982,984,1260,1262,751,753,1260,1262,1003,1004,1004,983,984,175,136
+</data>
+ </layer>
+ <layer name="Sprites" width="20" height="15">
+  <data encoding="csv">
+0,0,0,0,0,0,1461,0,1460,0,0,1460,0,1461,0,0,0,0,0,0,
+0,0,2147485806,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,2147485949,0,0,2004,2008,2000,1997,0,0,2303,0,0,0,0,0,
+0,0,1294,1460,0,0,0,2004,2006,2147485797,2124,2008,2009,0,0,0,1460,1292,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,1293,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1293,0,
+0,0,0,0,0,0,0,0,0,2147485406,0,0,0,0,0,0,2198,0,0,0,
+0,0,0,2147485830,0,0,0,0,0,0,1757,0,0,0,0,0,0,0,0,0,
+0,0,0,1460,1437,1460,0,0,0,1628,1628,0,0,0,1460,1437,1460,0,0,0,
+0,0,2027,1474,0,0,1787,0,0,0,0,0,0,0,1475,0,2147485131,0,0,0,
+0,1787,0,1424,1421,1430,0,0,0,0,0,0,0,0,2190,0,0,2147485435,0,0,
+0,2014,0,2147485301,0,0,0,0,0,0,1575,0,0,0,0,1787,0,0,0,0,
+0,0,0,0,2147485303,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,2147485894,0,0,0,0,0,0,0,0,0,0,0,0,2147485435,2147485325,0,0,0,0,
+0,0,0,0,0,2147485435,0,0,0,0,0,0,0,1474,0,0,2147485326,1677,0,0
+</data>
+ </layer>
+</map>

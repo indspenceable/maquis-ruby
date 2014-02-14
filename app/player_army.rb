@@ -25,28 +25,28 @@ class PlayerArmy
     purge_dead!
     heal_all_units!
     ready_all_units!
-    @units.each{|u| u.current_level = nil}
+    @army.each{|u| u.current_level = nil}
   end
 
   def lord_klasses
-    [ArmorKnight, Myrmidon, Mercenary, Fighter]
+    [ArmorKnight, Myrmidon, Fighter]
   end
 
   def klasses
     @klass_list ||= [
-      [PegasusKnight] * 3,
+      # [PegasusKnight] * 3,
       [ArmorKnight] * 2,
-      [Cavalier] * 5,
+      # [Cavalier] * 5,
       [Myrmidon] * 2,
       [Archer] * 2,
       [Fighter] * 2,
-      [Mercenary] * 2,
+      # [Mercenary] * 2,
       # [Cleric] * 1,
       [Mage] * 1,
       [Monk] * 1,
-      [Nomad] * 1,
+      # [Nomad] * 1,
       [Shaman] * 1,
-      [WyvernRider] * 1,
+      # [WyvernRider] * 1,
       [Thief] * 2,
     ].flatten.shuffle
   end

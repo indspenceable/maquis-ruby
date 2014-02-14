@@ -55,7 +55,30 @@ previous_save = if File.exists?(SAVE_FILE_PATH)
   YAML.load(File.read(SAVE_FILE_PATH))
 end
 
-class TileSet
+class TileSetProxy
+  def initialize(tilesets)
+    @store = {}
+    tilesets.each do |ts|
+      ts.keys.each do |k|
+        if @store.key?(k)
+          raise "duplicate key!"
+        else
+          @store[k] = ts
+        end
+      end
+    end
+  end
+  def fetch(name, *args)
+    puts "store is #{@store.keys}"
+    puts "name is #{name}"
+    @store[name].fetch(name, *args)
+  end
+  def finished?(name, *args)
+    @store[name].finished?(name, *args)
+  end
+end
+
+class SingleImageTileSet
   def initialize(window, filename, tile_width, tile_height, tiles_per_row)
     @store = {}
     @images = Gosu::Image.load_tiles(window, filename, tile_width, tile_height, true)
@@ -80,6 +103,35 @@ class TileSet
   def finished?(name, animation_frame)
     _, frames, ticks_per_frame = @store.fetch(name)
     animation_frame >= (frames*ticks_per_frame)-1
+  end
+end
+
+class MultiImageTileSet < SingleImageTileSet
+  def initialize(window, filenames, tile_width, tile_height, tiles_per_row)
+    @store = {}
+    images = filenames.map do |f|
+      Gosu::Image.load_tiles(window, f, tile_width, tile_height, true)
+    end
+    @images = []
+    images.first.length.times do |i|
+      images.each do |im|
+        @images << im[i]
+      end
+    end
+    @frame_count = filenames.length
+    @tiles_per_row = tiles_per_row*filenames.length
+  end
+  def define!(name, xy, ticks_per_frame=1, repeat=true)
+    x,y = xy
+    puts "name is #{name} xy is #{xy} x is #{x} y is #{y}"
+    xy = [@frame_count*x, y]
+    puts "xy is now #{xy}"
+    super(name, xy, @frame_count, ticks_per_frame, repeat)
+  end
+  def mass_define(ticks_per_frame, repeat, name_to_xy)
+    name_to_xy.each do |name, xy|
+      define!(name, xy, ticks_per_frame, repeat)
+    end
   end
 end
 
@@ -134,27 +186,39 @@ class GosuDisplay < Gosu::Window
 
     @camera_target_x = 0
     @camera_target_y = 0
+
+    @keys = {}
   end
 
-  # def on_camera?(x,y)
-  #   (@camera_x..@camera_x/TILE_SIZE_X+WINDOW_TILES_X).include?(x) &&
-  #   (@camera_y..@camera_x/TILE_SIZE_Y+WINDOW_TILES_Y).include?(y)
-  # end
-
   def define_tile_sets
-    @tiles = tile_set(
-      Gosu::Image.load_tiles(self, './tiles.png', 32, 32, true),
-      10,
-      {
-        :plains => [0,0],
-        :forest => [1,0],
-        :mountain => [2,0],
-        :wall => [3,0],
-        :fort => [4,0],
-      }
-    )
+    # @tiles = tile_set(
+    #   Gosu::Image.load_tiles(self, './tiles.png', 32, 32, true),
+    #   10,
+    #   {
+    #     :plains => [0,0],
+    #     :forest => [1,0],
+    #     :mountain => [2,0],
+    #     :wall => [3,0],
+    #     :fort => [4,0],
+    #   }
+    # )
 
-    @path = TileSet.new(self, './path.png', 33, 32, 15)
+    @land_tiles = SingleImageTileSet.new(self, './DawnLike/Objects/Floors.png', 16, 16, 21)
+    @land_tiles.define!(:plains, [8,7], 1, 1)
+
+    @tree_tiles = MultiImageTileSet.new(self, [
+        './DawnLike/Objects/Trees0.png',
+        './DawnLike/Objects/Trees1.png',
+      ], 16, 16, 8)
+    @tree_tiles.define!(:forest, [3,0])
+    @tree_tiles.define!(:wall, [4,0])
+    @tree_tiles.define!(:mountain, [5,0])
+    @tree_tiles.define!(:fort, [1,1])
+
+
+    @tiles = TileSetProxy.new([@land_tiles, @tree_tiles])
+
+    @path = SingleImageTileSet.new(self, './path.png', 33, 32, 15)
     @path.define!(:right_right, [0,0], 1, 1)
     @path.define!(:left_left,   [0,0], 1, 1)
     @path.define!(:up_up,       [1,0], 1, 1)
@@ -183,74 +247,101 @@ class GosuDisplay < Gosu::Window
     @path.define!(:down_left, [3,2], 1, 1)
     @path.define!(:right_up,  [3,2], 1, 1)
 
-    @effects = TileSet.new(self, './effects.png', 32, 32, 10)
+    @effects = SingleImageTileSet.new(self, './effects.png', 32, 32, 10)
     @effects.define!(:cursor, [0,0], 4, 5)
     @effects.define!(:red_selector, [0,1], 1, 30)
 
-    @units = TileSet.new(self, './units.png', 32, 32, 10)
-    @units.define!(:fighter_idle,          [0, 0], 2, 30)
-    @units.define!(:cavalier_idle,         [0, 1], 2, 30)
-    @units.define!(:knight_idle,           [0, 2], 2, 30)
-    @units.define!(:mage_idle,             [0, 3], 2, 30)
-    @units.define!(:archer_idle,           [0, 4], 2, 30)
-    @units.define!(:pegasus_knight_idle,   [0, 5], 2, 30)
-    @units.define!(:myrmidon_idle,         [0, 6], 2, 30)
-    @units.define!(:nomad_idle,            [2, 0], 2, 30)
-    @units.define!(:wyvern_rider_idle,     [2, 1], 2, 30)
-    @units.define!(:thief_idle,            [2, 2], 2, 30)
-    @units.define!(:monk_idle,             [2, 3], 2, 30)
-    @units.define!(:mercenary_idle,        [2, 4], 2, 30)
-    @units.define!(:shaman_idle,           [2, 5], 2, 30)
-    @units.define!(:soldier_idle,          [2, 6], 2, 30)
-    @units.define!(:brigand_idle,          [4, 0], 2, 30)
+    @units = SingleImageTileSet.new(self, './units.png', 32, 32, 10)
+    # @units.define!(:fighter_idle,          [0, 0], 2, 30)
+    # @units.define!(:cavalier_idle,         [0, 1], 2, 30)
+    # @units.define!(:knight_idle,           [0, 2], 2, 30)
+    # @units.define!(:mage_idle,             [0, 3], 2, 30)
+    # @units.define!(:archer_idle,           [0, 4], 2, 30)
+    # @units.define!(:pegasus_knight_idle,   [0, 5], 2, 30)
+    # @units.define!(:myrmidon_idle,         [0, 6], 2, 30)
+    # @units.define!(:nomad_idle,            [2, 0], 2, 30)
+    # @units.define!(:wyvern_rider_idle,     [2, 1], 2, 30)
+    # @units.define!(:thief_idle,            [2, 2], 2, 30)
+    # @units.define!(:monk_idle,             [2, 3], 2, 30)
+    # @units.define!(:mercenary_idle,        [2, 4], 2, 30)
+    # @units.define!(:shaman_idle,           [2, 5], 2, 30)
+    # @units.define!(:soldier_idle,          [2, 6], 2, 30)
+    # @units.define!(:brigand_idle,          [4, 0], 2, 30)
 
-    @units.define!(:fighter_attack,        [4, 1], 5, 10)
-    @units.define!(:cavalier_attack,       [4, 1], 5, 10)
-    @units.define!(:knight_attack,         [4, 1], 5, 10)
-    @units.define!(:mage_attack,           [4, 1], 5, 10)
-    @units.define!(:archer_attack,         [4, 1], 5, 10)
-    @units.define!(:pegasus_knight_attack, [4, 1], 5, 10)
-    @units.define!(:myrmidon_attack,       [4, 1], 5, 10)
-    @units.define!(:nomad_attack,          [4, 1], 5, 10)
-    @units.define!(:wyvern_rider_attack,   [4, 1], 5, 10)
-    @units.define!(:thief_attack,          [4, 1], 5, 10)
-    @units.define!(:monk_attack,           [4, 1], 5, 10)
-    @units.define!(:mercenary_attack,      [4, 1], 5, 10)
-    @units.define!(:shaman_attack,         [4, 1], 5, 10)
-    @units.define!(:soldier_attack,        [4, 1], 5, 10)
-    @units.define!(:brigand_attack,        [4, 1], 5, 10)
+    # @units.define!(:fighter_attack,        [4, 1], 5, 10)
+    # @units.define!(:cavalier_attack,       [4, 1], 5, 10)
+    # @units.define!(:knight_attack,         [4, 1], 5, 10)
+    # @units.define!(:mage_attack,           [4, 1], 5, 10)
+    # @units.define!(:archer_attack,         [4, 1], 5, 10)
+    # @units.define!(:pegasus_knight_attack, [4, 1], 5, 10)
+    # @units.define!(:myrmidon_attack,       [4, 1], 5, 10)
+    # @units.define!(:nomad_attack,          [4, 1], 5, 10)
+    # @units.define!(:wyvern_rider_attack,   [4, 1], 5, 10)
+    # @units.define!(:thief_attack,          [4, 1], 5, 10)
+    # @units.define!(:monk_attack,           [4, 1], 5, 10)
+    # @units.define!(:mercenary_attack,      [4, 1], 5, 10)
+    # @units.define!(:shaman_attack,         [4, 1], 5, 10)
+    # @units.define!(:soldier_attack,        [4, 1], 5, 10)
+    # @units.define!(:brigand_attack,        [4, 1], 5, 10)
 
-    @units.define!(:fighter_hit,           [4, 2], 3, 10)
-    @units.define!(:cavalier_hit,          [4, 2], 3, 10)
-    @units.define!(:knight_hit,            [4, 2], 3, 10)
-    @units.define!(:mage_hit,              [4, 2], 3, 10)
-    @units.define!(:archer_hit,            [4, 2], 3, 10)
-    @units.define!(:pegasus_knight_hit,    [4, 2], 3, 10)
-    @units.define!(:myrmidon_hit,          [4, 2], 3, 10)
-    @units.define!(:nomad_hit,             [4, 2], 3, 10)
-    @units.define!(:wyvern_rider_hit,      [4, 2], 3, 10)
-    @units.define!(:thief_hit,             [4, 2], 3, 10)
-    @units.define!(:monk_hit,              [4, 2], 3, 10)
-    @units.define!(:mercenary_hit,         [4, 2], 3, 10)
-    @units.define!(:shaman_hit,            [4, 2], 3, 10)
-    @units.define!(:soldier_hit,           [4, 2], 3, 10)
-    @units.define!(:brigand_hit,           [4, 2], 3, 10)
+    # @units.define!(:fighter_hit,           [4, 2], 3, 10)
+    # @units.define!(:cavalier_hit,          [4, 2], 3, 10)
+    # @units.define!(:knight_hit,            [4, 2], 3, 10)
+    # @units.define!(:mage_hit,              [4, 2], 3, 10)
+    # @units.define!(:archer_hit,            [4, 2], 3, 10)
+    # @units.define!(:pegasus_knight_hit,    [4, 2], 3, 10)
+    # @units.define!(:myrmidon_hit,          [4, 2], 3, 10)
+    # @units.define!(:nomad_hit,             [4, 2], 3, 10)
+    # @units.define!(:wyvern_rider_hit,      [4, 2], 3, 10)
+    # @units.define!(:thief_hit,             [4, 2], 3, 10)
+    # @units.define!(:monk_hit,              [4, 2], 3, 10)
+    # @units.define!(:mercenary_hit,         [4, 2], 3, 10)
+    # @units.define!(:shaman_hit,            [4, 2], 3, 10)
+    # @units.define!(:soldier_hit,           [4, 2], 3, 10)
+    # @units.define!(:brigand_hit,           [4, 2], 3, 10)
 
-    @units.define!(:fighter_death,         [4, 3], 3, 10)
-    @units.define!(:cavalier_death,        [4, 3], 3, 10)
-    @units.define!(:knight_death,          [4, 3], 3, 10)
-    @units.define!(:mage_death,            [4, 3], 3, 10)
-    @units.define!(:archer_death,          [4, 3], 3, 10)
-    @units.define!(:pegasus_knight_death,  [4, 3], 3, 10)
-    @units.define!(:myrmidon_death,        [4, 3], 3, 10)
-    @units.define!(:nomad_death,           [4, 3], 3, 10)
-    @units.define!(:wyvern_rider_death,    [4, 3], 3, 10)
-    @units.define!(:thief_death,           [4, 3], 3, 10)
-    @units.define!(:monk_death,            [4, 3], 3, 10)
-    @units.define!(:mercenary_death,       [4, 3], 3, 10)
-    @units.define!(:shaman_death,          [4, 3], 3, 10)
-    @units.define!(:soldier_death,         [4, 3], 3, 10)
-    @units.define!(:brigand_death,         [4, 3], 3, 10)
+    # @units.define!(:fighter_death,         [4, 3], 3, 10)
+    # @units.define!(:cavalier_death,        [4, 3], 3, 10)
+    # @units.define!(:knight_death,          [4, 3], 3, 10)
+    # @units.define!(:mage_death,            [4, 3], 3, 10)
+    # @units.define!(:archer_death,          [4, 3], 3, 10)
+    # @units.define!(:pegasus_knight_death,  [4, 3], 3, 10)
+    # @units.define!(:myrmidon_death,        [4, 3], 3, 10)
+    # @units.define!(:nomad_death,           [4, 3], 3, 10)
+    # @units.define!(:wyvern_rider_death,    [4, 3], 3, 10)
+    # @units.define!(:thief_death,           [4, 3], 3, 10)
+    # @units.define!(:monk_death,            [4, 3], 3, 10)
+    # @units.define!(:mercenary_death,       [4, 3], 3, 10)
+    # @units.define!(:shaman_death,          [4, 3], 3, 10)
+    # @units.define!(:soldier_death,         [4, 3], 3, 10)
+    # @units.define!(:brigand_death,         [4, 3], 3, 10)
+    # (window, filenames, tile_width, tile_height, tiles_per_row)
+    @people = MultiImageTileSet.new(self, [
+      './DawnLike/Characters/Player0.png',
+      './DawnLike/Characters/Player1.png'
+    ], 16, 16, 8)
+
+    basic_hash = {
+      :fighter => [3, 3],
+      :knight  => [1, 3],
+      :mage    => [6, 3],
+      :archer  => [2, 3],
+      :myrmidon=> [1, 7],
+      :thief   => [2, 4],
+      :monk    => [0, 4],
+      :shaman  => [6,10],
+      :soldier => [0,10],
+      :brigand => [2,10],
+    }
+    better_hash = {}
+    basic_hash.each do |k,v|
+      %w(idle attack hit death).each do |w|
+        better_hash[:"#{k}_#{w}"] = v
+      end
+    end
+
+    @people.mass_define(30, true, better_hash)
+    @all_units = TileSetProxy.new([@people])
   end
 
   def update
@@ -302,13 +393,13 @@ class GosuDisplay < Gosu::Window
 
     layer = current ? :current_char : :char
 
-    @units.fetch(unit.animation_for(animation), frame).draw_as_quad(
+    @all_units.fetch(unit.animation_for(animation), frame).draw_as_quad(
       (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
       (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
       (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
       (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
       Z_RANGE[layer])
-    return @units.finished?(unit.animation_for(animation), frame)
+    return @all_units.finished?(unit.animation_for(animation), frame)
   end
   # camera_function :draw_char_at
 
@@ -318,7 +409,7 @@ class GosuDisplay < Gosu::Window
         terrain = level.map(x,y)
         seen = level.see?(x,y)
         # TODO this lives somewhere else.
-        @tiles.fetch(terrain).draw_as_quad(
+        @tiles.fetch(terrain, @frame).draw_as_quad(
           (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
           (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
           (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,

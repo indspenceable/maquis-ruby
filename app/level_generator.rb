@@ -40,6 +40,35 @@ class SoldierTheme < Theme
   end
 end
 
+class RANDOMTHEME < Theme
+  def klasses
+    [
+      Fighter,
+      ArmorKnight,
+      Mage,
+      Archer,
+      Myrmidon,
+      Thief,
+      Monk,
+      Shaman,
+      Soldier,
+      Brigand,
+    ]
+  end
+
+  def fortune
+    "Lots of fighters! Bring swords."
+  end
+
+  def team
+    "Brigand"
+  end
+
+  def boss_klass(_)
+    Fighter
+  end
+end
+
 class BrigandTheme < Theme
   def klasses
     [Brigand, Brigand, Brigand, Brigand, Fighter, Mercenary]
@@ -89,16 +118,17 @@ module LevelGenerator
 
     def theme
       @theme ||= [
-        SoldierTheme.new,
-        BrigandTheme.new,
-        BalancedArmyTheme.new,
+        # SoldierTheme.new,
+        # BrigandTheme.new,
+        # BalancedArmyTheme.new,
+        RANDOMTHEME.new,
       ].shuffle.pop
     end
 
     def select_enemy_units(difficulty)
       # how many units?
       # 13 - 20
-      enemy_count = 13 + rand(7)
+      enemy_count = number_of_enemy_units
 
       # choose a unit for the boss.
       enemy_levels = enemy_count.times.map do |x|
@@ -221,6 +251,10 @@ module LevelGenerator
     NUM_POINTS = MAP_SIZE_Y/2
     DECAY_ITERATIONS = MAP_SIZE_Y/6
 
+    def number_of_enemy_units
+      1 + rand(7)
+    end
+
     def generate_map
       # might not generate a good map the first time, so loop until we do.
       while true
@@ -340,7 +374,7 @@ module LevelGenerator
     end
 
     def fog_of_war
-      true
+      false
     end
 
     def min_distance
@@ -394,7 +428,7 @@ module LevelGenerator
     end
 
     def fog_of_war
-      true
+      false
     end
   end
 end
