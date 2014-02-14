@@ -11,15 +11,10 @@ class Action
   def draw_map(window, cursor_location = nil)
     # this should actually just place all of the terrain tiles
     window.draw_map(@level)
-
-    # MAP_SIZE_X.times do |x|
-    #   MAP_SIZE_Y.times do |y|
-    #     add_map_location(window,x,y)
-    #   end
-    # end
-    # then, look through all units
-    # then place the cursor
-    window.draw_cursor(*cursor_location) if cursor_location
+    if cursor_location
+      window.move_camera(*cursor_location,@level.map_size_x, @level.map_size_y)
+      window.draw_cursor(*cursor_location)
+    end
   end
 
   def squares_to_color_for_highlighting(c)
@@ -53,6 +48,14 @@ class Action
       end
       rtn
     end
+  end
+
+  def unit_brief(window, unit)
+    window.draw_menu([
+      unit.name,
+      unit.klass,
+      unit.health_str
+    ], nil)
   end
 
   # this method figures out the right glyph to draw, and draws it

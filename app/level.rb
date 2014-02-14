@@ -1,10 +1,10 @@
 require 'set'
 
 class Level
-  attr_reader :units, :log, :difficulty, :army, :goal
+  attr_reader :units, :log, :difficulty, :army, :goal, :map_size_x, :map_size_y
   attr_accessor :fog_of_war
   def initialize(w,h)
-    @w,@h = w,h
+    @map_size_x,@map_size_y = w,h
     @units = []
     @log = []
   end
@@ -98,8 +98,8 @@ class Level
   end
 
   def fill
-    @map = Array.new(@w) do |x|
-      Array.new(@h) do |y|
+    @map = Array.new(@map_size_x) do |x|
+      Array.new(@map_size_y) do |y|
         yield x, y
       end
     end

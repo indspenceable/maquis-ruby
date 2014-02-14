@@ -50,12 +50,7 @@ class UnitSelect < MapAction
     draw_map(window, cursor_xy)
     draw_all_units(window)
     if current_unit
-      window.draw_menu([
-        current_unit.name,
-        current_unit.klass,
-        current_unit.health_str
-
-      ], nil)
+      unit_brief(window, current_unit)
     end
   end
 end

@@ -155,7 +155,7 @@ class GosuDisplay < Gosu::Window
   def initialize(previous_save)
     super(WINDOW_SIZE_X, WINDOW_SIZE_Y, false)
     action = nil
-    @current_action = action || Planning.new(-1, PlayerArmy.new(6))
+    @current_action = action || Planning.new(-1, PlayerArmy.new(2))
 
     @font = Gosu::Font.new(self, "futura", FONT_SIZE)
     define_tile_sets
@@ -393,13 +393,14 @@ class GosuDisplay < Gosu::Window
     (@camera_y + WINDOW_SIZE_Y)/TILE_SIZE_Y
   end
 
-  def move_camera(x,y)
+  def move_camera(x, y, tiles_x, tiles_y)
+
     if x > screen_right_tile-3
       @camera_x += (x - screen_right_tile+3)*TILE_SIZE_X / 3.0
     elsif x < screen_left_tile+3
       @camera_x -= (screen_left_tile+3 - x)*TILE_SIZE_X / 3.0
     end
-    @camera_x = [[@camera_x, 0].max, (MAP_SIZE_X - WINDOW_TILES_X)*TILE_SIZE_X].min
+    @camera_x = [[@camera_x, 0].max, (tiles_x - WINDOW_TILES_X)*TILE_SIZE_X].min
 
     if y > screen_bottom_tile-3
       @camera_y += (y - screen_bottom_tile+3)*TILE_SIZE_Y / 3.0
@@ -407,11 +408,10 @@ class GosuDisplay < Gosu::Window
       @camera_y -= (screen_top_tile+3 - y)*TILE_SIZE_Y / 3.0
     end
     @camera_y = [@camera_y, 0].max
-    @camera_y = [@camera_y, (MAP_SIZE_Y - WINDOW_TILES_Y)*TILE_SIZE_Y].min
+    @camera_y = [@camera_y, (tiles_y - WINDOW_TILES_Y)*TILE_SIZE_Y].min
   end
 
   def draw_cursor(x,y)
-    move_camera(x,y)
     c = Gosu::Color::CYAN
     @effects.fetch(:cursor, @frame).draw_as_quad(
       (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
