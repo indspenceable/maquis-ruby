@@ -438,7 +438,7 @@ class GosuDisplay < Gosu::Window
   end
 
   def extended_character_info(unit)
-    [
+    draw_menu([
       unit.name,
       "#{unit.klass}: #{unit.exp_level}",
       "% 3d/100 xp" % unit.exp,
@@ -452,11 +452,11 @@ class GosuDisplay < Gosu::Window
       "#{unit.constitution}",
       unit.traits.map(&:to_s).join(', '),
       unit.instance_variable_get(:@skills).map(&:identifier).map(&:to_s).join(','),
-    ].each_with_index do |string, i|
-      @font.draw string, 10, i*16, 1
-    end
+    ],nil)
+    # ].each_with_index do |string, i|
+    #   @font.draw string, 10, i*16, 1
+    # end
   end
-  no_camera :extended_character_info
 
   def character_list_for_planning(menu_items, current_item)
     quad(0,0,WINDOW_SIZE_X,WINDOW_SIZE_Y,Gosu::Color::WHITE,0)

@@ -19,10 +19,10 @@ class Inventory < MenuAction
     end
   end
 
-  def string_and_color
+  def choice_strings
     @unit.inventory.map do |i|
-      [i.name, i.color_for(@unit), 0]
-    end + [[@did_something ? "End" : "Cancel", RED, 0]]
+      i.name
+    end + [@did_something ? "End" : "Cancel"]
   end
 
   def cancel
@@ -43,5 +43,8 @@ class Inventory < MenuAction
   end
 
   def draw(window)
+    draw_map(window)
+    draw_all_units(window)
+    window.draw_menu(choice_strings, @index)
   end
 end
