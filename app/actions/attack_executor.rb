@@ -57,6 +57,7 @@ class AttackExecutor < Action
     elsif @level.units.none?{|u| u.team == COMPUTER_TEAM }
       @level.finish_turn(COMPUTER_TEAM)
     else
+      @unit.action_available = false
       @next_state.call
     end
   end
@@ -184,7 +185,6 @@ class AttackExecutor < Action
     a,b = @unit, @target
     a,b = b,a if @target.team == PLAYER_TEAM
     gain_exp(a, b)
-    @unit.action_available = false
     @finished = true
     @finished_animating = false
   end
