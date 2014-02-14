@@ -169,17 +169,16 @@ class GosuDisplay < Gosu::Window
   end
 
   def define_tile_sets
-    # @tiles = tile_set(
-    #   Gosu::Image.load_tiles(self, './tiles.png', 32, 32, true),
-    #   10,
-    #   {
-    #     :plains => [0,0],
-    #     :forest => [1,0],
-    #     :mountain => [2,0],
-    #     :wall => [3,0],
-    #     :fort => [4,0],
-    #   }
-    # )
+    @menu = SingleImageTileSet.new(self, './menu.png', 16, 16, 3)
+    @menu.define!(:tl, [0,0])
+    @menu.define!(:t,  [1,0])
+    @menu.define!(:tr, [2,0])
+    @menu.define!(:l,  [0,1])
+    @menu.define!(:m,  [1,1])
+    @menu.define!(:r,  [2,1])
+    @menu.define!(:bl, [0,2])
+    @menu.define!(:b,  [1,2])
+    @menu.define!(:br, [2,2])
 
     @land_tiles = SingleImageTileSet.new(self, './DawnLike/Objects/Floors.png', 16, 16, 21)
     @land_tiles.define!(:plains, [8, 7], 1, 1)
@@ -422,12 +421,52 @@ class GosuDisplay < Gosu::Window
   end
 
   def draw_menu(options, index)
-    xo,yo = 10, 10
-    quad(xo, yo, 200, options.count*(FONT_SIZE+FONT_BUFFER), Gosu::Color::WHITE, Z_RANGE[:menu_background])
-    options.each_with_index do |o,i|
-      @font.draw(o, xo+5, yo + i*(FONT_SIZE+FONT_BUFFER) + 1, Z_RANGE[:menu_text], 1, 1, Gosu::Color::BLACK)
+    xo,yo = 16, 16
+    w_tiles, h_tiles = (options.max_by(&:length).length), options.count*2+1
+    width, height = w_tiles*16, h_tiles*16
+
+    w_tiles.times do |x|
+      h_tiles.times do |y|
+        yp = if y == 0
+          :t
+        elsif y == h_tiles-1
+          :b
+        end
+        xp = if x == 0
+          :l
+        elsif x == w_tiles-1
+          :r
+        end
+
+        sym = "#{yp}#{xp}"
+        sym = :m if sym == ""
+        @menu.fetch(sym.to_sym,0).draw(xo+x*16,yo+y*16, Z_RANGE[:menu_text])
+      end
     end
-    quad(xo, yo + index*(FONT_SIZE+FONT_BUFFER)+1, 5, FONT_SIZE, Gosu::Color::RED, Z_RANGE[:menu_select])
+      # @menu.fetch(:tl,0).draw(xo,yo, Z_RANGE[:menu_text])
+      # @menu.fetch(:br,0).draw(xo+width-16,yo+height-16, Z_RANGE[:menu_text])
+      # @menu.fetch(:tr,0).draw(xo+width-16,yo, Z_RANGE[:menu_text])
+      # @menu.fetch(:bl,0).draw(xo,yo+height-16, Z_RANGE[:menu_text])
+
+    # (w_tiles-2).times do |x|
+
+    # end
+    # @menu.fetch(:m, 0).draw_as_quad(
+    #   xo+16, yo+16, Gosu::Color::WHITE,
+    #   xo+width-16, yo+16, Gosu::Color::WHITE,
+    #   xo+width-16, yo+height-16, Gosu::Color::WHITE,
+    #   xo+16, yo+height-16, Gosu::Color::WHITE,
+    #   Z_RANGE[:menu_text]
+    # )
+
+
+    # quad(xo, yo, 200, options.count*(FONT_SIZE+FONT_BUFFER), Gosu::Color::WHITE, Z_RANGE[:menu_background])
+    options.each_with_index do |o,i|
+      @font.draw(o, xo+5, yo + i*(FONT_SIZE) + 1, Z_RANGE[:menu_text], 1, 1, Gosu::Color::BLACK)
+    end
+    if index
+      quad(xo, yo + index*(FONT_SIZE)+1, 5, FONT_SIZE, Gosu::Color::RED, Z_RANGE[:menu_select])
+    end
   end
   no_camera :draw_menu
 
