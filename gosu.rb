@@ -4,8 +4,8 @@ require 'yaml'
 
 #constants go here too, cause yolo
 
-MAP_SIZE_X = 40
-MAP_SIZE_Y = 30
+MAP_SIZE_X = 20
+MAP_SIZE_Y = 15
 
 require './app/skill'
 require './app/actions/base'
@@ -32,6 +32,10 @@ require './app/items/vulnerary'
 require './app/units/base'
 require './app/player_army'
 
+
+MILD_BLUE = Gosu::Color.new(255, 175, 175, 255)
+USED_BLUE = Gosu::Color.new(255, 100, 100, 100)
+MILD_RED  = Gosu::Color.new(255, 255, 175, 175)
 
 PLAYER_TEAM = 0
 COMPUTER_TEAM = 1
@@ -386,9 +390,13 @@ class GosuDisplay < Gosu::Window
 
   def draw_char_at(x, y, unit, current, animation, frame=@frame)
     c = if unit.team == PLAYER_TEAM
-      Gosu::Color::BLUE
+      if unit.action_available
+        MILD_BLUE
+      else
+        USED_BLUE
+      end
     else
-      Gosu::Color::RED
+      MILD_RED
     end
 
     layer = current ? :current_char : :char
