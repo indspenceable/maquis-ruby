@@ -57,7 +57,7 @@ class ConfirmMove < MenuAction
   def draw(window)
     draw_map(window)
     draw_all_units(window)
-    window.draw_path(@path)
+    # window.draw_path(@path)
     window.draw_menu(@choices, @index)
   end
 

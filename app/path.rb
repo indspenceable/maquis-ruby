@@ -161,4 +161,8 @@ class Path
   def length
     @path.length
   end
+
+  def at(i)
+    @path[i]
+  end
 end
