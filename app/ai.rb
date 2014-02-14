@@ -155,7 +155,7 @@ class CautiousAI < GenericAI
   end
 
   def nearest_opponent_weight
-    -1
+    -2
   end
 end
 
