@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'gosu'
 require 'yaml'
+require 'set'
 
 #constants go here too, cause yolo
 
@@ -166,6 +167,9 @@ class GosuDisplay < Gosu::Window
     @camera_target_y = 0
 
     @keys = {}
+
+    @buttons_down = Set.new
+    @button_timer = 0
   end
 
   def define_tile_sets
@@ -259,6 +263,15 @@ class GosuDisplay < Gosu::Window
   end
 
   def update
+    if @button_timer > 10
+      @buttons_down.each do |b|
+        button_down(b)
+      end
+      @button_timer -= 2
+    else
+      @button_timer += 1
+    end
+
     old_action = @current_action
     @current_action= @current_action.auto if @current_action.respond_to?(:auto)
     if old_action != @current_action && @current_action.respond_to?(:precalculate!)
@@ -267,6 +280,14 @@ class GosuDisplay < Gosu::Window
   end
 
   def button_down(id)
+    @button_timer = 0 unless @buttons_down.include?(id)
+    @buttons_down << id if [
+      KEYS[:left],
+      KEYS[:right],
+      KEYS[:up],
+      KEYS[:down],
+    ].include?(id)
+
     old_action = @current_action
     if id == KEYS[:cancel]
       @current_action = @current_action.cancel
@@ -276,6 +297,10 @@ class GosuDisplay < Gosu::Window
     if old_action != @current_action && @current_action.respond_to?(:precalculate!)
       @current_action.precalculate!
     end
+  end
+
+  def button_up(id)
+    @buttons_down.delete(id)
   end
 
   def draw
