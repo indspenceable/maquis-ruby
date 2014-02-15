@@ -72,8 +72,16 @@ class GenericAI
 
   def score_nearest_opponent(option, level)
     foes = level.units.select{|u| u.team == PLAYER_TEAM}
-    foes.map{|f| Path.dist(*option.path.last_point, f.x, f.y)}.min *
-    nearest_opponent_weight
+    foes.map{|f| Path.dist(*option.path.last_point, f.x, f.y)}.min * nearest_opponent_weight
+    # minimum = option.unit.at(*option.path.last_point) do
+    #   m = foes.map do |f|
+    #     Path.find(option.unit, f.x, f.y, level, 999, :ignore)
+    #   end
+    #   puts m.inspect
+    #   puts m.compact.map(&:length)
+    #   m.compact.map(&:length).min
+    # end
+    # (minimum||0) * nearest_opponent_weight
   end
 
   def score_distance_travelled(option, level)
@@ -83,7 +91,7 @@ class GenericAI
   def score_distance_from_pack(option, level)
     friends = level.units.select{|u| u.team != PLAYER_TEAM} - [option.unit]
 
-    return 0 if friends.length == 1
+    return 0 if friends.length == 0
     ((option.path.last_point[0] -
       round(friends.map(&:x).inject(:+) / friends.count.to_f)).abs +
      (option.path.last_point[1] -
@@ -155,7 +163,7 @@ class CautiousAI < GenericAI
   end
 
   def nearest_opponent_weight
-    -2
+    -3
   end
 end
 
