@@ -233,7 +233,9 @@ module LevelGenerator
       l.map_size_y/2
     end
     def decay_iterations(l)
-      l.map_size_y/6
+      min = l.map_size_y/6
+      max = l.map_size_y/4
+      rand(max-min)+min
     end
 
     def number_of_enemy_units
