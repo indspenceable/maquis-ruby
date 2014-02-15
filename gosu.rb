@@ -235,16 +235,17 @@ class GosuDisplay < Gosu::Window
     ], 16, 16, 8)
 
     basic_hash = {
-      :fighter => [3, 3],
-      :knight  => [1, 3],
-      :mage    => [6, 3],
-      :archer  => [2, 3],
-      :myrmidon=> [1, 7],
-      :thief   => [2, 4],
-      :monk    => [0, 4],
-      :shaman  => [6,10],
-      :soldier => [0,10],
-      :brigand => [2,10],
+      :fighter   => [3, 3],
+      :knight    => [1, 3],
+      :mage      => [6, 3],
+      :archer    => [2, 3],
+      # :myrmidon=> [1, 7],
+      :thief     => [2, 4],
+      :monk      => [0, 4],
+      :shaman    => [6,10],
+      :soldier   => [0,10],
+      :brigand   => [2,10],
+      :mercenary => [1, 7],
     }
     better_hash = {}
     basic_hash.each do |k,v|

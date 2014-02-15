@@ -47,7 +47,7 @@ class RANDOMTHEME < Theme
       ArmorKnight,
       Mage,
       Archer,
-      Myrmidon,
+      Mercenary,
       Thief,
       Monk,
       Shaman,
@@ -65,7 +65,7 @@ class RANDOMTHEME < Theme
   end
 
   def boss_klass(_)
-    Fighter
+    klasses.shuffle.pop
   end
 end
 

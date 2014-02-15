@@ -29,7 +29,7 @@ class PlayerArmy
   end
 
   def lord_klasses
-    [ArmorKnight, Myrmidon, Fighter]
+    klasses.dup
   end
 
   def klasses
@@ -37,10 +37,10 @@ class PlayerArmy
       # [PegasusKnight] * 3,
       [ArmorKnight] * 2,
       # [Cavalier] * 5,
-      [Myrmidon] * 2,
+      # [Myrmidon] * 2,
       [Archer] * 2,
       [Fighter] * 2,
-      # [Mercenary] * 2,
+      [Mercenary] * 2,
       # [Cleric] * 1,
       [Mage] * 1,
       [Monk] * 1,
