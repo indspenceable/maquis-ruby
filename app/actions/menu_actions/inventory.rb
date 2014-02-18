@@ -1,8 +1,7 @@
 class Inventory < MenuAction
-  def initialize(unit, level, previous_action)
+  def initialize(unit, level, &previous_action)
     @unit, @level, @previous_action = unit, level, previous_action
     super((0..unit.inventory.count).to_a)
-    @did_something = false
     @cancel_or_end ="Cancel"
   end
 
@@ -22,24 +21,11 @@ class Inventory < MenuAction
   def choice_strings
     @unit.inventory.map do |i|
       i.name
-    end + [@did_something ? "End" : "Cancel"]
+    end + ["Cancel"]
   end
 
   def cancel
-    if @did_something
-      @unit.action_available = false
-      UnitSelect.new(@unit.x, @unit.y, @level)
-    else
-      @previous_action
-    end
-  end
-
-  def unit_for_map_highlighting
-    nil
-  end
-
-  def units_for_info_panel
-    [@unit]
+    @previous_action.call
   end
 
   def draw(window)

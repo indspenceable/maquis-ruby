@@ -76,6 +76,6 @@ class ConfirmMove < MenuAction
   end
 
   def items
-    Inventory.new(@unit, @level, self)
+    Inventory.new(@unit, @level) { self }
   end
 end
