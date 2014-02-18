@@ -83,7 +83,12 @@ class Move < MapAction
         return UnitSelect.new(*ee.last_point, @level)
       else
         return WalkPathAction.new(@unit, @path, @level) do
-          ConfirmMove.new(@unit, @path, @level, self)
+          old_x, old_y = @unit.x, @unit.y
+          @unit.x, @unit.y = @path.last_point
+          ConfirmMove.new(@unit, @path, @level) do
+            @unit.x, @unit.y = old_x, old_y
+            self
+          end
         end
       end
     end

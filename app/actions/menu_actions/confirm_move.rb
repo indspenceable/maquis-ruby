@@ -3,24 +3,12 @@ class ConfirmMove < MenuAction
 
   attr_accessor :can_undo_move
 
-  def string_and_color
-    {
-      :attack => "Attack",
-      :items => "Item",
-      :confirm => ["End", GREEN],
-      :trade => ["Trade", GREEN],
-      # :cancel => ["Cancel", RED],
-    }
-  end
-
-  def initialize(unit, path, level, prev_action)
+  def initialize(unit, path, level, &prev_action)
     @level = level
     @unit = unit
     @prev_action = prev_action
     @path = path
     opts = []
-    @start_x, @start_y = @unit.x, @unit.y
-    @unit.x, @unit.y = @path.last_point
     if enemies_in_range.any? && unit.weapon
       opts << :attack
     end
@@ -67,8 +55,7 @@ class ConfirmMove < MenuAction
   end
 
   def cancel
-    @unit.x, @unit.y = @start_x, @start_y
-    @prev_action
+    @prev_action.call
   end
 
   def trade
