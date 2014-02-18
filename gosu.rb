@@ -156,7 +156,7 @@ class GosuDisplay < Gosu::Window
   def initialize(previous_save)
     super(WINDOW_SIZE_X, WINDOW_SIZE_Y, false)
     action = nil
-    @current_action = action || Planning.new(-1, PlayerArmy.new(2))
+    @current_action = action || Planning.new(-1, PlayerArmy.new(4))
 
     @font = Gosu::Font.new(self, "futura", FONT_SIZE)
     define_tile_sets
@@ -263,7 +263,7 @@ class GosuDisplay < Gosu::Window
   end
 
   def update
-    if @button_timer > 10
+    if @button_timer > 7
       @buttons_down.each do |b|
         button_down(b)
       end
@@ -342,10 +342,13 @@ class GosuDisplay < Gosu::Window
       (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
       (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
       Z_RANGE[layer])
-    quad(TILE_SIZE_X*x, TILE_SIZE_Y*y, TILE_SIZE_X, 1, c, Z_RANGE[layer])
-    quad(TILE_SIZE_X*x, TILE_SIZE_Y*(y+1)-1, TILE_SIZE_X, 1, c, Z_RANGE[layer])
-    quad(TILE_SIZE_X*(x+1)-1, TILE_SIZE_Y*y, 1, TILE_SIZE_Y, c, Z_RANGE[layer])
-    quad(TILE_SIZE_X*x, TILE_SIZE_Y*y, 1, TILE_SIZE_Y, c, Z_RANGE[layer])
+
+    border_size = 2
+
+    quad(TILE_SIZE_X*x, TILE_SIZE_Y*y, TILE_SIZE_X, border_size, c, Z_RANGE[layer])
+    quad(TILE_SIZE_X*x, TILE_SIZE_Y*(y+1)-border_size, TILE_SIZE_X, border_size, c, Z_RANGE[layer])
+    quad(TILE_SIZE_X*(x+1)-border_size, TILE_SIZE_Y*y, border_size, TILE_SIZE_Y, c, Z_RANGE[layer])
+    quad(TILE_SIZE_X*x, TILE_SIZE_Y*y, border_size, TILE_SIZE_Y, c, Z_RANGE[layer])
 
     return @all_units.finished?(unit.animation_for(animation), frame)
   end
@@ -573,7 +576,7 @@ class GosuDisplay < Gosu::Window
       [
         draw_char_at(unit1.x, unit1.y, unit1, true, :attack, @frame),
         draw_char_at(unit2.x, unit2.y, unit2, true, :idle, @frame),
-        draw_rising_text(unit2.x, unit2.y, "Miss!", 30, @animation_frame, 2),
+        draw_rising_text(unit1.x, unit1.y, "Miss!", 30, @animation_frame, 2),
       ]
     when :death
       [

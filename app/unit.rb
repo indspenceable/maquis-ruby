@@ -20,6 +20,15 @@ class Unit
     :constitution,
   ]
 
+  BASE_STATS = {
+    :max_hp => 15,
+    :power => 1,
+    :skill => 1,
+    :armor => 0,
+    :speed => 0,
+    :resistance => 0,
+  }
+
   attr_reader *STATS
 
   attr_reader :exp_level, :hp, :exp
@@ -28,7 +37,7 @@ class Unit
     @growths[stat]
   end
 
-  LEVEL_UPS_FOR_LEVEL_ONE = 3
+  LEVEL_UPS_FOR_LEVEL_ONE = 5
 
   def initialize team, name, exp_level = 1, is_lord=false, average=false
     @team, @name = team, name
@@ -39,7 +48,7 @@ class Unit
 
     @action_available = true
     STATS.each do |stat|
-      self.instance_variable_set(:"@#{stat}", starting_stats[stat])
+      self.instance_variable_set(:"@#{stat}", BASE_STATS[stat] || starting_stats[stat])
       raise "#{stat} starting value undefined for #{self.class.name}!" unless starting_stats[stat]
       raise "#{stat} growth undefined for #{self.class.name}!" unless class_growths[stat] || stat==:constitution
     end
