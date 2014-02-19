@@ -134,21 +134,40 @@ class Unit
   def health_str
     "#{@hp}/#{max_hp}"
   end
+
   def health_color
     @hp/max_hp.to_f > 0.66 ? GREEN :
       @hp / max_hp.to_f > 0.33 ? BLUE : RED
   end
 
+  def strength_string(pct)
+    case
+    when pct < 30
+      "LOW"
+    when pct < 50
+      "MED"
+    when pct < 80
+      "HIGH"
+    else
+      "!!!"
+    end
+  end
+
+
+  def health_for_info_str
+    "#{health_str} hp #{strength_string(@growths[:max_hp])}"
+  end
+
   def armor_for_info_str
-    "ARM: #{armor}"
+    "ARM: #{armor} #{strength_string(@growths[:armor])}"
   end
 
   def resistance_for_info_str
-    "RES: #{resistance}"
+    "RES: #{resistance} #{strength_string(@growths[:resistance])}"
   end
 
   def speed_for_info_str
-    "SPE: #{speed}"
+    "SPE: #{speed} #{strength_string(@growths[:speed])}"
   end
 
   def terrain
@@ -185,7 +204,7 @@ class Unit
 
   # POWER
   def power_for_info_str
-    weapon ? "POW: #{power}" : "POW: NA"
+    "POW: #{power} #{strength_string(@growths[:power])}"
   end
 
   def weapon_triangle(my_type, their_type)
@@ -294,7 +313,7 @@ class Unit
     end
   end
   def skill_for_info_str
-    weapon ? "HIT: #{skill}" : "HIT: NA"
+    "SKILL: #{skill} #{strength_string(@growths[:skill])}"
   end
 
   # CRITICAL HITS

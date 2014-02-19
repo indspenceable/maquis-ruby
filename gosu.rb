@@ -511,11 +511,13 @@ class GosuDisplay < Gosu::Window
   end
 
   def extended_character_info(unit)
+    quad(0,0,WINDOW_SIZE_X,WINDOW_SIZE_Y,Gosu::Color::WHITE,0)
     draw_menu([
       unit.name,
       "#{unit.klass}: #{unit.exp_level}",
       "% 3d/100 xp" % unit.exp,
-      "#{unit.health_str} hp",
+      '',
+      unit.health_for_info_str,
       unit.power_for_info_str,
       unit.skill_for_info_str,
       unit.armor_for_info_str,
