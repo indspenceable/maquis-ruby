@@ -128,7 +128,7 @@ module LevelGenerator
     def select_enemy_units(difficulty)
       # how many units?
       # 13 - 20
-      enemy_count = number_of_enemy_units
+      enemy_count = number_of_enemy_units(difficulty)
 
       # choose a unit for the boss.
       enemy_levels = enemy_count.times.map do |x|
@@ -238,8 +238,8 @@ module LevelGenerator
       rand(max-min)+min
     end
 
-    def number_of_enemy_units
-      1 + rand(7)
+    def number_of_enemy_units(difficulty)
+      [(difficulty+1), 7].min + rand([(difficulty+1)*3, 16].min)
     end
 
 
