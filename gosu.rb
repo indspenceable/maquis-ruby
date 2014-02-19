@@ -262,7 +262,14 @@ class GosuDisplay < Gosu::Window
     @all_units = TileSetProxy.new([@people])
   end
 
-  def update
+  def change_current_action!(action)
+    return if action == @current_action
+    raise "#{@current_action} transitioned to nil!" if action.nil?
+    action.precalculate! if action.respond_to?(:precalculate)
+    @current_action = action
+  end
+
+  def trigger_sticky_keys!
     if @button_timer > 7
       @buttons_down.each do |b|
         button_down(b)
@@ -271,15 +278,9 @@ class GosuDisplay < Gosu::Window
     else
       @button_timer += 1
     end
-
-    old_action = @current_action
-    @current_action= @current_action.auto if @current_action.respond_to?(:auto)
-    if old_action != @current_action && @current_action.respond_to?(:precalculate!)
-      @current_action.precalculate!
-    end
   end
 
-  def button_down(id)
+  def track_key_press!(id)
     @button_timer = 0 unless @buttons_down.include?(id)
     @buttons_down << id if [
       KEYS[:left],
@@ -287,15 +288,21 @@ class GosuDisplay < Gosu::Window
       KEYS[:up],
       KEYS[:down],
     ].include?(id)
+  end
 
-    old_action = @current_action
-    if id == KEYS[:cancel]
-      @current_action = @current_action.cancel
-    else
-      @current_action = @current_action.key(id)
+  def update
+    trigger_sticky_keys!
+    if @current_action.respond_to?(:auto)
+      change_current_action!(@current_action.auto)
     end
-    if old_action != @current_action && @current_action.respond_to?(:precalculate!)
-      @current_action.precalculate!
+  end
+
+  def button_down(id)
+    track_key_press!(id)
+    if id == KEYS[:cancel]
+      change_current_action!(@current_action.cancel)
+    else
+      change_current_action!(@current_action.key(id))
     end
   end
 
