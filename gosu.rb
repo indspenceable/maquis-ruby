@@ -155,7 +155,7 @@ class GosuDisplay < Gosu::Window
 
   def initialize(previous_save)
     super(WINDOW_SIZE_X, WINDOW_SIZE_Y, false)
-    action = nil
+    action = previous_save
     @current_action = action || Planning.new(-1, PlayerArmy.new(4))
 
     @font = Gosu::Font.new(self, "futura", FONT_SIZE)
@@ -266,6 +266,7 @@ class GosuDisplay < Gosu::Window
     return if action == @current_action
     raise "#{@current_action} transitioned to nil!" if action.nil?
     action.precalculate! if action.respond_to?(:precalculate)
+    save_game(action)
     @current_action = action
   end
 
@@ -626,9 +627,14 @@ end
 Gosu::enable_undocumented_retrofication
 DISPLAY = GosuDisplay.new(previous_save)
 
-def save_game
-  File.open(SAVE_FILE_PATH, 'w+', 0644) do |f|
-    f << YAML.dump(DISPLAY.current_action)
+def save_game(action)
+  dump = YAML.dump(action)
+  begin
+    YAML.load(dump)
+    File.open(SAVE_FILE_PATH, 'w+', 0644) do |f|
+      f << YAML.dump(action)
+    end
+  rescue
   end
 end
 
