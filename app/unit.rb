@@ -236,9 +236,18 @@ class Unit
 
     }[my_type][their_type] || 0 rescue 0
   end
+
   def weapon_triangle_bonus_power(vs)
     return 0 unless weapon && vs.weapon
     weapon_triangle(weapon_type, vs.weapon_type)
+  end
+
+  def weapon_triangle_bonus_string(vs)
+    if weapon_triangle(weapon_type, vs.weapon_type) > 0
+      "+"
+    elsif weapon_triangle(weapon_type, vs.weapon_type) < 0
+      "-"
+    end
   end
 
   def weapon_effectiveness(vs)
@@ -334,6 +343,14 @@ class Unit
   end
   def double_attack?(vs)
     effective_speed >= vs.effective_speed + 4 if weapon
+  end
+
+  def double_attack_str(vs)
+    if double_attack?(vs)
+      "x2"
+    else
+      ""
+    end
   end
 
   def weapon

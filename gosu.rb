@@ -142,7 +142,7 @@ class GosuDisplay < Gosu::Window
 
   TILE_SIZE_X = 32
   TILE_SIZE_Y = 32
-  FONT_SIZE = 32
+  FONT_SIZE = 16
   FONT_BUFFER = 2
 
   WINDOW_SIZE_X = 640
@@ -158,7 +158,7 @@ class GosuDisplay < Gosu::Window
     action = previous_save
     @current_action = action || Planning.new(-1, PlayerArmy.new(4))
 
-    @font = Gosu::Font.new(self, "futura", FONT_SIZE)
+    @font = Gosu::Font.new(self, "courier", FONT_SIZE)
     define_tile_sets
     @camera_x = 0
     @camera_y = 0
@@ -460,6 +460,47 @@ class GosuDisplay < Gosu::Window
       (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, c,
       (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c,
       (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, c, Z_RANGE[:effects])
+  end
+
+  def compare_units(unit1, unit2)
+    attrs = [
+      :name,
+      :klass,
+      :hp,
+      :power_vs,
+      :accuracy,
+      :crit_chance,
+      :double_attack?,
+      :weapon_triangle_bonus_string
+    ]
+
+    labels = [
+      "",
+      "",
+      "HP",
+      "Pow",
+      "Acc",
+      "Crt",
+      "2x",
+      "",
+    ]
+
+    strings = attrs.map do |m|
+      if unit1.method(m).arity == 0
+        [unit1.__send__(m), unit2.__send__(m)]
+      else
+        [unit1.__send__(m, unit2), unit2.__send__(m, unit1)]
+      end
+    end
+    jst = strings.map{|a| a.first.to_s.length}.max
+
+    menu = []
+    strings.length.times do |i|
+      s1, s2 = strings[i]
+      menu << "#{s1.to_s.rjust(jst)} #{labels[i].center(3)} #{s2.to_s}"
+    end
+
+    draw_menu(menu,nil)
   end
 
   def draw_menu(options, index)

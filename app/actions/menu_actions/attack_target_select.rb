@@ -54,6 +54,10 @@ class AttackTargetSelect < TargetSelect
   def effect
     :red
   end
+  def draw(window)
+    super(window)
+    window.compare_units(@unit, @targets[@index])
+  end
 end
 
 class TradeTargetSelect < TargetSelect
