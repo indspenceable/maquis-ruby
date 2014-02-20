@@ -47,7 +47,7 @@ class Move < MapAction
       if can_add_to_path?(x,y)
         @path.add(x,y)
       else
-        @path = Path.find(@unit, x, y, @level, @unit.movement, :block_seen) || @path
+        @path = Path.find(@unit, [[x, y]], @level, @unit.movement, :block_seen) || @path
       end
 
     end

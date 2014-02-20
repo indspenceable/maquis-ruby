@@ -19,25 +19,28 @@ class Path
     }
   end
 
-  def self.find(unit, dx, dy, level, limit=999, enemy_strategy=:block)
-    path_base(:find, unit, level, limit, enemy_strategy, dx, dy)
+  def self.find(unit, destinations, level, limit=999, enemy_strategy=:block)
+    path_base(:find, unit, level, limit, enemy_strategy, destinations)
   end
 
   def self.discover_paths(unit, level, limit=999, enemy_strategy=:block)
-     path_base(:discover, unit, level, limit, enemy_strategy, nil, nil)
+     path_base(:discover, unit, level, limit, enemy_strategy, [])
   end
 
-  def self.path_base(method, unit, level, limit, enemy_strategy, dx, dy)
+  def self.path_base(method, unit, level, limit, enemy_strategy, destinations)
     unless [:ignore, :block, :block_seen].include?(enemy_strategy)
       raise "invalid enemy strategy: #{enemy_strategy}"
     end
 
+    # TODO - this should be able to a* (use shortest estimated distance to nearest (x,y) dstination)
     open_list = PQueue.new([Path.new(unit.x,unit.y, level)]) {|a, b| b.cost(unit) <=> a.cost(unit) }
     closed_list = []
     while open_list.size > 0
       current_path = open_list.pop
       path_x, path_y = current_path.last_point
-      return current_path if (method == :find) && (path_x == dx) && (path_y == dy)
+      return current_path if (method == :find) && destinations.any? do |(dx,dy)|
+        (path_x == dx) && (path_y == dy)
+      end
       closed_list << current_path
       paths_to_consider = [
         current_path.dup.add(path_x+1, path_y),

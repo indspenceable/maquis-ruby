@@ -74,12 +74,10 @@ class GenericAI
     foes = level.units.select{|u| u.team == PLAYER_TEAM}
     foes.map{|f| Path.dist(*option.path.last_point, f.x, f.y)}.min * nearest_opponent_weight
     # minimum = option.unit.at(*option.path.last_point) do
-    #   m = foes.map do |f|
-    #     Path.find(option.unit, f.x, f.y, level, 999, :ignore)
+    #   destinations = foes.map do |f|
+    #     [f.x,f.y]
     #   end
-    #   puts m.inspect
-    #   puts m.compact.map(&:length)
-    #   m.compact.map(&:length).min
+    #   Path.find(option.unit, destinations, level, 999, :ignore).length
     # end
     # (minimum||0) * nearest_opponent_weight
   end
