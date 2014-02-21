@@ -177,7 +177,7 @@ module LevelGenerator
                 baddie_area.count < baddie_units.size ||
                 level.map(px, py) != :plains ||
                 level.map(bx, by) != :plains ||
-                (px == bx && py == by)
+                Path.dist(px,py,bx,by) < 20
 
       player_area.map!(&:last_point)
       # incase theres possible movement off of the map
