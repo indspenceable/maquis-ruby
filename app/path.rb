@@ -19,6 +19,10 @@ class Path
     }
   end
 
+  def self.min_dist(_x,_y, list_of_destinations)
+    list_of_destinations.map{|x,y| (_x-x).abs + (_y-y).abs}.min || 0
+  end
+
   def self.find(unit, destinations, level, limit=999, enemy_strategy=:block)
     path_base(:find, unit, level, limit, enemy_strategy, destinations)
   end
@@ -33,7 +37,9 @@ class Path
     end
 
     # TODO - this should be able to a* (use shortest estimated distance to nearest (x,y) dstination)
-    open_list = PQueue.new([Path.new(unit.x,unit.y, level)]) {|a, b| b.cost(unit) <=> a.cost(unit) }
+    open_list = PQueue.new([Path.new(unit.x,unit.y, level)]) do |a, b|
+      b.cost(unit)+min_dist(*b.last_point, destinations) <=> a.cost(unit)+min_dist(*a.last_point, destinations)
+    end
     closed_list = []
     while open_list.size > 0
       current_path = open_list.pop
