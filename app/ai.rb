@@ -72,14 +72,14 @@ class GenericAI
 
   def score_nearest_opponent(option, level)
     foes = level.units.select{|u| u.team == PLAYER_TEAM}
-    foes.map{|f| Path.dist(*option.path.last_point, f.x, f.y)}.min * nearest_opponent_weight
-    # minimum = option.unit.at(*option.path.last_point) do
-    #   destinations = foes.map do |f|
-    #     [f.x,f.y]
-    #   end
-    #   Path.find(option.unit, destinations, level, 999, :ignore).length
-    # end
-    # (minimum||0) * nearest_opponent_weight
+    # foes.map{|f| Path.dist(*option.path.last_point, f.x, f.y)}.min * nearest_opponent_weight
+    minimum = option.unit.at(*option.path.last_point) do
+      destinations = foes.map do |f|
+        [f.x,f.y]
+      end
+      Path.find(option.unit, destinations, level, 999, :ignore).length
+    end
+    (minimum||0) * nearest_opponent_weight
   end
 
   def score_distance_travelled(option, level)
