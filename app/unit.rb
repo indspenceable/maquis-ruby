@@ -256,12 +256,17 @@ class Unit
     end
   end
 
+  UNIT_AT_MUTEX = Mutex.new
+
   def at(x,y,&blk)
-    ox, oy = @x, @y
-    @x, @y = x, y
-    rtn = blk.call
-    @x, @y = ox, oy
-    rtn
+    # not threadsafe, don't remove mutex!
+    UNIT_AT_MUTEX.synchronize do
+      ox, oy = @x, @y
+      @x, @y = x, y
+      rtn = blk.call
+      @x, @y = ox, oy
+      rtn
+    end
   end
 
   def power_vs(vs)

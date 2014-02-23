@@ -13,21 +13,49 @@ class EnemyTurn < Action
   end
 
   def auto
-    my_units     = @level.units.select{|u| u.team == COMPUTER_TEAM}
-    player_units = @level.units.select{|u| u.team == PLAYER_TEAM}
-    current_unit = select_a_unit(my_units)
-    if current_unit
-      options = find_all_options_for_unit(current_unit)
-      current_option = options.max_by{|o| @ai.score(o, @level) }
-      execute_option(current_option)
+    my_units        = @level.units.select{|u| u.team == COMPUTER_TEAM}
+    player_units    = @level.units.select{|u| u.team == PLAYER_TEAM}
+    @current_unit ||= begin
+      u = select_a_unit(my_units)
+      @mx, @my = u.x, u.y if u
+      u
+    end
+    if @current_unit
+      if @scores
+        return self if @scores.values.any?{|v| v.nil? }
+        current_option = @options.max_by{|o| @scores[o] }
+        @scores = @current_unit = nil
+        execute_option(current_option)
+      else
+        @options = find_all_options_for_unit(@current_unit)
+        @scores = {}
+        @options.each{|o| @scores[o] = nil}
+        prio = Thread.current.priority
+        @options.each do |o|
+          Thread.new do
+            @scores[o] = @ai.score(o, @level)
+          end
+        end
+        self
+      end
     else
       @level.finish_turn(COMPUTER_TEAM)
     end
   end
 
-  def draw(window)
+  def draw_real(window)
     draw_map(window)
     draw_all_units(window)
+  end
+
+  def draw(window)
+    if @current_unit
+      @current_unit.at(@mx, @my) do
+        draw_real(window)
+      end
+    else
+      draw_real(window)
+    end
   end
 
   def key(k)
