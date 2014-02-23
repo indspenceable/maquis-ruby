@@ -1,0 +1,75 @@
+# knight:
+#   growths:
+#     max_hp: ?
+#     power: ?
+#     skill: ?
+#     speed: ?
+#   promotes:
+#     - paladin # support based
+#     - darkknight    # combat based
+#   skills:
+#     - armor
+#     - attack
+# paladin:
+#   promotes:
+#     - angelica # defense + healing
+#     - crusader # offensive buffs
+#   skills:
+#     - attack
+#     - true-knight # heal all units nearby, but uses up turn.
+# angelica:
+#   promotes:
+#   skills:
+#     - attack
+#     - wings
+#     - healing_aura # passive nearby healing. Damn.
+# crusader:
+#   promotes:
+#   skills:
+#     - attack
+#     - war_chant # boost one stat for nearby units
+# darkknight:
+#   promotes:
+#     - deathknight # self damaging
+#     - duelist # debuff all neighbors
+#     # also, the darkknight gets some increased fighting stats
+# ---
+# soldier:
+#   promotes:
+#     - marshal # group combat
+#     - mercenary
+#   skills:
+# marshal:
+#   promotes:
+#     - samurai # gives bonuses to adjacent allies
+#     - myrmidon # ????
+# mercenary:
+#   promotes:
+#     - freelancer
+#     - assassin
+# ---
+# fighter:
+#   promotes:
+#     - warrior
+#     - barbarian
+
+# barbarian:
+#   promotes:
+#     - viking
+#     - berserker
+# warrior:
+#   promotes:
+#     - hero
+#     - champion/vanquishor
+soldier:
+  pretty: "a basic unit"
+  growths:
+    :max_hp: 50
+    :power: 50
+    :skill: 50
+    :armor: 50
+    :speed: 50
+    :resistance: 50
+  con: 13
+  skills:
+    - swords

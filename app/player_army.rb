@@ -7,18 +7,17 @@ class PlayerArmy
   def initialize(size)
     # build an army of size units, plus the lord.
 
-    lord = lord_klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, 1, true)
-    @army = [
-      lord
-    ]
+    # lord = lord_klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, 1, true)
+    lord = Unit.new(Unit.random_class, PLAYER_TEAM, Names.generate, 1, true)
+    @army = [ lord ]
     @army += size.times.map do |x|
-      klasses.pop.new(PLAYER_TEAM, Names.generate, 1)
+      Unit.new(Unit.random_class, PLAYER_TEAM, Names.generate, 1)
     end
     @army.each do |u|
       u.inventory << Vulnerary.new
     end
-
-    @inventory = Array.new(10) { SkillToken.new(all_skills.shuffle.pop.new) }
+    @inventory = []
+    # @inventory = Array.new(10) { SkillToken.new(all_skills.shuffle.pop.new) }
   end
 
   def next_level!
@@ -26,29 +25,6 @@ class PlayerArmy
     heal_all_units!
     ready_all_units!
     @army.each{|u| u.current_level = nil}
-  end
-
-  def lord_klasses
-    klasses.dup
-  end
-
-  def klasses
-    @klass_list ||= [
-      # [PegasusKnight] * 3,
-      [ArmorKnight] * 2,
-      # [Cavalier] * 5,
-      # [Myrmidon] * 2,
-      [Archer] * 2,
-      [Fighter] * 2,
-      [Mercenary] * 2,
-      # [Cleric] * 1,
-      [Mage] * 1,
-      [Monk] * 1,
-      # [Nomad] * 1,
-      [Shaman] * 1,
-      # [WyvernRider] * 1,
-      [Thief] * 2,
-    ].flatten.shuffle
   end
 
   def possible_recruits(diff)

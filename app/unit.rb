@@ -31,15 +31,40 @@ class Unit
 
   attr_reader *STATS
 
-  attr_reader :exp_level, :hp, :exp
+  attr_reader :exp_level, :hp, :exp, :klass
 
-  def growth_pct(stat)
-    @growths[stat]
+  def self.config
+    @config ||= YAML.load(File.read('./units.yml'))
+  end
+  def config
+    self.class.config
+  end
+
+  def class_growths
+    config[@klass]['growths']
+  end
+
+  def starting_stats
+    BASE_STATS.merge({
+      :constitution => config[@klass]['con']
+    })
+  end
+
+  def skills
+    @@skills ||= {}
+    @@skills[@klass] ||= config[@klass]['skills'].map do |s|
+      Skill.by_name(s).new
+    end
+  end
+
+  def self.random_class
+    config.keys.shuffle.pop
   end
 
   LEVEL_UPS_FOR_LEVEL_ONE = 5
 
-  def initialize team, name, exp_level = 1, is_lord=false, average=false
+  def initialize klass, team, name, exp_level = 1, is_lord=false, average=false
+    @klass = klass
     @team, @name = team, name
     @x, @y = 0, 0
 
@@ -55,11 +80,12 @@ class Unit
 
     @growths = {}
     if average
-      class_growths.each do |k, (min,max)|
-        @growths[k] = (max-min)/2 + min
+      class_growths.each do |k, val|
+        @growths[k] = val
       end
     else
-      class_growths.each do |k, (min,max)|
+      class_growths.each do |k, val|
+        min,max = val-20,val+20
         @growths[k] = rand((max-min)/5)*5 + min
       end
     end
@@ -67,13 +93,8 @@ class Unit
     # lords have universally improved growths. Look out, myrmidon lord skill stat...
     if is_lord
       @growths.keys.each do |k|
-        @growths[k] += rand(3)*5
+        @growths[k] += (rand(3)+1)*5
       end
-    end
-
-    @skills = []
-    starting_skills.each do |s|
-      learn_skill(s)
     end
 
     @hp = max_hp
@@ -99,27 +120,8 @@ class Unit
     @exp = 0
   end
 
-  def learn_skill(skill)
-    skill.class.modifiers.each do |m|
-      unless self.class.modifiable_methods.include?(m)
-        raise "#{skill} modifies non-method #{m} (not in#{self.class.modifiable_methods})!"
-      end
-    end
-    @skills.each do |s|
-      if s.conflicts?(skill.identifier) || skill.conflicts?(s.identifier)
-        raise "#{skill} conflicts with #{s}"
-      end
-    end
-    raise "Already have #{skill}" if @skills.any?{|s| s.identifier == skill.identifier}
-    @skills << skill
-  end
-
   def lord?
     @is_lord
-  end
-
-  def self.klass c
-    define_method(:klass){ c }
   end
 
   # HEALTH
@@ -459,7 +461,7 @@ class Unit
       original_method_name = "original_#{meth}"
       alias_method original_method_name, meth
       define_method(meth) do |*args|
-        @skills.inject(self.__send__(original_method_name, *args)) do |val, skill|
+        skills.inject(self.__send__(original_method_name, *args)) do |val, skill|
           unless skill.is_a?(Skill)
             raise "Skill #{skill.inspect}/#{skill.class} in #{self.class} is not a skill!"
           end
@@ -473,12 +475,12 @@ class Unit
     end
   end
 
-  def klass_sym
-    @klass_sym ||= klass.downcase.gsub(' ', '_')
+  def pretty_name
+    config[@klass]['pretty']
   end
 
   def animation_for(anim)
-    "#{klass_sym}_#{anim}".to_sym
+    "#{klass}_#{anim}".to_sym
   end
 
   def summary
@@ -498,8 +500,6 @@ end
 
 def create_class(g, k, growths, starting_stats, starting_skills)
   Class.new(Unit) do
-    klass k
-
     define_method :class_growths do
       growths
     end
@@ -509,9 +509,7 @@ def create_class(g, k, growths, starting_stats, starting_skills)
     define_method :starting_skills do
       starting_skills
     end
-    define_method :animation do
-      k.downcase.gsub(' ', '_').to_sym
-    end
+
   end
 end
 

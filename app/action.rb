@@ -53,7 +53,7 @@ class Action
   def unit_brief(window, unit)
     window.draw_menu([
       unit.name,
-      unit.klass,
+      unit.pretty_name,
       unit.health_str
     ], nil)
   end

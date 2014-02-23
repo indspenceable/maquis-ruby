@@ -465,7 +465,7 @@ class GosuDisplay < Gosu::Window
   def compare_units(unit1, unit2)
     attrs = [
       :name,
-      :klass,
+      :pretty_name,
       :hp,
       :power_vs,
       :accuracy,
@@ -563,7 +563,7 @@ class GosuDisplay < Gosu::Window
     quad(0,0,WINDOW_SIZE_X,WINDOW_SIZE_Y,Gosu::Color::WHITE,0)
     draw_menu([
       unit.name,
-      "#{unit.klass}: #{unit.exp_level}",
+      "#{unit.pretty_name}: #{unit.exp_level}",
       "% 3d/100 xp" % unit.exp,
       '',
       unit.health_for_info_str,
@@ -575,7 +575,7 @@ class GosuDisplay < Gosu::Window
       unit.weapon_name_str,
       "#{unit.constitution}",
       unit.traits.map(&:to_s).join(', '),
-      unit.instance_variable_get(:@skills).map(&:identifier).map(&:to_s).join(','),
+      unit.skills.map(&:identifier).map(&:to_s).join(','),
     ],nil)
     # ].each_with_index do |string, i|
     #   @font.draw string, 10, i*16, 1

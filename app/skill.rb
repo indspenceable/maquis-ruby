@@ -4,13 +4,11 @@
 # Basically - it's awesome.
 class Skill
   class << self
-    def identifier i
-      define_method(:identifier) { i }
-    end
-
-    def conflicts(*others)
-      define_method(:conflicts?) do |sym|
-        others.include?(sym)
+    def identifier i=nil
+      if i
+        @identifier = i
+      else
+        return @identifier
       end
     end
 
@@ -24,12 +22,17 @@ class Skill
       @modifiers[sym] = blk
     end
 
-    def modifiers
-      @modifiers.keys
+    def by_name(name)
+      rtn = ObjectSpace.each_object(Class).find do |s|
+        s < Skill && s.identifier == name
+      end
+      raise "Couldn't find skill with name: #{name}" unless rtn
+      return rtn
     end
   end
-  def conflicts?(_)
-    false
+
+  def identifier
+    self.class.identifier
   end
 
   def modifies?(sym)
@@ -44,7 +47,6 @@ end
 # our example skill is "horseback"
 class Horseback < Skill
   identifier :horse
-  conflicts :pegasus
 
   modify :movement do |m|
     m + 2
@@ -61,7 +63,6 @@ end
 
 class PegasusRider < Skill
   identifier :pegasus
-  conflicts :horse
 
   modify :movement do |m|
     m + 2
@@ -77,7 +78,7 @@ class PegasusRider < Skill
 end
 
 class WieldSwords < Skill
-  identifier :swords
+  identifier 'swords'
 
   modify :weapon_skills do |ws|
     ws + [:swords]
@@ -179,7 +180,6 @@ end
 
 # class MountainClimber
 #   identifier :mountains
-#   conflicts :horse, :pegasus
 
 #   modify :movement_costs do |old_movement_costs|
 #     old_movement_costs.merge({:mountain => 3})

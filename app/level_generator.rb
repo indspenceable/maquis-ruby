@@ -22,87 +22,21 @@ class Theme
   end
 end
 
-class SoldierTheme < Theme
-  def klasses
-    [Soldier, Soldier, Soldier, Soldier, Soldier, Cavalier]
-  end
-
-  def fortune
-    "Lots of soldiers! Bring axes."
-  end
-
-  def team
-    "Brigand"
-  end
-
-  def boss_klass(_)
-    ArmorKnight
-  end
-end
-
 class RANDOMTHEME < Theme
-  def klasses
-    [
-      Fighter,
-      ArmorKnight,
-      Mage,
-      Archer,
-      Mercenary,
-      Thief,
-      Monk,
-      Shaman,
-      Soldier,
-      Brigand,
-    ]
+  def pop_klass(_)
+    Unit.random_class
   end
 
   def fortune
-    "Lots of fighters! Bring swords."
+    "Lots of everything! Bring everything."
   end
 
   def team
-    "Brigand"
+    "Butt Brigade"
   end
 
   def boss_klass(_)
-    klasses.shuffle.pop
-  end
-end
-
-class BrigandTheme < Theme
-  def klasses
-    [Brigand, Brigand, Brigand, Brigand, Fighter, Mercenary]
-  end
-
-  def fortune
-    "Brigands coming in over the mountains. Sword wielders would be useful here."
-  end
-
-  def team
-    "Brigand"
-  end
-
-  def boss_klass(_)
-    Fighter
-  end
-end
-
-class BalancedArmyTheme < Theme
-  def klasses
-    [Brigand, Soldier, Soldier, Cavalier, Archer, ArmorKnight, Mercenary]
-  end
-
-  def fortune
-    "They're sending a balanced army at you. Bring a diversity of weapons in this battle!"
-  end
-
-  def team
-    "Brigand"
-  end
-
-
-  def boss_klass(_)
-    Mercenary
+    Unit.random_class
   end
 end
 
@@ -118,9 +52,6 @@ module LevelGenerator
 
     def theme
       @theme ||= [
-        # SoldierTheme.new,
-        # BrigandTheme.new,
-        # BalancedArmyTheme.new,
         RANDOMTHEME.new,
       ].shuffle.pop
     end
@@ -145,14 +76,16 @@ module LevelGenerator
       end
 
       return [
-        theme.boss_klass(difficulty).new(
+        Unit.new(
+          theme.boss_klass(difficulty),
           COMPUTER_TEAM,
           "Count #{Names.generate}",
           (difficulty+1)*5,
           false,
-          true)
+          true
+        )
       ] + enemy_levels.map do |lv|
-        theme.pop_klass(difficulty).new(COMPUTER_TEAM, theme.team, lv, false, true)
+        Unit.new(theme.pop_klass(difficulty), COMPUTER_TEAM, theme.team, lv, false, true)
       end
     end
 
