@@ -1,5 +1,4 @@
 class Archer < Unit
-  glyph 'a'
   klass "Archer"
   def animation
     :archer

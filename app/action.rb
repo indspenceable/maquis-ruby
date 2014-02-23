@@ -58,7 +58,6 @@ class Action
     ], nil)
   end
 
-  # this method figures out the right glyph to draw, and draws it
   def add_map_location(window, x, y)
     window.draw_terrain(x, y, @level.map(x,y), @level.see?(x,y))
   end

@@ -118,14 +118,6 @@ class Unit
     @is_lord
   end
 
-  def self.glyph c
-    define_method(:klass_glyph){ c }
-  end
-
-  def glyph
-    @is_lord ? 'l' : klass_glyph
-  end
-
   def self.klass c
     define_method(:klass){ c }
   end
@@ -506,7 +498,6 @@ end
 
 def create_class(g, k, growths, starting_stats, starting_skills)
   Class.new(Unit) do
-    glyph g
     klass k
 
     define_method :class_growths do
