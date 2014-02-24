@@ -61,8 +61,13 @@ class Unit
     class_skills + @buffs
   end
 
-  def buff!(b)
-    @buffs << b
+  def buff!(identifier, charges, max_charges=charges)
+    buff = @buffs.find{ |x| x.identifier == identifier }
+    if buff
+      buff.charges = [buff.charges + charges, max_charges].min
+    else
+      @buffs << Skill.by_name(identifier).new(charges)
+    end
   end
 
   def countdown_buffs!

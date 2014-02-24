@@ -97,19 +97,12 @@ class Skill
 end
 
 class Buff < Skill
-  def self.timeout(i=nil)
-    if i
-      @timeout = i
-    else
-      @timeout
-    end
-  end
-
+  attr_accessor :charges
   def pretty
     "#{self.class.name}(#{@charges})"
   end
 
-  def initialize(charges=self.class.timeout)
+  def initialize(charges)
     @charges = charges
   end
 
@@ -227,7 +220,7 @@ class Perform < Skill
   range (1..2)
 
   activate do |me, target, level|
-    target.buff!(Empower.new)
+    target.buff!('empower', 5)
   end
 
   def effect
@@ -236,7 +229,7 @@ class Perform < Skill
 end
 
 class Empower < Buff
-  timeout 5
+  identifier 'empower'
   modify :power do |p|
     p + 1
   end
