@@ -220,7 +220,8 @@ class Unit
   def accessible_range
     # find our longest range, then get all numbers from 0 up to that number
     # which we can hit.
-    available_weapons.map(&:range).map(&:max).max.times.select{ |x| can_hit_range?(x) }
+    max_range = available_weapons.map(&:range).map(&:max).max || 0
+    max_range.times.map(&:succ).select{ |x| can_hit_range?(x) }
   end
 
   # POWER
