@@ -32,7 +32,7 @@ class RANDOMTHEME < Theme
   end
 
   def team
-    "Butt Brigade"
+    "Bandits"
   end
 
   def boss_klass(_)
