@@ -25,6 +25,7 @@ class PlayerArmy
     heal_all_units!
     ready_all_units!
     @army.each{|u| u.current_level = nil}
+    @army.each{|u| u.clear_buffs! }
   end
 
   def possible_recruits(diff)

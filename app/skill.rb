@@ -67,6 +67,10 @@ class Skill
     self.class.identifier
   end
 
+  def pretty
+    identifier.to_s
+  end
+
   def modifies?(sym)
     !!self.class.modifier_for(sym)
   end
@@ -89,6 +93,32 @@ class Skill
 
   def action?
     self.class.action?
+  end
+end
+
+class Buff < Skill
+  def self.timeout(i=nil)
+    if i
+      @timeout = i
+    else
+      @timeout
+    end
+  end
+
+  def pretty
+    "#{self.class.name}(#{@charges})"
+  end
+
+  def initialize(charges=self.class.timeout)
+    @charges = charges
+  end
+
+  def tick
+    @charges -= 1
+  end
+
+  def expired?
+    @charges <= 0
   end
 end
 
@@ -190,30 +220,14 @@ class Farsight < Skill
   end
 end
 
-class Armor < Skill
-  identifier 'armor'
-
-  modify :movement do |m|
-    m - 1
-  end
-
-  modify :traits do |traits|
-    traits + [:armored]
-  end
-
-  modify :constitution do |con|
-    con + 2
-  end
-end
-
 class Perform < Skill
   identifier 'perform'
 
   target :friends
   range (1..2)
 
-  activate do |me, unit, level|
-    puts "BUFFED #{unit.name}"
+  activate do |me, target, level|
+    target.buff!(Empower.new)
   end
 
   def effect
@@ -221,30 +235,9 @@ class Perform < Skill
   end
 end
 
-class Vampirism < Skill
-  identifier 'vampire'
-
-  modify :hit do |damage|
-    heal(damage/2)
-    damage
+class Empower < Buff
+  timeout 5
+  modify :power do |p|
+    p + 1
   end
-
-  modify(:traits){ |traits| traits + [:undead] }
 end
-
-def all_skills
-  rtn = []
-  ObjectSpace.each_object(Class) do |s|
-    rtn << s if s < Skill
-  end
-  rtn
-end
-
-
-# class MountainClimber
-#   identifier 'mountains'
-
-#   modify :movement_costs do |old_movement_costs|
-#     old_movement_costs.merge({:mountain => 3})
-#   end
-# end

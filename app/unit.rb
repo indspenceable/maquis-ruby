@@ -50,11 +50,28 @@ class Unit
     })
   end
 
-  def skills
+  def class_skills
     @@skills ||= {}
     @@skills[@klass] ||= config[@klass]['skills'].map do |s|
       Skill.by_name(s).new
     end
+  end
+
+  def skills
+    class_skills + @buffs
+  end
+
+  def buff!(b)
+    @buffs << b
+  end
+
+  def countdown_buffs!
+    @buffs.each(&:tick)
+    @buffs.reject!(&:expired?)
+  end
+
+  def clear_buffs!
+    @buffs = []
   end
 
   def self.random_class
@@ -69,6 +86,7 @@ class Unit
     @klass = klass
     @team, @name = team, name
     @x, @y = 0, 0
+    @buffs = []
 
     #ensure everyone is exp_level 1 at least.
     exp_level = 1 if exp_level < 1

@@ -568,7 +568,7 @@ class GosuDisplay < Gosu::Window
       unit.weapon_name_str,
       "#{unit.constitution}",
       unit.traits.map(&:to_s).join(', '),
-      unit.skills.map(&:identifier).map(&:to_s).join(','),
+      unit.skills.map(&:pretty).join(','),
     ],nil)
     # ].each_with_index do |string, i|
     #   @font.draw string, 10, i*16, 1
