@@ -71,6 +71,7 @@ class GenericAI
   end
 
   def score_nearest_opponent(option, level)
+    return 0 if nearest_opponent_weight==0
     foes = level.units.select{|u| u.team == PLAYER_TEAM}
     # foes.map{|f| Path.dist(*option.path.last_point, f.x, f.y)}.min * nearest_opponent_weight
     minimum = option.unit.at(*option.path.last_point) do
