@@ -9,10 +9,15 @@ class ConfirmMove < MenuAction
     @prev_action = prev_action
     @path = path
     opts = []
-    if enemies_in_range.any? && unit.weapon
+    if valid_targets(:foes, unit.accessible_range).any?
       opts << :attack
     end
-    if friends_adjacent.any?
+    unit.skills.select(&:action?).each do |skill|
+      if valid_targets(skill.target, skill.range).any?
+        opts << skill.identifier
+      end
+    end
+    if valid_targets(:friends, 1).any?
       opts << :trade
     end
     opts << :items
@@ -22,6 +27,26 @@ class ConfirmMove < MenuAction
 
   def units_for_info_panel
     [@unit]
+  end
+
+  def valid_targets(type, range)
+    range = (range..range) unless range.respond_to?(:include?)
+
+    return case type
+    when :friends
+      # find friends, in range
+      # assume we can see them.
+      @level.units.select do |u|
+        (u.team == @unit.team) && range.include?(Path.unit_dist(u, @unit))
+      end
+    when :foes
+      #find enemies, that we can see, in range
+      @level.units.select do |u|
+        u.team != @unit.team &&
+        @level.see?(u.x, u.y) &&
+        range.include?(Path.unit_dist(u, @unit))
+      end
+    end
   end
 
   def enemies_in_range
@@ -59,10 +84,22 @@ class ConfirmMove < MenuAction
   end
 
   def trade
-    TradeTargetSelect.new(@unit, @level, friends_adjacent,@path, self)
+    TradeTargetSelect.new(@unit, @level, friends_adjacent, @path, self)
   end
 
   def items
     Inventory.new(@unit, @level) { self }
+  end
+
+  def method_missing(sym, *args)
+    skill = @unit.skills.find{|s| s.identifier == sym.to_s }
+    if skill
+      TargetSelect.new(@unit, @level, valid_targets(skill.target, skill.range), @path, skill.effect, self) do |t|
+        # SkillActivator.new(skill, @unit, t, @level)
+        skill.activate!(@unit, t, @level)
+        @unit.action_available = false
+        UnitSelect.new(@unit.x, @unit.y, @level)
+      end
+    end
   end
 end

@@ -199,6 +199,12 @@ class Unit
     weapon && weapon.in_range?(n)
   end
 
+  def accessible_range
+    # find our longest range, then get all numbers from 0 up to that number
+    # which we can hit.
+    weapons.map(&:range).map(&:max).max.times.select{ |x| can_hit_range?(x) }
+  end
+
   # POWER
   def power_for_info_str
     "POW: #{power} #{strength_string(@growths[:power])}"
@@ -355,7 +361,7 @@ class Unit
   end
 
   def weapon_type
-    weapon.weapon_type
+    weapon.weapon_type if weapon
   end
 
   def available_weapons

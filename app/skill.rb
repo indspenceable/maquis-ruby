@@ -2,6 +2,9 @@
 # this can provide it passive abilities, activated abilites,
 # stat boosts, vulnerabilities, etc.
 # Basically - it's awesome.
+
+VALID_TARGETS = [:friends, :foes, :all_units, :empty]
+
 class Skill
   class << self
     def identifier i=nil
@@ -29,6 +32,35 @@ class Skill
       raise "Couldn't find skill with name: #{name}" unless rtn
       return rtn
     end
+
+    def action?
+      @activate
+    end
+
+    def target(t=nil)
+      if t
+        raise unless VALID_TARGETS.include?(t)
+        @target = t
+      else
+        @target
+      end
+    end
+
+    def range(r=nil)
+      if r
+        @range = r
+      else
+        @range
+      end
+    end
+
+    def activate &blk
+      @activate = blk
+    end
+
+    def activate!(*args)
+      @activate.call(*args)
+    end
   end
 
   def identifier
@@ -41,6 +73,22 @@ class Skill
 
   def modify(sym, caller, val)
     caller.instance_exec(val, &self.class.modifier_for(sym))
+  end
+
+  def target
+    self.class.target
+  end
+
+  def range
+    self.class.range
+  end
+
+  def activate!(*args)
+    self.class.activate!(*args)
+  end
+
+  def action?
+    self.class.action?
   end
 end
 
@@ -160,6 +208,17 @@ end
 
 class Perform < Skill
   identifier 'perform'
+
+  target :friends
+  range (1..2)
+
+  activate do |me, unit, level|
+    puts "BUFFED #{unit.name}"
+  end
+
+  def effect
+    :blue
+  end
 end
 
 class Vampirism < Skill
