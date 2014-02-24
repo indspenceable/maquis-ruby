@@ -142,7 +142,7 @@ class GosuDisplay < Gosu::Window
 
   TILE_SIZE_X = 32
   TILE_SIZE_Y = 32
-  FONT_SIZE = 16
+  FONT_SIZE = 12
   FONT_BUFFER = 2
 
   WINDOW_SIZE_X = 640
@@ -158,7 +158,7 @@ class GosuDisplay < Gosu::Window
     action = previous_save
     @current_action = action || Planning.new(-1, PlayerArmy.new(4))
 
-    @font = Gosu::Font.new(self, "DawnLike/GUI/SDS_8x8.ttf", FONT_SIZE)
+    @font = Gosu::Font.new(self, "DawnLike/GUI/SDS_6x6.ttf", FONT_SIZE)
     define_tile_sets
     @camera_x = 0
     @camera_y = 0
@@ -173,16 +173,20 @@ class GosuDisplay < Gosu::Window
   end
 
   def define_tile_sets
-    @menu = SingleImageTileSet.new(self, './menu.png', 16, 16, 3)
-    @menu.define!(:tl, [0,0])
-    @menu.define!(:t,  [1,0])
-    @menu.define!(:tr, [2,0])
-    @menu.define!(:l,  [0,1])
-    @menu.define!(:m,  [1,1])
-    @menu.define!(:r,  [2,1])
-    @menu.define!(:bl, [0,2])
-    @menu.define!(:b,  [1,2])
-    @menu.define!(:br, [2,2])
+    @menu = MultiImageTileSet.new(self, [
+      './DawnLike/GUI/GUI0.png',
+      './DawnLike/GUI/GUI1.png',
+      ],
+      16, 16, 16)
+    @menu.define!(:tl, [1,6])
+    @menu.define!(:t,  [2,6])
+    @menu.define!(:tr, [3,6])
+    @menu.define!(:l,  [1,7])
+    @menu.define!(:m,  [2,7])
+    @menu.define!(:r,  [3,7])
+    @menu.define!(:bl, [1,8])
+    @menu.define!(:b,  [2,8])
+    @menu.define!(:br, [3,8])
 
     @land_tiles = SingleImageTileSet.new(self, './DawnLike/Objects/Floors.png', 16, 16, 21)
     @land_tiles.define!(:plains, [8, 7], 1, 1)
@@ -498,7 +502,11 @@ class GosuDisplay < Gosu::Window
 
   def draw_menu(options, index)
     xo,yo = 16, 16
-    w_tiles, h_tiles = (options.max_by(&:length).length), options.count*2+1
+    border_buffer_x = 3
+    border_buffer_y = 3
+    w_tiles = (options.max_by(&:length).length)
+    h_tiles = ((options.count*FONT_SIZE + border_buffer_y+2).to_f/16).ceil
+
     width, height = w_tiles*16, h_tiles*16
 
     w_tiles.times do |x|
@@ -538,10 +546,10 @@ class GosuDisplay < Gosu::Window
 
     # quad(xo, yo, 200, options.count*(FONT_SIZE+FONT_BUFFER), Gosu::Color::WHITE, Z_RANGE[:menu_background])
     options.each_with_index do |o,i|
-      @font.draw(o, xo+5, yo + i*(FONT_SIZE) + 1, Z_RANGE[:menu_text], 1, 1, Gosu::Color::BLACK)
+      @font.draw(o, xo+border_buffer_x+5, yo + i*(FONT_SIZE) + border_buffer_y, Z_RANGE[:menu_text], 1, 1, Gosu::Color::WHITE)
     end
     if index
-      quad(xo, yo + index*(FONT_SIZE)+1, 5, FONT_SIZE, Gosu::Color::RED, Z_RANGE[:menu_select])
+      quad(xo+border_buffer_x, yo + index*(FONT_SIZE)+border_buffer_y, 5, FONT_SIZE, Gosu::Color::RED, Z_RANGE[:menu_select])
     end
   end
   no_camera :draw_menu
