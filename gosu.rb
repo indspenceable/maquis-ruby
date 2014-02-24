@@ -238,19 +238,12 @@ class GosuDisplay < Gosu::Window
       './DawnLike/Characters/Player1.png'
     ], 16, 16, 8)
 
-    basic_hash = {
-      :fighter   => [3, 3],
-      :knight    => [1, 3],
-      :mage      => [6, 3],
-      :archer    => [2, 3],
-      # :myrmidon=> [1, 7],
-      :thief     => [2, 4],
-      :monk      => [0, 4],
-      :shaman    => [6,10],
-      :soldier   => [0,10],
-      :brigand   => [2,10],
-      :mercenary => [1, 7],
-    }
+    basic_hash = {}
+    Unit.config.each do |k, v|
+      basic_hash[k] = v['tile'] if v['tile']
+    end
+
+
     better_hash = {}
     basic_hash.each do |k,v|
       %w(idle attack hit death).each do |w|

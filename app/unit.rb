@@ -46,7 +46,7 @@ class Unit
 
   def starting_stats
     BASE_STATS.merge({
-      :constitution => config[@klass]['con']
+      :constitution => config[@klass]['con'] + rand(5)-2
     })
   end
 
@@ -58,7 +58,9 @@ class Unit
   end
 
   def self.random_class
-    config.keys.shuffle.pop
+    config.keys.select do |k|
+      config[k]['basic']
+    end.shuffle.pop
   end
 
   LEVEL_UPS_FOR_LEVEL_ONE = 5
@@ -74,18 +76,19 @@ class Unit
     @action_available = true
     STATS.each do |stat|
       self.instance_variable_set(:"@#{stat}", BASE_STATS[stat] || starting_stats[stat])
-      raise "#{stat} starting value undefined for #{self.class.name}!" unless starting_stats[stat]
-      raise "#{stat} growth undefined for #{self.class.name}!" unless class_growths[stat] || stat==:constitution
+      raise "#{stat} starting value undefined for #{@klass}!" unless starting_stats[stat]
+      raise "#{stat} growth undefined for #{@klass}!" unless class_growths[stat] || stat==:constitution
     end
 
     @growths = {}
     if average
       class_growths.each do |k, val|
+        (val/2)+20
         @growths[k] = val
       end
     else
       class_growths.each do |k, val|
-        min,max = val-20,val+20
+        min,max = 20, val+20
         @growths[k] = rand((max-min)/5)*5 + min
       end
     end
@@ -484,7 +487,7 @@ class Unit
   end
 
   def summary
-    "#{name} (#{klass}: #{exp_level})"
+    "#{name} (#{pretty_name}: #{exp_level})"
   end
 
   # stats are adjusted by skills

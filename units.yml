@@ -62,14 +62,127 @@
 #     - hero
 #     - champion/vanquishor
 soldier:
-  pretty: "a basic unit"
+  basic: true
+  pretty: Solider
+  description: A professional fighter. Not particularly experienced.
+  tile: [1, 7]
   growths:
-    :max_hp: 50
-    :power: 50
-    :skill: 50
-    :armor: 50
-    :speed: 50
-    :resistance: 50
-  con: 13
+    :max_hp: 60
+    :power: 20
+    :skill: 20
+    :armor: 20
+    :speed: 20
+    :resistance: 30
+  con: 6
   skills:
     - swords
+  promotes:
+    - hero
+    - mercenary
+hero:
+  pretty: Hero
+  description: A battle-hardended character. He leads the charge on the field of battle.
+  skills:
+    - swords
+  promotes:
+    - samurai
+    - myrmidon
+# mercenary:
+#   pretty: Mercenary
+#   description: A professional sell-sword.
+# -----
+fighter:
+  basic: true
+  pretty: Fighter
+  description: A self taught fighter. Wields axes.
+  tile: [3, 3]
+  con: 8
+  growths:
+    :max_hp: 60
+    :power: 40
+    :skill: 10
+    :armor: 20
+    :speed: 10
+    :resistance: 10
+  skills:
+    - axes
+# -----
+squire:
+  basic: true
+  pretty: Squire
+  description: A trainee to the order of knights
+  tile: [1, 3]
+  growths:
+    :max_hp: 60
+    :power: 20
+    :skill: 10
+    :armor: 30
+    :speed: 10
+    :resistance: 10
+  con: 10
+  skills:
+    - lances
+  promote:
+    - knight
+    - knave
+knight:
+  pretty: Knight
+  description: A full member of the order of knights, capable of supporting his allies.
+  skills:
+    - lances
+    - support
+  promote:
+    - paladin
+    - crusader
+paladin:
+  pretty: Paladin
+  description: A holy warrior, who can heal and support his allies simply by being there.
+  skills:
+    - lances
+    - healing
+    - aura
+crusader:
+  pretty: Crusader
+  description: A warrior leading the ranks on a noble quest. He empowers his allies in combat.
+  skills:
+    - lances
+    - empower
+knave:
+  pretty: Knave
+  description: A rogueish knight, who spurns the support of his comarades.
+  skills:
+    - lances
+    - swords
+  promotes:
+    - dragoon
+    - darkshine
+dragoon:
+  pretty: Dragoon
+  description: An experienced member of the order of knights. Able to disempower enemies.
+  skills:
+    - lances
+    - swords
+    - debuff
+darkshine:
+  pretty: Darkshine Knight
+  description: A knight in armor so dark it appears to shine. Attacks with any type of weapon.
+  skills:
+    - lances
+    - swords
+    - axes
+
+entertainer:
+  pretty: Entertainer
+  description: A travelling entertainer.
+  basic: true
+  tile: [0, 7]
+  growths:
+    :max_hp: 60
+    :power: 0
+    :skill: 30
+    :armor: 10
+    :speed: 30
+    :resistance: 10
+  con: 4
+  skills:
+    - perform

@@ -46,7 +46,7 @@ end
 
 # our example skill is "horseback"
 class Horseback < Skill
-  identifier :horse
+  identifier 'horse'
 
   modify :movement do |m|
     m + 2
@@ -62,7 +62,7 @@ class Horseback < Skill
 end
 
 class PegasusRider < Skill
-  identifier :pegasus
+  identifier 'pegasus'
 
   modify :movement do |m|
     m + 2
@@ -86,7 +86,7 @@ class WieldSwords < Skill
 end
 
 class WieldLances < Skill
-  identifier :lance
+  identifier 'lances'
 
   modify :weapon_skills do |ws|
     ws + [:lances]
@@ -94,7 +94,7 @@ class WieldLances < Skill
 end
 
 class WieldAxes < Skill
-  identifier :axes
+  identifier 'axes'
 
   modify :weapon_skills do |ws|
     ws + [:axes]
@@ -102,7 +102,7 @@ class WieldAxes < Skill
 end
 
 class CastAnima < Skill
-  identifier :anima
+  identifier 'anima'
 
   modify :weapon_skills do |ws|
     ws + [:anima]
@@ -110,7 +110,7 @@ class CastAnima < Skill
 end
 
 class CastLight < Skill
-  identifier :light
+  identifier 'light'
 
   modify :weapon_skills do |ws|
     ws + [:light]
@@ -118,7 +118,7 @@ class CastLight < Skill
 end
 
 class CastDark < Skill
-  identifier :dark
+  identifier 'dark'
 
   modify :weapon_skills do |ws|
     ws + [:dark]
@@ -126,7 +126,7 @@ class CastDark < Skill
 end
 
 class WieldBows < Skill
-  identifier :bows
+  identifier 'bows'
 
   modify :weapon_skills do |ws|
     ws + [:bows]
@@ -135,7 +135,7 @@ end
 
 
 class Farsight < Skill
-  identifier :farsight
+  identifier 'farsight'
 
   modify :los_distance do |_|
     7
@@ -143,7 +143,7 @@ class Farsight < Skill
 end
 
 class Armor < Skill
-  identifier :armor
+  identifier 'armor'
 
   modify :movement do |m|
     m - 1
@@ -158,8 +158,12 @@ class Armor < Skill
   end
 end
 
+class Perform < Skill
+  identifier 'perform'
+end
+
 class Vampirism < Skill
-  identifier :vampire
+  identifier 'vampire'
 
   modify :hit do |damage|
     heal(damage/2)
@@ -179,7 +183,7 @@ end
 
 
 # class MountainClimber
-#   identifier :mountains
+#   identifier 'mountains'
 
 #   modify :movement_costs do |old_movement_costs|
 #     old_movement_costs.merge({:mountain => 3})
