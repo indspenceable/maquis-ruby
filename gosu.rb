@@ -504,7 +504,7 @@ class GosuDisplay < Gosu::Window
     xo,yo = 16, 16
     border_buffer_x = 3
     border_buffer_y = 3
-    w_tiles = (options.max_by(&:length).length)
+    w_tiles = ((options.max_by(&:length).length*FONT_SIZE).to_f/16).ceil
     h_tiles = ((options.count*FONT_SIZE + border_buffer_y+2).to_f/16).ceil
 
     width, height = w_tiles*16, h_tiles*16
