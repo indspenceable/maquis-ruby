@@ -1,20 +1,14 @@
-tarog
+Maquis
 =====
 
-a TActics ROGuelike
+A tactics roguelike
 
 Usage
 -----
 
-`ruby curses.rb`
-
+`ruby gosu.rb`
 Should work in ruby >= 1.8.7
 
 Controls
 --------
-WASD to move / space to confirm / escape to cancel
-Alternatively, you can invoke it from:
-
-`bundle exec ruby curses.rb vi`
-
-to use vi keys (hjkl) and a for move + confirm.
+Arrows to move, z to select, x to cancel, and i for more information on a unit.
