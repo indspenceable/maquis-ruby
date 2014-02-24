@@ -59,6 +59,3 @@ class Weapon
   end
 end
 
-Dir.glob('./app/items/weapons/*').each do |f|
-  require f
-end

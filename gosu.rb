@@ -158,7 +158,7 @@ class GosuDisplay < Gosu::Window
     action = previous_save
     @current_action = action || Planning.new(-1, PlayerArmy.new(4))
 
-    @font = Gosu::Font.new(self, "courier", FONT_SIZE)
+    @font = Gosu::Font.new(self, "DawnLike/GUI/SDS_8x8.ttf", FONT_SIZE)
     define_tile_sets
     @camera_x = 0
     @camera_y = 0

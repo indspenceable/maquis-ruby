@@ -1,4 +1,3 @@
-require 'pry'
 class Unit
   attr_accessor :team, :x, :y, :action_available, :current_level
 
@@ -530,34 +529,4 @@ class Unit
     :hit
   ])
 end
-
-def create_class(g, k, growths, starting_stats, starting_skills)
-  Class.new(Unit) do
-    define_method :class_growths do
-      growths
-    end
-    define_method :starting_stats do
-      starting_stats
-    end
-    define_method :starting_skills do
-      starting_skills
-    end
-
-  end
-end
-
-Dir.glob('./app/units/*').each do |f|
-  require f
-end
-
-# Cleric = create_class('p', "Cleric", x, y, {
-
-# }, {
-#   :max_hp => 14,
-#   :power => 3,
-#   :skill => 2,
-#   :speed => 3,
-#   :armor => 1,
-#   :res =>   4,
-# }, [:staves])
 

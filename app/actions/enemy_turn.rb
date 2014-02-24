@@ -1,8 +1,4 @@
-require './app/ai'
 EnemyMoveOption = Struct.new(:unit, :path, :target)
-
-
-
 class EnemyTurn < Action
   attr_reader :level
 

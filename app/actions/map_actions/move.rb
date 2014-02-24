@@ -1,5 +1,3 @@
-require './app/path'
-
 class Move < MapAction
   attr_reader :level
 
