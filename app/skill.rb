@@ -220,7 +220,7 @@ class Perform < Skill
   range (1..2)
 
   activate do |me, target, level|
-    target.buff!('empower', 5)
+    target.buff!('empower', 1)
   end
 
   def effect
