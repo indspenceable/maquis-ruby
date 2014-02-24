@@ -123,9 +123,10 @@ class Level
     units.each do |u|
       if u.team == team
         u.action_available = true
-        if map(u.x, u.y) == '#'
+        if map(u.x, u.y) == :fort
           u.heal(u.max_hp / 10)
         end
+        u.countdown_buffs!
       end
     end
 
