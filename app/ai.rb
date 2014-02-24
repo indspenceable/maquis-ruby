@@ -31,9 +31,9 @@ class GenericAI
   end
 
   def score_damage_taken(option, level)
+    return 0 unless option.target.can_hit?(option.unit)
     (option.target.power_vs(option.unit)) *
     (option.target.double_attack?(option.unit) ? 2 : 1) *
-    (option.target.can_hit?(option.unit) ? 1 : 0) *
     (damage_taken_weight)
   end
 
@@ -46,6 +46,7 @@ class GenericAI
   end
 
   def score_death(option, level)
+    return 0 unless option.target.can_hit?(option.unit)
     if option.target.power_vs(option.unit) > option.unit.hp
       death_weight
     else
