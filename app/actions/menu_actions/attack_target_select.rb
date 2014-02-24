@@ -1,11 +1,12 @@
 class TargetSelect < MenuAction
-  def initialize unit, level, targets, path, prev_action, &next_action
+  def initialize unit, level, targets, path, effect, prev_action, &next_action
     @unit = unit
     @level = level
     @targets = targets
     @prev_action = prev_action
     @path = path
     @next_action = next_action
+    @effect = effect
     super Array.new(@targets.length){:confirm}
   end
 
@@ -39,7 +40,7 @@ class TargetSelect < MenuAction
   def draw(window)
     draw_map(window)
     draw_all_units(window)
-    window.highlight(Hash[@targets.map{|t| [[t.x, t.y], effect]}])
+    window.highlight(Hash[@targets.map{|t| [[t.x, t.y], @effect]}])
     window.highlight([selected_target.x, selected_target.y] => :cursor)
     # window.draw_unit_fight_compare(@unit, selected_target)
   end
@@ -47,13 +48,11 @@ end
 
 class AttackTargetSelect < TargetSelect
   def initialize unit, level, targets, path, prev_action
-    super(unit, level, targets, path, prev_action) do |t|
+    super(unit, level, targets, path, :red, prev_action) do |t|
       AttackWeaponSelect.new(@unit, t, @level, @path, self)
     end
   end
-  def effect
-    :red
-  end
+
   def draw(window)
     super(window)
     window.compare_units(@unit, @targets[@index])
@@ -62,14 +61,11 @@ end
 
 class TradeTargetSelect < TargetSelect
   def initialize unit, level, targets, path, prev_action
-    super(unit, level, targets, path, prev_action) do |t|
+    super(unit, level, targets, path, :blue, prev_action) do |t|
       Trade.new(unit, t, self) do
         unit.action_available = false
         UnitSelect.new(unit.x, unit.y, level)
       end
     end
-  end
-  def effect
-    :blue
   end
 end
