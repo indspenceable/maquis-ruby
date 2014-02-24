@@ -131,6 +131,7 @@ module LevelGenerator
 
     def fill_in_level(army, difficulty, level)
       baddie_units = select_enemy_units(difficulty)
+      baddie_units.each(&:select_valid_ai!)
       player_units = army.units
       success = false
       tries = 0

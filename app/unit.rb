@@ -1,5 +1,14 @@
 class Unit
   attr_accessor :team, :x, :y, :action_available, :current_level
+  attr_reader :ai
+
+  def select_valid_ai!
+    @ai = if rand(2) == 0
+      CautiousAI.new
+    else
+      ZerkAI.new
+    end
+  end
 
   def name
     if lord?

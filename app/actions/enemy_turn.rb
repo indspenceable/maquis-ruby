@@ -5,7 +5,6 @@ class EnemyTurn < Action
   def initialize level
     @level = level
     @level.units.each{|u| u.action_available = true }
-    @ai = CautiousAI.new
   end
 
   def auto
@@ -14,7 +13,16 @@ class EnemyTurn < Action
     current_unit = select_a_unit(my_units)
     if current_unit
       options = find_all_options_for_unit(current_unit)
-      current_option = options.max_by{|o| @ai.score(o, @level) }
+      current_option = options.max_by do |o|
+        ai= current_unit.ai
+
+        if ai
+          ai.score(o, @level)
+        else
+          require 'pry'
+          binding.pry
+        end
+      end
       execute_option(current_option)
     else
       @level.finish_turn(COMPUTER_TEAM)
