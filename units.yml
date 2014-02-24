@@ -152,7 +152,7 @@ knave:
   description: A rogueish knight, who spurns the support of his comarades.
   skills:
     - lances
-    - swords
+    - axes
   promotes:
     - dragoon
     - darkshine
@@ -161,14 +161,14 @@ dragoon:
   description: An experienced member of the order of knights. Able to disempower enemies.
   skills:
     - lances
+    - axes
     - swords
-    - debuff
 darkshine:
   pretty: Darkshine Knight
   description: A knight in armor so dark it appears to shine. Attacks with any type of weapon.
   skills:
     - lances
-    - swords
+    - debuffs
     - axes
 
 entertainer:
