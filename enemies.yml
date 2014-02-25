@@ -1,0 +1,15 @@
+cow:
+  pretty: Cow
+  description: Mooooo
+  tile: [1, 0]
+  tileset: Quadrapeds
+  stats:
+    :max_hp: 10
+    :power: 1
+    :skill: 1
+    :armor: 0
+    :speed: 0
+    :resistance: 0
+  con: 15
+  ais: []
+  skills: []

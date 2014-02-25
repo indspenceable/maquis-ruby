@@ -243,20 +243,43 @@ class GosuDisplay < Gosu::Window
     ], 16, 16, 8)
 
     basic_hash = {}
-    Unit.config.each do |k, v|
+    PlayerUnit.config.each do |k, v|
       basic_hash[k] = v['tile'] if v['tile']
     end
-
-
     better_hash = {}
     basic_hash.each do |k,v|
       %w(idle attack hit death).each do |w|
         better_hash[:"#{k}_#{w}"] = v
       end
     end
-
     @people.mass_define(30, true, better_hash)
-    @all_units = TileSetProxy.new([@people])
+
+
+    enemy_tilesets = {}
+    basic_hash = {}
+    Enemy.config.each do |k, v|
+      tileset = v['tileset']
+      tile = v['tile']
+      basic_hash[k] = [tileset, tile]
+    end
+    better_hash = {}
+    basic_hash.each do |k,(ts, t)|
+      %w(idle attack hit death).each do |w|
+        better_hash[ts] ||= {}
+        better_hash[ts][:"#{k}_#{w}"] = t
+      end
+    end
+    tile_sets = []
+    better_hash.each do |ts_name, ts_hash|
+      actual_tile_set = MultiImageTileSet.new(self, [
+        "./DawnLike/Characters/#{ts_name}0.png",
+        "./DawnLike/Characters/#{ts_name}1.png",
+      ], 16, 16, 8)
+      actual_tile_set.mass_define(30, true, ts_hash)
+      tile_sets << actual_tile_set
+    end
+
+    @all_units = TileSetProxy.new([@people] + tile_sets)
   end
 
   def change_current_action!(action)
@@ -561,11 +584,11 @@ class GosuDisplay < Gosu::Window
   end
 
   def extended_character_info(unit)
-    quad(0,0,WINDOW_SIZE_X,WINDOW_SIZE_Y,Gosu::Color::WHITE,0)
+    quad(@camera_x,@camera_y,WINDOW_SIZE_X,WINDOW_SIZE_Y,Gosu::Color::WHITE,0)
     draw_menu([
       unit.name,
       "#{unit.pretty_name}: #{unit.exp_level}",
-      "% 3d/100 xp" % unit.exp,
+      unit.exp_string,
       '',
       unit.health_for_info_str,
       unit.power_for_info_str,

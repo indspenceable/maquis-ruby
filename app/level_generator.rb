@@ -24,7 +24,7 @@ end
 
 class RANDOMTHEME < Theme
   def pop_klass(_)
-    Unit.random_class
+    Enemy.random_class
   end
 
   def fortune
@@ -36,7 +36,7 @@ class RANDOMTHEME < Theme
   end
 
   def boss_klass(_)
-    Unit.random_class
+    Enemy.random_class
   end
 end
 
@@ -76,16 +76,13 @@ module LevelGenerator
       end
 
       return [
-        Unit.new(
+        Enemy.new(
           theme.boss_klass(difficulty),
-          COMPUTER_TEAM,
           "Count #{Names.generate}",
-          (difficulty+1)*5,
-          false,
-          true
+          (difficulty+1)*5
         )
       ] + enemy_levels.map do |lv|
-        Unit.new(theme.pop_klass(difficulty), COMPUTER_TEAM, theme.team, lv, false, true)
+        Enemy.new(theme.pop_klass(difficulty), theme.team, lv)
       end
     end
 

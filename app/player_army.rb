@@ -8,10 +8,10 @@ class PlayerArmy
     # build an army of size units, plus the lord.
 
     # lord = lord_klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, 1, true)
-    lord = Unit.new(Unit.random_class, PLAYER_TEAM, Names.generate, 1, true)
+    lord = PlayerUnit.new(PlayerUnit.random_class, Names.generate, 1, true)
     @army = [ lord ]
     @army += size.times.map do |x|
-      Unit.new(Unit.random_class, PLAYER_TEAM, Names.generate, 1)
+      PlayerUnit.new(PlayerUnit.random_class, Names.generate, 1)
     end
     @army.each do |u|
       u.inventory << Vulnerary.new

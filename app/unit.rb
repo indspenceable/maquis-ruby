@@ -1,15 +1,4 @@
 class Unit
-  attr_accessor :team, :x, :y, :action_available, :current_level
-  attr_reader :ai
-
-  def select_valid_ai!
-    @ai = if rand(2) == 0
-      CautiousAI.new
-    else
-      ZerkAI.new
-    end
-  end
-
   def name
     if lord?
       "Lord #{@name.capitalize}"
@@ -27,46 +16,11 @@ class Unit
     :resistance,
     :constitution,
   ]
+  attr_reader *STATS, :exp_level, :hp, :klass
+  attr_accessor :team, :x, :y, :action_available, :current_level
 
-  BASE_STATS = {
-    :max_hp => 15,
-    :power => 1,
-    :skill => 1,
-    :armor => 0,
-    :speed => 0,
-    :resistance => 0,
-  }
-
-  attr_reader *STATS
-
-  attr_reader :exp_level, :hp, :exp, :klass
-
-  def self.config
-    @config ||= YAML.load(File.read('./units.yml'))
-  end
-  def config
-    self.class.config
-  end
-
-  def class_growths
-    config[@klass]['growths']
-  end
-
-  def starting_stats
-    BASE_STATS.merge({
-      :constitution => config[@klass]['con'] + rand(5)-2
-    })
-  end
-
-  def class_skills
-    @@skills ||= {}
-    @@skills[@klass] ||= config[@klass]['skills'].map do |s|
-      Skill.by_name(s).new
-    end
-  end
-
-  def skills
-    class_skills + @buffs
+  def initialize *args
+    raise "Can't initialize a Unit. Create a PlayerUnit or an Enemy instead."
   end
 
   def buff!(identifier, charges, max_charges=charges)
@@ -78,6 +32,10 @@ class Unit
     end
   end
 
+  def config
+    self.class.config
+  end
+
   def countdown_buffs!
     @buffs.each(&:tick)
     @buffs.reject!(&:expired?)
@@ -87,75 +45,23 @@ class Unit
     @buffs = []
   end
 
-  def self.random_class
-    config.keys.select do |k|
-      config[k]['basic']
-    end.shuffle.pop
+  def pretty_name
+    config[@klass]['pretty']
   end
 
-  LEVEL_UPS_FOR_LEVEL_ONE = 5
-
-  def initialize klass, team, name, exp_level = 1, is_lord=false, average=false
-    @klass = klass
-    @team, @name = team, name
-    @x, @y = 0, 0
-    @buffs = []
-
-    #ensure everyone is exp_level 1 at least.
-    exp_level = 1 if exp_level < 1
-
-    @action_available = true
-    STATS.each do |stat|
-      self.instance_variable_set(:"@#{stat}", BASE_STATS[stat] || starting_stats[stat])
-      raise "#{stat} starting value undefined for #{@klass}!" unless starting_stats[stat]
-      raise "#{stat} growth undefined for #{@klass}!" unless class_growths[stat] || stat==:constitution
+  def class_skills
+    @@skills ||= {}
+    @@skills[@klass] ||= config[@klass]['skills'].map do |s|
+      Skill.by_name(s).new
     end
-
-    @growths = {}
-    if average
-      class_growths.each do |k, val|
-        (val/2)+20
-        @growths[k] = val
-      end
-    else
-      class_growths.each do |k, val|
-        min,max = 20, val+20
-        @growths[k] = rand((max-min)/5)*5 + min
-      end
-    end
-
-    # lords have universally improved growths. Look out, myrmidon lord skill stat...
-    if is_lord
-      @growths.keys.each do |k|
-        @growths[k] += (rand(3)+1)*5
-      end
-    end
-
-    @hp = max_hp
-    @inventory = [
-      IronSword.new,
-      IronLance.new,
-      IronAxe.new,
-      IronBow.new,
-      Lightning.new,
-      Flux.new,
-      Fire.new,].shuffle
-    @inventory = available_weapons
-
-    @exp_level = 0
-    if average
-      jump_to_exp_level(exp_level)
-    else
-      (exp_level + LEVEL_UPS_FOR_LEVEL_ONE - 1).times { exp_level_up! }
-    end
-    @exp_level = exp_level
-
-    @is_lord = is_lord
-    @exp = 0
   end
 
-  def lord?
-    @is_lord
+  def animation_for(anim)
+    "#{klass}_#{anim}".to_sym
+  end
+
+  def skills
+    class_skills + @buffs
   end
 
   # HEALTH
@@ -338,9 +244,11 @@ class Unit
   def to_hit
     weapon.to_hit + skill if weapon
   end
+
   def evade
     0
   end
+
   def weapon_triangle_bonus_accuracy(vs)
     weapon_triangle(weapon_type, vs.weapon_type) * 15
   end
@@ -366,6 +274,7 @@ class Unit
       [weapon.to_crit + skill/2].max
     end
   end
+
   def crit_str
     weapon ? "#{crit_chance}%" : "NA"
   end
@@ -431,46 +340,6 @@ class Unit
     @hp = max_hp if @hp > max_hp
   end
 
-  def self.create(exp_level, *args)
-    unit = self.new(*args)
-    (exp_level+3).times {|u| u.exp_level_up!(:silent => true)}
-  end
-
-  def gain_experience n
-    @exp += n
-    if @exp >= 100
-      @exp -= 100
-      return exp_level_up!
-    end
-  end
-
-  def exp_level_up!
-    @exp_level += 1
-    stats_grown = []
-    @growths.each do |stat, growth|
-      if rand(100) < growth
-        stats_grown << stat
-        current_val = instance_variable_get(:"@#{stat}")
-        instance_variable_set(:"@#{stat}", current_val + 1)
-        # increase current hp when max_hp rises.
-        @hp += 1 if stat == :max_hp
-      end
-    end
-    stats_grown
-  end
-
-  def jump_to_exp_level(exp_level)
-    @growths.each do |stat, growth|
-      amount_to_grow = growth*exp_level/100
-      current_val = instance_variable_get(:"@#{stat}")
-      instance_variable_set(:"@#{stat}", current_val + amount_to_grow)
-      @hp += amount_to_grow if stat == :max_hp
-    end
-    @exp_level = exp_level
-  end
-
-  # base stats
-
   def movement
     5
   end
@@ -514,18 +383,6 @@ class Unit
         end
       end
     end
-  end
-
-  def pretty_name
-    config[@klass]['pretty']
-  end
-
-  def animation_for(anim)
-    "#{klass}_#{anim}".to_sym
-  end
-
-  def summary
-    "#{name} (#{pretty_name}: #{exp_level})"
   end
 
   # stats are adjusted by skills
