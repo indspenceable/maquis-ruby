@@ -14,7 +14,38 @@ cow:
   value: 1
   ais: []
   skills: []
-
+spider:
+  pretty: Spider
+  description: Ew! An Arachnid
+  tile: [0, 1]
+  tileset: Pests
+  stats:
+    :max_hp: 10
+    :power: 2
+    :skill: 6
+    :armor: 1
+    :speed: 6
+    :resistance: 0
+  con: 2
+  value: 3
+  ais: []
+  skills: []
+spider:
+  pretty: Farmer
+  description: A silly farmer.
+  tile: [2,8]
+  tileset: Humanoids
+  stats:
+    :max_hp: 10
+    :power: 3
+    :skill: 2
+    :armor: 4
+    :speed: 0
+    :resistance: 0
+  con: 8
+  value: 4
+  ais: []
+  skills: []
 eyeball:
   pretty: Floating Eye
   description: A floating eye!
