@@ -237,30 +237,11 @@ class GosuDisplay < Gosu::Window
     @effects.define!(:cursor, [0,0], 4, 5)
     @effects.define!(:red_selector, [0,1], 1, 30)
 
-    @people = MultiImageTileSet.new(self, [
-      './DawnLike/Characters/Player0.png',
-      './DawnLike/Characters/Player1.png'
-    ], 16, 16, 8)
-
     basic_hash = {}
-    PlayerUnit.config.each do |k, v|
-      basic_hash[k] = v['tile'] if v['tile']
-    end
-    better_hash = {}
-    basic_hash.each do |k,v|
-      %w(idle attack hit death).each do |w|
-        better_hash[:"#{k}_#{w}"] = v
-      end
-    end
-    @people.mass_define(30, true, better_hash)
-
-
-    enemy_tilesets = {}
-    basic_hash = {}
-    Enemy.config.each do |k, v|
+    Enemy.config.merge(PlayerUnit.config).each do |k, v|
       tileset = v['tileset']
       tile = v['tile']
-      basic_hash[k] = [tileset, tile]
+      basic_hash[k] = [tileset, tile] if tile
     end
     better_hash = {}
     basic_hash.each do |k,(ts, t)|
@@ -279,7 +260,7 @@ class GosuDisplay < Gosu::Window
       tile_sets << actual_tile_set
     end
 
-    @all_units = TileSetProxy.new([@people] + tile_sets)
+    @all_units = TileSetProxy.new(tile_sets)
   end
 
   def change_current_action!(action)

@@ -66,6 +66,7 @@ soldier:
   pretty: Solider
   description: A professional fighter. Not particularly experienced.
   tile: [1, 7]
+  tileset: Player
   growths:
     :max_hp: 60
     :power: 20
@@ -96,6 +97,7 @@ fighter:
   pretty: Fighter
   description: A self taught fighter. Wields axes.
   tile: [3, 3]
+  tileset: Player
   con: 8
   growths:
     :max_hp: 60
@@ -112,6 +114,7 @@ squire:
   pretty: Squire
   description: A trainee to the order of knights
   tile: [1, 3]
+  tileset: Player
   growths:
     :max_hp: 60
     :power: 20
@@ -176,6 +179,7 @@ entertainer:
   description: A travelling entertainer.
   basic: true
   tile: [0, 7]
+  tileset: Player
   growths:
     :max_hp: 60
     :power: 0
