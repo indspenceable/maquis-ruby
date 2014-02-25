@@ -142,7 +142,7 @@ class GosuDisplay < Gosu::Window
 
   TILE_SIZE_X = 32
   TILE_SIZE_Y = 32
-  FONT_SIZE = 12
+  FONT_SIZE = 18
   FONT_BUFFER = 2
 
   WINDOW_SIZE_X = 640
