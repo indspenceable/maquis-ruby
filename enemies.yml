@@ -11,5 +11,23 @@ cow:
     :speed: 0
     :resistance: 0
   con: 15
+  value: 1
+  ais: []
+  skills: []
+
+eyeball:
+  pretty: Floating Eye
+  description: A floating eye!
+  tile: [0, 5]
+  tileset: Elementals
+  stats:
+    :max_hp: 20
+    :power: 7
+    :skill: 6
+    :armor: 3
+    :speed: 7
+    :resistance: 0
+  con: 4
+  value: 6
   ais: []
   skills: []

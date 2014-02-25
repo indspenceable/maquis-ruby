@@ -30,7 +30,15 @@ class Enemy < Unit
     ''
   end
 
-  def initialize(klass, name, exp_level)
+  def exp_level
+    config[@klass]['value']
+  end
+
+  def strength_string(stat)
+    ""
+  end
+
+  def initialize(klass, name)
     @klass = klass
     @name = name
     @team = COMPUTER_TEAM
@@ -38,7 +46,6 @@ class Enemy < Unit
     @buffs = []
 
     #ensure everyone is exp_level 1 at least.
-    exp_level = 1 if exp_level < 1
     @action_available = true
 
     STATS.each do |stat|
