@@ -20,6 +20,9 @@ class ConfirmMove < MenuAction
     if valid_targets(:friends, 1).any?
       opts << :trade
     end
+    level.map(unit.x, unit.y).actions.each do |name, val|
+      opts << name
+    end
     opts << :items
     opts << :confirm
     super(opts)
@@ -92,6 +95,12 @@ class ConfirmMove < MenuAction
   end
 
   def method_missing(sym, *args)
+    # require 'pry'
+    # binding.pry
+    map_action = @level.map(@unit.x, @unit.y).actions[sym]
+    if map_action
+      return map_action.new(@unit, @level, @level.map(@unit.x, @unit.y), self)
+    end
     skill = @unit.skills.find{|s| s.identifier == sym.to_s }
     if skill
       TargetSelect.new(@unit, @level, valid_targets(skill.target, skill.range), @path, skill.effect, self) do |t|
@@ -100,6 +109,8 @@ class ConfirmMove < MenuAction
         @unit.action_available = false
         UnitSelect.new(@unit.x, @unit.y, @level)
       end
+    else
+      super(sym, *args)
     end
   end
 end

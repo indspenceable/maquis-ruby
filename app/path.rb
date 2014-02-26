@@ -15,7 +15,8 @@ class Path
       :forest => 2,
       :fort => 2,
       :mountain => 999,
-      :wall => 999
+      :wall => 999,
+      :shop => 2,
     }
   end
 

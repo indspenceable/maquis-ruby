@@ -62,7 +62,7 @@ class PlayerUnit < Unit
 
     @inventory = []
     if config[@klass]['weapons'].any?
-      @inventory << Weapon.build(config[@klass]['weapons'].shuffle.pop)
+      @inventory << Weapon.new(config[@klass]['weapons'].shuffle.pop)
     end
     @inventory << Vulnerary.new
 

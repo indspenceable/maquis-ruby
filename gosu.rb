@@ -188,21 +188,25 @@ class GosuDisplay < Gosu::Window
     @menu.define!(:b,  [2,8])
     @menu.define!(:br, [3,8])
 
-    @land_tiles = SingleImageTileSet.new(self, './DawnLike/Objects/Floors.png', 16, 16, 21)
-    @land_tiles.define!(:plains, [8, 7], 1, 1)
-    @land_tiles.define!(:mountain, [15, 7])
-    @land_tiles.define!(:wall, [15, 10])
+    land_tiles = SingleImageTileSet.new(self, './DawnLike/Objects/Floors.png', 16, 16, 21)
+    land_tiles.define!(:plains, [8, 7], 1, 1)
+    land_tiles.define!(:mountain, [15, 7])
+    land_tiles.define!(:wall, [15, 10])
 
-    @tree_tiles = MultiImageTileSet.new(self, [
+    tree_tiles = MultiImageTileSet.new(self, [
         './DawnLike/Objects/Trees0.png',
         './DawnLike/Objects/Trees1.png',
       ], 16, 16, 8)
-    @tree_tiles.define!(:forest, [3,0])
+    tree_tiles.define!(:forest, [3,0])
+    tree_tiles.define!(:fort, [1,1])
 
-    @tree_tiles.define!(:fort, [1,1])
+    decor_tiles = MultiImageTileSet.new(self, [
+        './DawnLike/Objects/Decor0.png',
+        './DawnLike/Objects/Decor1.png',
+      ], 16, 16, 8)
+    decor_tiles.define!(:shop, [7, 5])
 
-
-    @tiles = TileSetProxy.new([@land_tiles, @tree_tiles])
+    @tiles = TileSetProxy.new([land_tiles, tree_tiles, decor_tiles])
 
     @path = SingleImageTileSet.new(self, './path.png', 33, 32, 15)
     @path.define!(:right_right, [0,0], 1, 1)

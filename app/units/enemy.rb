@@ -54,11 +54,7 @@ class Enemy < Unit
     end
     @hp = max_hp
     @inventory = config[@klass]['weapons'].map do |w|
-      if w.is_a?(String)
-        Weapon.build(w)
-      else
-        Weapon.new(w)
-      end
+      Weapon.new(w)
     end
     @exp_level = exp_level
   end

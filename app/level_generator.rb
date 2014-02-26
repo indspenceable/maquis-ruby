@@ -266,6 +266,7 @@ module LevelGenerator
         # TODO - on the ground, fill in roads + forest.
         new_forests = []
         new_forts = []
+        possible_shop_locations = []
         (l.map_size_x).times do |x|
           (l.map_size_y).times do |y|
             next unless l.map(x,y) == :plains
@@ -275,6 +276,8 @@ module LevelGenerator
               new_forests << [x,y]
             when r < 8
               new_forts << [x,y]
+            else
+              possible_shop_locations << [x,y]
             end
           end
         end
@@ -284,6 +287,7 @@ module LevelGenerator
         new_forests.each do |(x,y)|
           l.set_map(x,y,:forest)
         end
+        l.set_map(*possible_shop_locations.shuffle.pop, :shop)
 
         l.fill do |x,y|
           case l.map(x,y)
@@ -297,6 +301,8 @@ module LevelGenerator
             ::Mountain.new
           when :wall
             Wall.new
+          when :shop
+            Shop.new
           end
         end
         return l

@@ -14,6 +14,10 @@ class Terrain
   def tile
     identifier
   end
+
+  def actions
+    {}
+  end
 end
 
 class Plains < Terrain
@@ -55,5 +59,34 @@ class Fort < Terrain
 
   def available_to_place_units?
     true
+  end
+end
+
+class Shop < Terrain
+  attr_reader :items
+
+  def initialize
+    @items = [
+      Weapon.new('iron_sword'),
+      Weapon.new('iron_axe'),
+    ]
+  end
+
+  def identifier
+    :shop
+  end
+
+  def available_to_place_units?
+    false
+  end
+
+  def actions
+    if @items.any?
+      {
+        :shop => ShopAction
+      }
+    else
+      {}
+    end
   end
 end

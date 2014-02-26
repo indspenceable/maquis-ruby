@@ -14,13 +14,9 @@ class Weapon
     @config ||= YAML.load(File.read('./weapons.yml'))
   end
 
-  def self.build(name)
-    raise "No weapon named: #{name}" unless Weapon.config[name]
-    Weapon.new(Weapon.config[name])
-  end
-
-  def initialize configuration, identifier=nil
-    @config = configuration
+  def initialize identifier
+    raise "No weapon named: #{identifier}" unless Weapon.config[identifier]
+    @config = Weapon.config[identifier]
     @identifier=identifier
     ATTRS.each do |stat|
       val = config[stat.to_s] || DEFAULTS[stat]
