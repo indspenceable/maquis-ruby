@@ -83,7 +83,6 @@ soldier:
     - mercenary
   weapons:
     - iron_sword
-    - slim_sword
 hero:
   pretty: Hero
   description: A battle-hardended character. He leads the charge on the field of battle.
@@ -257,3 +256,23 @@ pupil:
     - dark
   weapons:
     - flux
+# --- Thief Tree
+scoundrel:
+  pretty: Scoundrel
+  dscription: Someone new to annoying others, but already pretty skilled.
+  basic: true
+  tile: [3, 8]
+  tileset: Player
+  growths:
+    :max_hp: 50
+    :power: 20
+    :skill: 30
+    :armor: 10
+    :speed: 30
+    :resistance: 10
+  con: 4
+  skills:
+    - swords
+  weapons:
+    - slim_sword
+#
