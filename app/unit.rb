@@ -110,11 +110,11 @@ class Unit
   end
 
   def terrain_armor_bonus
-    Level.armor_bonus_for_terrain[terrain]
+    @current_level.map(x,y).armor_bonus
   end
 
   def terrain_evade_bonus
-    Level.evade_bonus_for_terrain[terrain]
+    @current_level.map(x,y).evade_bonus
   end
 
   def adjusted_armor(weapon)

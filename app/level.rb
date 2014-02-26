@@ -20,13 +20,6 @@ class Level
     @difficulty = d
   end
 
-  def self.armor_bonus_for_terrain
-    Hash.new(0).merge({
-      :forest => 1,
-      :fort => 2,
-    })
-  end
-
   def self.evade_bonus_for_terrain
     Hash.new(0).merge({
       :forest => 20,
@@ -68,21 +61,15 @@ class Level
   end
 
   def map(x,y)
-    @map[x][y] || :wall rescue :wall
+    @map[x][y] || default_terrain rescue default_terrain
+  end
+
+  def default_terrain
+    @default_terrain ||= Wall.new
   end
 
   def set_map(x,y,v)
     @map[x][y] = v
-  end
-
-  def self.terrain_sym_to_str
-    {
-      :plains => ' ',
-      :mountain => '^',
-      :forest => '7',
-      :fort => '#',
-      :wall => 'x',
-    }
   end
 
   def map_to_str(x,y)
@@ -91,10 +78,6 @@ class Level
 
   def raw_map
     @map
-  end
-
-  def blocked?(x,y)
-    @map[x][y] == :wall
   end
 
   def fill

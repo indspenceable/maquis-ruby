@@ -99,7 +99,7 @@ class Path
 
   def cost(unit)
     costs = @path.map do |x,y|
-      unit.movement_costs[@level.map(x,y)]
+      unit.movement_costs[@level.map(x,y).identifier]
     end
     costs.shift
     costs.inject(0,&:+)

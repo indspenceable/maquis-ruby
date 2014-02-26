@@ -91,7 +91,7 @@ module LevelGenerator
         begin
           return false if area.none?
           u.x, u.y = area.pop
-        end while level.map(u.x, u.y) != :plains
+        end until level.map(u.x, u.y).available_to_place_units?
       end
     end
 
@@ -100,16 +100,17 @@ module LevelGenerator
       whole_map = level.map_size_x.times.to_a.product(level.map_size_y.times.to_a)
 
       begin
-        px, py, bx, by = rand(level.map_size_x), rand(level.map_size_y), rand(level.map_size_x) ,rand(level.map_size_y)
-        player_area = Path.discover_paths(FakeUnit.new(px,py), level, 4)
-        baddie_area = whole_map.select{|(x,y)| level.map(x,y) == :plains} - player_area
+        (px, py), (bx, by) = whole_map.select{|(x,y)| level.map(x,y).available_to_place_units?}.shuffle.first(2)
+        player_area = Path.discover_paths(FakeUnit.new(px,py), level, 4).map(&:last_point)
+        baddie_area = whole_map.select{|(x,y)| level.map(x,y).available_to_place_units?} - player_area
+        print 'x'
       end while player_area.count < player_units.size ||
                 baddie_area.count < baddie_units.size ||
-                level.map(px, py) != :plains ||
-                level.map(bx, by) != :plains ||
-                Path.dist(px,py,bx,by) < 20
+                !level.map(px, py).available_to_place_units? ||
+                !level.map(bx, by).available_to_place_units? ||
+                Path.dist(px,py,bx,by) < 10
 
-      player_area.map!(&:last_point)
+      # player_area.map!(&:last_point)
       # incase theres possible movement off of the map
       player_area &= whole_map
       # remove the boss' location from the baddies area.
@@ -133,7 +134,8 @@ module LevelGenerator
       success = false
       tries = 0
 
-      until place_units_with_baddies_scattered(level, baddie_units, player_units)
+      until place_units_with_baddies_scattered(level, baddie_units.dup, player_units)
+        print '.'
       end
 
       # set important level stats
@@ -283,6 +285,20 @@ module LevelGenerator
           l.set_map(x,y,:forest)
         end
 
+        l.fill do |x,y|
+          case l.map(x,y)
+          when :plains
+            Plains.new
+          when :forest
+            Forest.new
+          when :fort
+            Fort.new
+          when :mountain
+            ::Mountain.new
+          when :wall
+            Wall.new
+          end
+        end
         return l
       end
     end

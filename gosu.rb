@@ -366,7 +366,7 @@ class GosuDisplay < Gosu::Window
   def draw_map(level)
     (screen_left_tile.to_i-1..screen_right_tile.to_i+1).each do |x|
       (screen_top_tile.to_i-1..screen_bottom_tile.to_i+1).each do |y|
-        terrain = level.map(x,y)
+        terrain = level.map(x,y).tile
         seen = level.see?(x,y)
         # TODO this lives somewhere else.
         @tiles.fetch(terrain, @frame).draw_as_quad(
@@ -510,7 +510,6 @@ class GosuDisplay < Gosu::Window
     border_buffer_y = 3
     w_tiles = ((options.max_by(&:length).length*FONT_SIZE).to_f/16).ceil
     h_tiles = ((options.count*FONT_SIZE + border_buffer_y+2).to_f/16).ceil
-
     width, height = w_tiles*16, h_tiles*16
 
     w_tiles.times do |x|
@@ -531,24 +530,7 @@ class GosuDisplay < Gosu::Window
         @menu.fetch(sym.to_sym,0).draw(xo+x*16,yo+y*16, Z_RANGE[:menu_text])
       end
     end
-      # @menu.fetch(:tl,0).draw(xo,yo, Z_RANGE[:menu_text])
-      # @menu.fetch(:br,0).draw(xo+width-16,yo+height-16, Z_RANGE[:menu_text])
-      # @menu.fetch(:tr,0).draw(xo+width-16,yo, Z_RANGE[:menu_text])
-      # @menu.fetch(:bl,0).draw(xo,yo+height-16, Z_RANGE[:menu_text])
 
-    # (w_tiles-2).times do |x|
-
-    # end
-    # @menu.fetch(:m, 0).draw_as_quad(
-    #   xo+16, yo+16, Gosu::Color::WHITE,
-    #   xo+width-16, yo+16, Gosu::Color::WHITE,
-    #   xo+width-16, yo+height-16, Gosu::Color::WHITE,
-    #   xo+16, yo+height-16, Gosu::Color::WHITE,
-    #   Z_RANGE[:menu_text]
-    # )
-
-
-    # quad(xo, yo, 200, options.count*(FONT_SIZE+FONT_BUFFER), Gosu::Color::WHITE, Z_RANGE[:menu_background])
     options.each_with_index do |o,i|
       @font.draw(o, xo+border_buffer_x+5, yo + i*(FONT_SIZE) + border_buffer_y, Z_RANGE[:menu_text], 1, 1, Gosu::Color::WHITE)
     end
