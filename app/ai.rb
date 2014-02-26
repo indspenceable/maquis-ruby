@@ -137,6 +137,12 @@ class ZerkAI < GenericAI
   def vs_lord_weight
     10
   end
+  def kill_weight
+    30
+  end
+  def damage_taken_weight
+    -1
+  end
 end
 
 class CautiousAI < GenericAI

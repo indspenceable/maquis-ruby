@@ -164,29 +164,29 @@ class Unit
 
   def weapon_triangle(my_type, their_type)
     {
-      :swords => {
-        :axes => 1,
-        :lances => -1
+      'swords' => {
+        'axes' => 1,
+        'lances' => -1
       },
-      :axes => {
-        :swords => -1,
-        :lances => 1,
+      'axes' => {
+        'swords' => -1,
+        'lances' => 1,
       },
-      :lances => {
-        :swords => 1,
-        :axes => -1,
+      'lances' => {
+        'swords' => 1,
+        'axes' => -1,
       },
-      :anima => {
-        :light => 1,
-        :dark => -1
+      'anima' => {
+        'light' => 1,
+        'dark' => -1
       },
-      :light => {
-        :anima => -1,
-        :dark => 1,
+      'light' => {
+        'anima' => -1,
+        'dark' => 1,
       },
-      :dark => {
-        :anima => 1,
-        :light => -1,
+      'dark' => {
+        'anima' => 1,
+        'light' => -1,
       }
 
     }[my_type][their_type] || 0 rescue 0

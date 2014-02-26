@@ -59,13 +59,14 @@ eyeball:
   tileset: Elementals
   stats:
     :max_hp: 20
-    :power: 7
+    :power: 2
     :skill: 6
-    :armor: 3
+    :armor: 0
     :speed: 7
-    :resistance: 0
+    :resistance: 7
     :constitution: 4
   value: 6
   ais: []
   skills: []
-  weapons: []
+  weapons:
+    - beam

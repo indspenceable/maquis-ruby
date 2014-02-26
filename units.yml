@@ -275,4 +275,22 @@ scoundrel:
     - swords
   weapons:
     - slim_sword
-#
+
+archer:
+  pretty: Archer
+  description: has a familiarity with bows and arrows.
+  basic: true
+  tile: [2, 3]
+  tileset: Player
+  growths:
+    :max_hp: 30
+    :power: 20
+    :skill: 30
+    :armor: 20
+    :speed: 10
+    :resistance: 0
+  con: 4
+  skills:
+    - bows
+  weapons:
+    - iron_bow
