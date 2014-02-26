@@ -20,7 +20,7 @@ class Inventory < MenuAction
 
   def choice_strings
     @unit.inventory.map do |i|
-      i.name
+      i.pretty
     end + ["Cancel"]
   end
 

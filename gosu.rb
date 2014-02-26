@@ -205,6 +205,8 @@ class GosuDisplay < Gosu::Window
         './DawnLike/Objects/Decor1.png',
       ], 16, 16, 8)
     decor_tiles.define!(:shop, [7, 5])
+    decor_tiles.define!(:closed_shop, [7, 4])
+
 
     @tiles = TileSetProxy.new([land_tiles, tree_tiles, decor_tiles])
 

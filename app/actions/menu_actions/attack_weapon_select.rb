@@ -19,7 +19,7 @@ class AttackWeaponSelect < MenuAction
   def draw(window)
     draw_map(window)
     draw_all_units(window)
-    window.draw_menu(@available_weapons.map(&:name), @index)
+    window.draw_menu(@available_weapons.map(&:pretty), @index)
   end
 
   def key *args

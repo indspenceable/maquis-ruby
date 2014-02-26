@@ -1,6 +1,6 @@
 class Weapon
   ATTRS = [:name, :type, :range, :power, :to_hit, :to_crit, :weight, :targets] +
-    [:on_hit]
+    [:on_hit, :durability]
 
   DEFAULTS = {
     :targets => [],
@@ -23,7 +23,16 @@ class Weapon
       raise "Weapon #{@identifier} doens't have stat #{stat}!" unless val
       instance_variable_set("@#{stat}", val)
     end
+    @uses = @durability
     @range = (@range..@range) if @range.is_a?(Numeric)
+  end
+
+  def pretty
+    if unlimited_uses?
+      name
+    else
+      "#{name} (#{@uses})"
+    end
   end
 
   def in_range?(x)
@@ -56,9 +65,13 @@ class Weapon
     end
   end
 
+  def unlimited_uses?
+    @durability.is_a?(String)
+  end
+
   def used_up?
     #TODO weapon durabilities
-    false
+    @uses <= 0 unless unlimited_uses?
   end
 
   def targets
@@ -70,6 +83,7 @@ class Weapon
   end
 
   def hit(target)
+    @uses -= 1 unless unlimited_uses?
     on_hit.each do |m|
       __send__("on_hit_#{m}", target)
     end

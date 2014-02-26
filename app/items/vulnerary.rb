@@ -16,6 +16,10 @@ class Consumable
   def used_up?
     @charges <= 0
   end
+
+  def pretty
+    name
+  end
 end
 
 class SkillToken < Consumable

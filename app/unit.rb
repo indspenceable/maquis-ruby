@@ -288,7 +288,7 @@ class Unit
     speed + (weapon ? weapon_slow : 0)
   end
   def double_attack?(vs)
-    effective_speed >= vs.effective_speed + 4 if weapon
+    effective_speed >= vs.effective_speed + 4 if weapon && !weapon.used_up?
   end
 
   def double_attack_str(vs)

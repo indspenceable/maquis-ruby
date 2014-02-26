@@ -6,6 +6,7 @@ slim_sword:
   to_hit: 100
   to_crit: 5
   weight: 2
+  durability: 45
 iron_sword:
   name: Iron Sword
   type: swords
@@ -14,6 +15,7 @@ iron_sword:
   to_hit: 95
   to_crit: 0
   weight: 5
+  durability: 45
 iron_axe:
   name: Iron Axe
   type: axes
@@ -22,6 +24,7 @@ iron_axe:
   to_hit: 75
   to_crit: 0
   weight: 8
+  durability: 45
 iron_lance:
   name: Iron Lance
   type: lances
@@ -30,6 +33,7 @@ iron_lance:
   to_hit: 85
   to_crit: 0
   weight: 6
+  durability: 45
 
 # Enemy Weapons
 pitchfork:
@@ -40,6 +44,7 @@ pitchfork:
   to_hit: 85
   to_crit: 0
   weight: 8
+  durability: infinite
 
 bite:
   name: Bite
@@ -51,6 +56,7 @@ bite:
   weight: 0
   on_hit:
     - poison
+  durability: infinite
 
 # IronSword   = Weapon.create 'Iron Sword',   :swords, (1..1), 5,  90,  0, 5
 # SteelSword  = Weapon.create 'Steel Sword',  :swords, (1..1), 8,  75,  0, 10

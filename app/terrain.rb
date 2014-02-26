@@ -76,6 +76,11 @@ class Shop < Terrain
     :shop
   end
 
+  def tile
+    return :shop if @items.any?
+    :closed_shop
+  end
+
   def available_to_place_units?
     false
   end

@@ -96,24 +96,47 @@ class Level
     units.find{|c| c.x == x && c.y == y}
   end
 
-  def check_death &blk
+  def player_units
+    units.select{ |u| u.team == PLAYER_TEAM }
+  end
+
+  def computer_units
+    units.select{ |u| u.team == COMPUTER_TEAM }
+  end
+
+  def upkeep &blk
     # did anyone die?
     u = units.find{|u| !u.alive? }
     if u
       return DeathAnimation.new(u, self) do
+
         units.delete(u)
-        check_death(&blk)
+        if u.lord?
+          # Kill our savegame.
+          `rm #{SAVE_FILE_PATH}`
+          raise "lord died!"
+        end
+        upkeep(&blk)
       end
+    end
+    # did anyone's weapons break?
+    u = player_units.find do |u|
+      u.weapon && u.weapon.used_up?
+    end
+    if u
+      puts "#{u.name}'s weapon got used up."
+      u.inventory.delete(u.weapon)
+      return upkeep(&blk)
     end
     blk.call
   end
 
   # for the players turn
   def next_action(x,y)
-    check_death do
-      if units.none?{ |u| u.team == COMPUTER_TEAM }
+    upkeep do
+      if computer_units.none?
         finish_turn(PLAYER_TEAM)
-      elsif units.none?{|u| u.team == PLAYER_TEAM && u.action_available}
+      elsif player_units.none?(&:action_available)
         finish_turn(PLAYER_TEAM)
       else
         UnitSelect.new(x,y,self)
@@ -121,12 +144,10 @@ class Level
     end
   end
 
-
-
   # returns the action for whoever's turn is next.
   # also, do stuff that happens between turns.
   def finish_turn(team)
-    if units.none?{ |u| u.team == COMPUTER_TEAM }
+    if computer_units.none?
       return Planning.new(difficulty, army.tap(&:next_level!))
     end
 

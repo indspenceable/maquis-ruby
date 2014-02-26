@@ -34,11 +34,8 @@ class AttackExecutor < Action
 
     done
 
-    if @level.lord.nil?
-      # Kill our savegame.
-      `rm #{SAVE_FILE_PATH}`
-      raise "lord died!"
-    elsif @level.units.none?{|u| u.team == COMPUTER_TEAM }
+
+    if @level.units.none?{|u| u.team == COMPUTER_TEAM }
       @level.finish_turn(COMPUTER_TEAM)
     else
       @unit.action_available = false
@@ -171,19 +168,6 @@ class AttackExecutor < Action
   def double_counter
     combat_round(@target, @unit, @messages)
     determine_next_state(:double_counter)
-  end
-
-  def death
-    if @unit.alive?
-      # @animation = [@target, @unit, :death]
-      @animation = DeathAnimation.new(@target, @level) { @animation = nil; self }
-      @level.units.delete(@target)
-    else
-      # @animation = [@unit, @target, :death]
-      @animation = DeathAnimation.new(@unit, @level) { @animation = nil; self }
-      @level.units.delete(@unit)
-    end
-    :done
   end
 
   def done
