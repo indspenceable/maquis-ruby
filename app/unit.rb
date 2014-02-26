@@ -32,6 +32,19 @@ class Unit
     end
   end
 
+  def debuff(identifier, charges=nil)
+    buff = @buffs.find{ |x| x.identifier == identifier }
+    if buff
+      if charges && charges > buff.charges
+        buff.charges -= charges
+        true
+      else
+        @buffs.delete(buff)
+        true
+      end
+    end
+  end
+
   def config
     self.class.config
   end

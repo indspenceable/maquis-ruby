@@ -22,26 +22,6 @@ class Consumable
   end
 end
 
-class SkillToken < Consumable
-  def initialize(skill)
-    @skill = skill
-    super(1)
-  end
-
-  def name
-    "Skill token #{@skill.identifier}"
-  end
-
-  def consume(unit)
-    unit.learn_skill(@skill)
-    true
-  end
-
-  def color_for(unit)
-    GREEN
-  end
-end
-
 class Vulnerary < Consumable
   def initialize
     super(3)
@@ -55,8 +35,18 @@ class Vulnerary < Consumable
     unit.heal(10)
     true
   end
+end
 
-  def color_for(unit)
-    GREEN
+class Antitoxin < Consumable
+  def initialize
+    super(1)
+  end
+
+  def name
+    "Antitoxin"
+  end
+
+  def consume(unit)
+    unit.debuff('poison')
   end
 end
