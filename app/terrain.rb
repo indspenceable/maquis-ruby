@@ -66,11 +66,21 @@ class Shop < Terrain
   attr_reader :items
 
   def initialize
-    @items = [
-      Weapon.new('iron_sword'),
-      Weapon.new('iron_axe'),
+    @items = starting_inventory
+  end
+
+  def starting_inventory
+    (
+      Weapon.basic_names * 2 +
+      Weapon.advanced_names.shuffle.first(rand(5))
+    ).sort.map do |w|
+      Weapon.new(w)
+    end + [
+      Vulnerary.new,
+      Antitoxin.new,
     ]
   end
+
 
   def identifier
     :shop

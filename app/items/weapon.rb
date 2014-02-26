@@ -10,6 +10,18 @@ class Weapon
   attr_reader *ATTRS
   attr_reader :config
 
+  def self.basic_names
+    config.select do |name, value|
+      value['rarity'] == 'basic'
+    end.keys
+  end
+
+  def self.advanced_names
+    config.select do |name, value|
+      value['rarity'] == 'special'
+    end.keys
+  end
+
   def self.config
     @config ||= YAML.load(File.read('./weapons.yml'))
   end
