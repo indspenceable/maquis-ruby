@@ -71,8 +71,8 @@ class Shop < Terrain
 
   def starting_inventory
     (
-      Weapon.basic_names * 2 +
-      Weapon.advanced_names.shuffle.first(rand(5))
+      Weapon.basic_names +
+      Weapon.advanced_names.shuffle.first([rand(5)-3,0].max)
     ).sort.map do |w|
       Weapon.new(w)
     end + [

@@ -46,7 +46,7 @@ class PlayerUnit < Unit
     else
       class_growths.each do |k, val|
         min,max = 20, val+20
-        @growths[k] = rand((max-min)/5)*5 + min
+        @growths[k] = rand([(max-min)/5, 1].max)*5 + min
       end
     end
 

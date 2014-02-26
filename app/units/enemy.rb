@@ -50,7 +50,6 @@ class Enemy < Unit
 
     STATS.each do |stat|
       self.instance_variable_set(:"@#{stat}", stat_for(stat) )
-      # raise "#{stat} starting value undefined for #{@klass}!" unless starting_stats[stat]
     end
     @hp = max_hp
     @inventory = config[@klass]['weapons'].map do |w|

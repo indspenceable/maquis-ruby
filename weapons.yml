@@ -27,6 +27,16 @@ steel_sword:
   weight: 10
   durability: 30
   rarity: 'special'
+silver_sword:
+  name: Silver Sword
+  type : swords
+  range: 1
+  power: 13
+  to_hit: 80
+  to_crit: 0
+  weight: 8
+  durability: 20
+  rarity: 'special'
 killing_edge:
   name: Killing Edge
   type: swords
@@ -48,7 +58,6 @@ iron_axe:
   weight: 8
   durability: 45
   rarity: 'basic'
-
 iron_lance:
   name: Iron Lance
   type: lances
@@ -59,8 +68,37 @@ iron_lance:
   weight: 6
   durability: 45
   rarity: 'basic'
-
-
+# Magic Weapons
+fire:
+  name: Fire
+  type: anima
+  range: [1, 2]
+  power: 3
+  to_hit: 90
+  to_crit: 0
+  weight: 4
+  durability: 45
+  rarity: 'basic'
+lightning:
+  name: Lightning
+  type: light
+  range: [1, 2]
+  power: 2
+  to_hit: 100
+  to_crit: 0
+  weight: 4
+  durability: 45
+  rarity: 'basic'
+flux:
+  name: Flux
+  type: dark
+  range: [1, 2]
+  power: 7
+  to_hit: 80
+  to_crit: 0
+  weight: 13
+  durability: 45
+  rarity: 'basic'
 # Enemy Weapons
 pitchfork:
   name: Pitchfork
@@ -71,7 +109,6 @@ pitchfork:
   to_crit: 0
   weight: 8
   durability: infinite
-
 bite:
   name: Bite
   type: natural
@@ -83,8 +120,3 @@ bite:
   on_hit:
     - poison
   durability: infinite
-
-# IronSword   = Weapon.create 'Iron Sword',   :swords, (1..1), 5,  90,  0, 5
-# SteelSword  = Weapon.create 'Steel Sword',  :swords, (1..1), 8,  75,  0, 10
-# KillingEdge = Weapon.create 'Killing Edge', :swords, (1..1), 9,  75, 30, 7
-# SilverSword = Weapon.create 'Silver Sword', :swords, (1..1), 13, 80,  0, 8

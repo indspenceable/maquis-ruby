@@ -61,6 +61,7 @@
 #   promotes:
 #     - hero
 #     - champion/vanquishor
+# --- Soldier Tree
 soldier:
   basic: true
   pretty: Solider
@@ -94,7 +95,7 @@ hero:
 # mercenary:
 #   pretty: Mercenary
 #   description: A professional sell-sword.
-# -----
+# --- Fighter Tree
 fighter:
   basic: true
   pretty: Fighter
@@ -113,7 +114,7 @@ fighter:
     - axes
   weapons:
     - iron_axe
-# -----
+# --- Squire Tree
 squire:
   basic: true
   pretty: Squire
@@ -180,7 +181,7 @@ darkshine:
     - lances
     - debuffs
     - axes
-
+# --- Entertainer Tree
 entertainer:
   pretty: Entertainer
   description: A travelling entertainer.
@@ -198,3 +199,61 @@ entertainer:
   skills:
     - perform
   weapons: []
+# -- Mage Tree
+mage:
+  pretty: Mage
+  description: Basic magician
+  basic: true
+  tile: [6, 3]
+  tileset: Player
+  growths:
+    :max_hp: 40
+    :power: 20
+    :skill: 10
+    :armor: 0
+    :speed: 10
+    :resistance: 30
+  con: 4
+  skills:
+    - anima
+  weapons:
+    - fire
+# --- Cleric Tree
+cleric:
+  pretty: Cleric
+  description: Your basic healer
+  basic: true
+  tile: [0, 4]
+  tileset: Player
+  growths:
+    :max_hp: 40
+    :power: 0
+    :skill: 20
+    :armor: 10
+    :speed: 0
+    :resistance: 30
+  con: 8
+  skills:
+    - light
+    - healing
+  weapons:
+    - lightning
+# --- Dark mage tree
+pupil:
+  pretty: Pupil
+  description: A child just beginning to learn the dark arts
+  basic: true
+  tile: [7, 3]
+  tileset: Player
+  growths:
+    :max_hp: 30
+    :power: 30
+    :skill: 10
+    :armor: 10
+    :speed: 0
+    :resistance: 20
+  con: 13
+  skills:
+    - dark
+  weapons:
+    - flux
