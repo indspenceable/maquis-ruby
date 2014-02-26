@@ -5,7 +5,6 @@ slim_sword:
   power: 1
   to_hit: 100
   to_crit: 5
-  targets: []
   weight: 2
 iron_sword:
   name: Iron Sword
@@ -14,7 +13,6 @@ iron_sword:
   power: 3
   to_hit: 95
   to_crit: 0
-  targets: []
   weight: 5
 iron_axe:
   name: Iron Axe
@@ -23,7 +21,6 @@ iron_axe:
   power: 6
   to_hit: 75
   to_crit: 0
-  targets: []
   weight: 8
 iron_lance:
   name: Iron Lance
@@ -32,7 +29,6 @@ iron_lance:
   power: 5
   to_hit: 85
   to_crit: 0
-  targets: []
   weight: 6
 
 # Enemy Weapons
@@ -43,7 +39,6 @@ pitchfork:
   power: 2
   to_hit: 85
   to_crit: 0
-  targets: []
   weight: 8
 
 bite:
@@ -53,7 +48,6 @@ bite:
   power: 1
   to_hit: 95
   to_crit: 0
-  targets: []
   weight: 0
   skills:
     - poison_weapon

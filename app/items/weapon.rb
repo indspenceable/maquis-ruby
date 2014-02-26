@@ -1,5 +1,9 @@
 class Weapon
   ATTRS = [:name, :type, :range, :power, :to_hit, :to_crit, :weight, :targets]
+  DEFAULTS = {
+    :targets => [],
+  }
+
   attr_reader *ATTRS
   attr_reader :config
 
@@ -15,9 +19,10 @@ class Weapon
   def initialize configuration, identifier=nil
     @config = configuration
     @identifier=identifier
-    ATTRS.map(&:to_s).each do |stat|
-      raise "Weapon #{@identifier} doens't have stat #{stat}!" unless config[stat]
-      instance_variable_set("@#{stat}", config[stat])
+    ATTRS.each do |stat|
+      val = config[stat.to_s] || DEFAULTS[stat]
+      raise "Weapon #{@identifier} doens't have stat #{stat}!" unless val
+      instance_variable_set("@#{stat}", val)
     end
     @range = (@range..@range) if @range.is_a?(Numeric)
   end
