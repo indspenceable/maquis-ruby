@@ -1,7 +1,10 @@
 class Weapon
-  ATTRS = [:name, :type, :range, :power, :to_hit, :to_crit, :weight, :targets]
+  ATTRS = [:name, :type, :range, :power, :to_hit, :to_crit, :weight, :targets] +
+    [:on_hit]
+
   DEFAULTS = {
     :targets => [],
+    :on_hit => [],
   }
 
   attr_reader *ATTRS
@@ -68,6 +71,16 @@ class Weapon
 
   def magic?
     [:anima, :light, :dark].include?(type)
+  end
+
+  def hit(target)
+    on_hit.each do |m|
+      __send__("on_hit_#{m}", target)
+    end
+  end
+
+  def on_hit_poison(target)
+    target.buff!('poison', 3, 5)
   end
 end
 

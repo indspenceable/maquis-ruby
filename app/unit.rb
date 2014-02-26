@@ -23,12 +23,12 @@ class Unit
     raise "Can't initialize a Unit. Create a PlayerUnit or an Enemy instead."
   end
 
-  def buff!(identifier, charges, max_charges=charges)
+  def buff!(identifier, charges, max_charges=nil)
     buff = @buffs.find{ |x| x.identifier == identifier }
     if buff
-      buff.charges = [buff.charges + charges, max_charges].min
+      buff.charges = [buff.charges + charges, max_charges].compact.min
     else
-      @buffs << Skill.by_name(identifier).new(charges)
+      @buffs << Skill.by_name(identifier).new(self, charges)
     end
   end
 
@@ -230,6 +230,7 @@ class Unit
 
   def hit(vs, multiplier)
     damage = vs.lose_life(power_vs(vs)*multiplier)
+    weapon.hit(vs)
     damage
   end
 

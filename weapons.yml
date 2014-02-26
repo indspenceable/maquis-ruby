@@ -49,8 +49,8 @@ bite:
   to_hit: 95
   to_crit: 0
   weight: 0
-  skills:
-    - poison_weapon
+  on_hit:
+    - poison
 
 # IronSword   = Weapon.create 'Iron Sword',   :swords, (1..1), 5,  90,  0, 5
 # SteelSword  = Weapon.create 'Steel Sword',  :swords, (1..1), 8,  75,  0, 10

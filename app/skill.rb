@@ -102,7 +102,8 @@ class Buff < Skill
     "#{self.class.name}(#{@charges})"
   end
 
-  def initialize(charges)
+  def initialize(target, charges)
+    @target = target
     @charges = charges
   end
 
@@ -152,7 +153,7 @@ class WieldSwords < Skill
   identifier 'swords'
 
   modify :weapon_skills do |ws|
-    ws + [:swords]
+    ws + ["swords"]
   end
 end
 
@@ -160,7 +161,7 @@ class WieldLances < Skill
   identifier 'lances'
 
   modify :weapon_skills do |ws|
-    ws + [:lances]
+    ws + ["lances"]
   end
 end
 
@@ -168,7 +169,7 @@ class WieldAxes < Skill
   identifier 'axes'
 
   modify :weapon_skills do |ws|
-    ws + [:axes]
+    ws + ["axes"]
   end
 end
 
@@ -176,7 +177,7 @@ class CastAnima < Skill
   identifier 'anima'
 
   modify :weapon_skills do |ws|
-    ws + [:anima]
+    ws + ["anima"]
   end
 end
 
@@ -184,7 +185,7 @@ class CastLight < Skill
   identifier 'light'
 
   modify :weapon_skills do |ws|
-    ws + [:light]
+    ws + ["light"]
   end
 end
 
@@ -192,7 +193,7 @@ class CastDark < Skill
   identifier 'dark'
 
   modify :weapon_skills do |ws|
-    ws + [:dark]
+    ws + ["dark"]
   end
 end
 
@@ -200,7 +201,7 @@ class WieldBows < Skill
   identifier 'bows'
 
   modify :weapon_skills do |ws|
-    ws + [:bows]
+    ws + ["bows"]
   end
 end
 
@@ -232,5 +233,13 @@ class Empower < Buff
   identifier 'empower'
   modify :power do |p|
     p + 1
+  end
+end
+
+class Poison < Buff
+  identifier 'poison'
+  def tick
+    @target.lose_life(@charges)
+    super
   end
 end
