@@ -71,13 +71,4 @@ class Action
       window.draw_char_at(u.x, u.y, u, @unit == u, :idle) if u.team == PLAYER_TEAM || @level.see?(u.x,u.y)
     end
   end
-
-  def draw_character_info_panel(window)
-    a,b = units_for_info_panel
-    window.draw_character_info(a,b, ignore_range)
-  end
-
-  def ignore_range
-    false
-  end
 end

@@ -20,10 +20,6 @@ class Move < MapAction
     [@unit, @level.see?(@x,@y) && @level.unit_at(@x,@y)].compact.uniq
   end
 
-  def ignore_range
-    @unit.weapon.range.to_a.first if @unit.weapon
-  end
-
   def adjacent_to_last_point?(x,y)
     xx,yy=@path.last_point
     ((xx-x).abs + (yy-y).abs) == 1
