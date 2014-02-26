@@ -247,7 +247,7 @@ class Unit
   end
 
   def evade
-    0
+    effective_speed * 2
   end
 
   def weapon_triangle_bonus_accuracy(vs)
