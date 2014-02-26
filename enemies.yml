@@ -36,7 +36,7 @@ spider:
 farmer:
   pretty: Farmer
   description: A silly farmer.
-  tile: [2,8]
+  tile: [2, 8]
   tileset: Humanoids
   stats:
     :max_hp: 10
