@@ -243,3 +243,17 @@ class Poison < Buff
     super
   end
 end
+
+class Healing < Skill
+  identifier 'healing'
+  target :friends
+  range 1
+
+  activate do |me, target, level|
+    target.heal(me.power)
+  end
+
+  def effect
+    :blue
+  end
+end
