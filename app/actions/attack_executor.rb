@@ -140,7 +140,7 @@ class AttackExecutor < Action
   end
 
   def determine_next_state(current_state)
-    return :death unless both_alive?
+    return :done unless both_alive?
     case current_state
     when :attack
       return :counter if can_attack(@target, @unit)

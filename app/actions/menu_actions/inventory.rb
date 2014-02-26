@@ -12,7 +12,7 @@ class Inventory < MenuAction
 
     if !@unit.action_available
       # If we did an action that took up their action, move on to the next unit
-      UnitSelect.new(@unit.x, @unit.y, @level)
+      @level.next_action(@unit.x, @unit.y)
     else
       self
     end

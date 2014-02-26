@@ -74,7 +74,7 @@ class Move < MapAction
       if ee
         @unit.x, @unit.y = ee.last_point
         @unit.action_available = false
-        return UnitSelect.new(*ee.last_point, @level)
+        return @level.next_action(*ee.last_point)
       else
         return WalkPathAction.new(@unit, @path, @level) do
           old_x, old_y = @unit.x, @unit.y

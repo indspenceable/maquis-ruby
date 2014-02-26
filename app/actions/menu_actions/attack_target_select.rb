@@ -64,7 +64,7 @@ class TradeTargetSelect < TargetSelect
     super(unit, level, targets, path, :blue, prev_action) do |t|
       Trade.new(unit, t, self) do
         unit.action_available = false
-        UnitSelect.new(unit.x, unit.y, level)
+        level.next_action(unit.x, unit.y)
       end
     end
   end

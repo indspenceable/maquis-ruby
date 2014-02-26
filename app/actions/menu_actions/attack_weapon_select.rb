@@ -34,11 +34,7 @@ class AttackWeaponSelect < MenuAction
 
   def action!
     AttackExecutor.new(@unit, @target, @level) do
-      if @level.units.any?{|u| u.team == PLAYER_TEAM && u.action_available}
-        UnitSelect.new(@unit.x, @unit.y, @level)
-      else
-        @level.finish_turn(PLAYER_TEAM)
-      end
+      @level.next_action(@unit.x, @unit.y)
     end
   end
 

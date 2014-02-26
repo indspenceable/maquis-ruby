@@ -58,7 +58,7 @@ class EnemyTurn < Action
       mx,my = o.path.last_point
       o.unit.x, o.unit.y = o.path.last_point
       if o.target
-        AttackExecutor.new(o.unit, o.target, @level) { self }
+        AttackExecutor.new(o.unit, o.target, @level) { @level.check_death{ self } }
       else
         o.unit.action_available = false
         self

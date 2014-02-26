@@ -79,7 +79,7 @@ class ConfirmMove < MenuAction
 
   def confirm
     @unit.action_available = false
-    UnitSelect.new(@unit.x, @unit.y, @level)
+    @level.next_action(@unit.x, @unit.y)
   end
 
   def cancel
@@ -107,7 +107,7 @@ class ConfirmMove < MenuAction
         # SkillActivator.new(skill, @unit, t, @level)
         skill.activate!(@unit, t, @level)
         @unit.action_available = false
-        UnitSelect.new(@unit.x, @unit.y, @level)
+        @level.next_action(@unit.x, @unit.y)
       end
     else
       super(sym, *args)

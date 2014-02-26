@@ -96,6 +96,33 @@ class Level
     units.find{|c| c.x == x && c.y == y}
   end
 
+  def check_death &blk
+    # did anyone die?
+    u = units.find{|u| !u.alive? }
+    if u
+      return DeathAnimation.new(u, self) do
+        units.delete(u)
+        check_death(&blk)
+      end
+    end
+    blk.call
+  end
+
+  # for the players turn
+  def next_action(x,y)
+    check_death do
+      if units.none?{ |u| u.team == COMPUTER_TEAM }
+        finish_turn(PLAYER_TEAM)
+      elsif units.none?{|u| u.team == PLAYER_TEAM && u.action_available}
+        finish_turn(PLAYER_TEAM)
+      else
+        UnitSelect.new(x,y,self)
+      end
+    end
+  end
+
+
+
   # returns the action for whoever's turn is next.
   # also, do stuff that happens between turns.
   def finish_turn(team)
@@ -104,7 +131,7 @@ class Level
     end
 
     units.each do |u|
-      if u.team == team
+      if u.team != team
         u.action_available = true
         if map(u.x, u.y) == :fort
           u.heal(u.max_hp / 10)
@@ -116,7 +143,7 @@ class Level
     if team == PLAYER_TEAM
       EnemyTurn.new(self)
     else
-      UnitSelect.new(lord.x, lord.y, self)
+      next_action(lord.x, lord.y)
     end
   end
 end
