@@ -20,21 +20,17 @@ class PlayerArmy
     # @inventory = Array.new(10) { SkillToken.new(all_skills.shuffle.pop.new) }
   end
 
-  def next_level!
+  def next_level!(difficulty)
     purge_dead!
     heal_all_units!
     ready_all_units!
     @army.each{|u| u.current_level = nil}
     @army.each{|u| u.clear_buffs! }
+    select_reward(difficulty).apply(self)
   end
 
-  def possible_recruits(diff)
-    rtn = []
-    klasses.shuffle.first(3).each_with_index do |k,x|
-      rtn << k.new(PLAYER_TEAM, Names.generate, diff+x-1)
-    end
-    return []
-    rtn
+  def select_reward(difficulty)
+    GainAUnit.new(difficulty)
   end
 
   def units

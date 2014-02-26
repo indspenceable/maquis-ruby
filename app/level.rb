@@ -148,7 +148,8 @@ class Level
   # also, do stuff that happens between turns.
   def finish_turn(team)
     if computer_units.none?
-      return Planning.new(difficulty, army.tap(&:next_level!))
+      army.next_level!(difficulty)
+      return Planning.new(difficulty, army)
     end
 
     units.each do |u|
