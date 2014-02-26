@@ -80,6 +80,9 @@ soldier:
   promotes:
     - hero
     - mercenary
+  weapons:
+    - iron_sword
+    - slim_sword
 hero:
   pretty: Hero
   description: A battle-hardended character. He leads the charge on the field of battle.
@@ -108,6 +111,8 @@ fighter:
     :resistance: 10
   skills:
     - axes
+  weapons:
+    - iron_axe
 # -----
 squire:
   basic: true
@@ -128,6 +133,8 @@ squire:
   promote:
     - knight
     - knave
+  weapons:
+    - iron_lance
 knight:
   pretty: Knight
   description: A full member of the order of knights, capable of supporting his allies.
@@ -190,3 +197,4 @@ entertainer:
   con: 4
   skills:
     - perform
+  weapons: []

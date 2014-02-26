@@ -58,15 +58,13 @@ class PlayerUnit < Unit
     end
 
     @hp = max_hp
-    @inventory = [
-      IronSword.new,
-      IronLance.new,
-      IronAxe.new,
-      IronBow.new,
-      Lightning.new,
-      Flux.new,
-      Fire.new,].shuffle
-    @inventory = available_weapons
+    # @inventory = [Weapon.new('iron_sword')].shuffle
+
+    @inventory = []
+    if config[@klass]['weapons'].any?
+      @inventory << Weapon.build(config[@klass]['weapons'].shuffle.pop)
+    end
+    @inventory << Vulnerary.new
 
     @exp_level = 0
     if average

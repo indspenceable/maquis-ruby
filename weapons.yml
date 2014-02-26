@@ -1,0 +1,64 @@
+slim_sword:
+  name: Slim Sword
+  type: swords
+  range: 1
+  power: 1
+  to_hit: 100
+  to_crit: 5
+  targets: []
+  weight: 2
+iron_sword:
+  name: Iron Sword
+  type: swords
+  range: 1
+  power: 3
+  to_hit: 95
+  to_crit: 0
+  targets: []
+  weight: 5
+iron_axe:
+  name: Iron Axe
+  type: axes
+  range: 1
+  power: 6
+  to_hit: 75
+  to_crit: 0
+  targets: []
+  weight: 8
+iron_lance:
+  name: Iron Lance
+  type: lances
+  range: 1
+  power: 5
+  to_hit: 85
+  to_crit: 0
+  targets: []
+  weight: 6
+
+# Enemy Weapons
+pitchfork:
+  name: Pitchfork
+  type: lances
+  range: 1
+  power: 2
+  to_hit: 85
+  to_crit: 0
+  targets: []
+  weight: 8
+
+bite:
+  name: Bite
+  type: natural
+  range: 1
+  power: 1
+  to_hit: 95
+  to_crit: 0
+  targets: []
+  weight: 0
+  skills:
+    - poison_weapon
+
+# IronSword   = Weapon.create 'Iron Sword',   :swords, (1..1), 5,  90,  0, 5
+# SteelSword  = Weapon.create 'Steel Sword',  :swords, (1..1), 8,  75,  0, 10
+# KillingEdge = Weapon.create 'Killing Edge', :swords, (1..1), 9,  75, 30, 7
+# SilverSword = Weapon.create 'Silver Sword', :swords, (1..1), 13, 80,  0, 8

@@ -10,10 +10,11 @@ cow:
     :armor: 0
     :speed: 0
     :resistance: 0
-  con: 15
+    :constitution: 15
   value: 1
   ais: []
   skills: []
+  weapons: []
 spider:
   pretty: Spider
   description: Ew! An Arachnid
@@ -26,11 +27,13 @@ spider:
     :armor: 1
     :speed: 6
     :resistance: 0
-  con: 2
+    :constitution: 2
   value: 3
   ais: []
   skills: []
-spider:
+  weapons:
+  - bite
+farmer:
   pretty: Farmer
   description: A silly farmer.
   tile: [2,8]
@@ -42,10 +45,13 @@ spider:
     :armor: 4
     :speed: 0
     :resistance: 0
-  con: 8
+    :constitution: 8
   value: 4
   ais: []
-  skills: []
+  skills:
+    - lances
+  weapons:
+    - pitchfork
 eyeball:
   pretty: Floating Eye
   description: A floating eye!
@@ -58,7 +64,8 @@ eyeball:
     :armor: 3
     :speed: 7
     :resistance: 0
-  con: 4
+    :constitution: 4
   value: 6
   ais: []
   skills: []
+  weapons: []

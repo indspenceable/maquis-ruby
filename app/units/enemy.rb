@@ -53,8 +53,17 @@ class Enemy < Unit
       # raise "#{stat} starting value undefined for #{@klass}!" unless starting_stats[stat]
     end
     @hp = max_hp
-    #TODO each enemy should be able to define what items it has
-    @inventory = []
+    @inventory = config[@klass]['weapons'].map do |w|
+      if w.is_a?(String)
+        Weapon.build(w)
+      else
+        Weapon.new(w)
+      end
+    end
     @exp_level = exp_level
+  end
+
+  def can_wield?(weapon)
+    true
   end
 end

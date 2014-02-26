@@ -1,32 +1,39 @@
 class Weapon
-  ATTRS = [:name, :weapon_type, :range, :power, :to_hit, :to_crit, :weight, :targets]
+  ATTRS = [:name, :type, :range, :power, :to_hit, :to_crit, :weight, :targets]
   attr_reader *ATTRS
+  attr_reader :config
 
-  def initialize *attrs
-    ATTRS.count.times do |i|
-      instance_variable_set("@#{ATTRS[i]}", attrs[i])
+  def self.config
+    @config ||= YAML.load(File.read('./weapons.yml'))
+  end
+
+  def self.build(name)
+    raise "No weapon named: #{name}" unless Weapon.config[name]
+    Weapon.new(Weapon.config[name])
+  end
+
+  def initialize configuration, identifier=nil
+    @config = configuration
+    @identifier=identifier
+    ATTRS.map(&:to_s).each do |stat|
+      raise "Weapon #{@identifier} doens't have stat #{stat}!" unless config[stat]
+      instance_variable_set("@#{stat}", config[stat])
     end
+    @range = (@range..@range) if @range.is_a?(Numeric)
   end
 
   def in_range?(x)
     range.include?(x)
   end
 
-  def self.create(*args)
-    @all||=[]
-    c = Class.new(self) do
-      define_method :initialize do
-        super(*args)
-      end
-    end
-    @all << c
-    c
+  def self.exists?(name)
+    config.key?(name)
   end
 
   # override if different from their triangle weapon type
   # examples: axekiller is wieldable by lances, but in other cases is a sword.
   def wield_type
-    weapon_type
+    type
   end
 
   # equip!
@@ -55,7 +62,7 @@ class Weapon
   end
 
   def magic?
-    [:anima, :light, :dark].include?(weapon_type)
+    [:anima, :light, :dark].include?(type)
   end
 end
 

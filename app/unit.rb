@@ -303,7 +303,7 @@ class Unit
   end
 
   def weapon_type
-    weapon.weapon_type if weapon
+    weapon.type if weapon
   end
 
   def available_weapons
@@ -311,7 +311,7 @@ class Unit
   end
 
   def can_wield?(weapon)
-    weapon_skills.include?(weapon.weapon_type)
+    weapon_skills.include?(weapon.type)
   end
 
   def weapons_that_hit_at(x)
