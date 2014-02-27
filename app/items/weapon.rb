@@ -91,7 +91,7 @@ class Weapon
   end
 
   def magic?
-    [:anima, :light, :dark].include?(type)
+    %w(anima light dark).include?(type)
   end
 
   def hit(target)
