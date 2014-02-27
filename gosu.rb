@@ -631,6 +631,11 @@ class GosuDisplay < Gosu::Window
     end.all?
   end
 
+  def draw_exp_meter(exp)
+    quad(50, 50, 200, 50, Gosu::Color::WHITE, 300)
+    quad(50, 50, (exp%100)*2, 50, Gosu::Color::RED, 301)
+  end
+  no_camera :draw_exp_meter
 
   private
 

@@ -1,5 +1,5 @@
 class PlayerUnit < Unit
-  attr_reader :exp
+  attr_reader :exp, :pending_exp
 
   def self.random_class
     config.keys.select do |k|
@@ -76,6 +76,7 @@ class PlayerUnit < Unit
 
     @is_lord = is_lord
     @exp = 0
+    @pending_exp = 0
   end
 
   def self.config
@@ -93,7 +94,12 @@ class PlayerUnit < Unit
   end
 
   def gain_experience n
-    @exp += n
+    @pending_exp += n
+  end
+
+  def apply_exp_gain
+    @exp += @pending_exp
+    @pending_exp = 0
     if @exp >= 100
       @exp -= 100
       return exp_level_up!

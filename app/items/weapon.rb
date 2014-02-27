@@ -102,7 +102,7 @@ class Weapon
   end
 
   def on_hit_poison(target)
-    target.buff!('poison', 3, 5)
+    target.buff!('poison', 2, 5)
   end
 end
 

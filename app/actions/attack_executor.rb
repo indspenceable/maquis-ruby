@@ -32,11 +32,14 @@ class AttackExecutor < Action
       return self
     end
 
-    done
-
+    a,b = @unit, @target
+    a,b = b,a if @target.team == PLAYER_TEAM
+    gain_exp(a, b)
 
     if @level.units.none?{|u| u.team == COMPUTER_TEAM }
-      @level.finish_turn(COMPUTER_TEAM)
+      @level.upkeep do
+        @level.finish_turn(COMPUTER_TEAM)
+      end
     else
       @unit.action_available = false
       @next_state.call
@@ -115,13 +118,14 @@ class AttackExecutor < Action
 
   def gain_exp(me, vs)
     return unless me.alive?
-    exp = [determine_exp_to_gain(me, vs),1].max
-    @messages << "#{me.name} gains #{exp} exp."
-    level_up_stats_gained = me.gain_experience(exp)
-    if level_up_stats_gained
-      stats_gain_string = level_up_stats_gained.any? ? "(#{level_up_stats_gained.join('/')})" : ''
-      @messages << "#{me.name} gains a level! #{stats_gain_string}"
-    end
+    me.gain_experience([determine_exp_to_gain(me, vs),1].max)
+
+    # @messages << "#{me.name} gains #{exp} exp."
+    # level_up_stats_gained = me.gain_experience(exp)
+    # if level_up_stats_gained
+    #   stats_gain_string = level_up_stats_gained.any? ? "(#{level_up_stats_gained.join('/')})" : ''
+    #   # @messages << "#{me.name} gains a level! #{stats_gain_string}"
+    # end
   end
 
   def determine_exp_to_gain(me, vs)
@@ -169,13 +173,4 @@ class AttackExecutor < Action
     combat_round(@target, @unit, @messages)
     determine_next_state(:double_counter)
   end
-
-  def done
-    a,b = @unit, @target
-    a,b = b,a if @target.team == PLAYER_TEAM
-    gain_exp(a, b)
-    @finished = true
-    @finished_animating = false
-  end
-
 end

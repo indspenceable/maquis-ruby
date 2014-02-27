@@ -112,6 +112,12 @@ class Level
         upkeep(&blk)
       end
     end
+    u = player_units.find{|u| u.pending_exp > 0 }
+    if u
+      return ExperienceGain.new(u, self) do
+        upkeep(&blk)
+      end
+    end
     # did anyone's weapons break?
     u = player_units.find do |u|
       u.weapon && u.weapon.used_up?

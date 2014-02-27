@@ -222,6 +222,7 @@ class Perform < Skill
 
   activate do |me, target, level|
     target.buff!('empower', 1)
+    me.gain_experience(10)
   end
 
   def effect
@@ -250,7 +251,8 @@ class Healing < Skill
   range 1
 
   activate do |me, target, level|
-    target.heal(me.power)
+    target.heal(me.power*4)
+    me.gain_experience(10)
   end
 
   def effect
