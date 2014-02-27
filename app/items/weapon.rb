@@ -1,6 +1,6 @@
 class Weapon
   ATTRS = [:name, :type, :range, :power, :to_hit, :to_crit, :weight, :targets] +
-    [:on_hit, :durability]
+    [:on_hit, :durability, :price]
 
   DEFAULTS = {
     :targets => [],

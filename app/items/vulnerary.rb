@@ -35,6 +35,10 @@ class Vulnerary < Consumable
     unit.heal(10)
     true
   end
+
+  def price
+    300
+  end
 end
 
 class Antitoxin < Consumable
@@ -48,5 +52,9 @@ class Antitoxin < Consumable
 
   def consume(unit)
     unit.debuff('poison')
+  end
+
+  def price
+    150
   end
 end

@@ -156,7 +156,7 @@ class GosuDisplay < Gosu::Window
   def initialize(previous_save)
     super(WINDOW_SIZE_X, WINDOW_SIZE_Y, false)
     action = previous_save
-    @current_action = action || Planning.new(-1, PlayerArmy.new(4))
+    @current_action = action || Planning.new(-1, PlayerArmy.new)
 
     @font = Gosu::Font.new(self, "DawnLike/GUI/SDS_6x6.ttf", FONT_SIZE)
     define_tile_sets

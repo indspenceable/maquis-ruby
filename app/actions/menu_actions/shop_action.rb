@@ -7,13 +7,21 @@ class ShopAction < MenuAction
     @made_purchase = false
   end
 
+  def can_afford_current_item?
+    @item_list[@index].price <= @level.army.money
+  end
+
   def action!
     # override action!
-    @unit.inventory << @item_list.delete_at(@index)
-    @made_purchase = true
-    @choices = @item_list.map(&:pretty)
-    @index -= 1 if @index = @choices.length
-    return cancel if @choices == []
+    if can_afford_current_item?
+      @level.army.money -= @item_list[@index].price
+      puts "YOU NOW HAVE #{@level.army.money} MONEY"
+      @unit.inventory << @item_list.delete_at(@index)
+      @made_purchase = true
+      @choices = @item_list.map(&:pretty)
+      @index -= 1 if @index == @choices.length
+      return cancel if @choices == []
+    end
     self
   end
 
