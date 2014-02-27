@@ -28,11 +28,27 @@ class Plains < Terrain
   def available_to_place_units?
     true
   end
+
+  def standard_movement_cost
+    1
+  end
 end
 
 class Mountain < Terrain
   def identifier
     :mountain
+  end
+
+  def standard_movement_cost
+    3
+  end
+
+  def armor_bonus
+    2
+  end
+
+  def evade_bonus
+    30
   end
 end
 
@@ -44,11 +60,26 @@ class Forest < Terrain
   def available_to_place_units?
     true
   end
+
+  def standard_movement_cost
+    2
+  end
+
+  def armor_bonus
+    1
+  end
+
+  def evade_bonus
+    20
+  end
 end
 
 class Wall < Terrain
   def identifier
     :wall
+  end
+  def standard_movement_cost
+    99999
   end
 end
 
@@ -59,6 +90,18 @@ class Fort < Terrain
 
   def available_to_place_units?
     true
+  end
+
+  def standard_movement_cost
+    2
+  end
+
+  def armor_bonus
+    2
+  end
+
+  def evade_bonus
+    20
   end
 end
 
@@ -81,7 +124,6 @@ class Shop < Terrain
     ]
   end
 
-
   def identifier
     :shop
   end
@@ -103,5 +145,10 @@ class Shop < Terrain
     else
       {}
     end
+  end
+
+
+  def standard_movement_cost
+    2
   end
 end

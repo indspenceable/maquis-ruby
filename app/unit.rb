@@ -131,7 +131,6 @@ class Unit
   end
 
   def adjusted_armor(weapon)
-    # puts "terrain armor is #{terrain_armor_bonus} and weapon is #{weapon.power} and resist = #{resistance} and armor = #{armor}"
     terrain_armor_bonus + if weapon.magic?
       resistance
     else

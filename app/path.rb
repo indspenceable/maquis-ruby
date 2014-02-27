@@ -10,14 +10,11 @@ class Path
   end
 
   def self.default_movement_costs
-    {
-      :plains => 1,
-      :forest => 2,
-      :fort => 2,
-      :mountain => 999,
-      :wall => 999,
-      :shop => 2,
-    }
+    @default_movement_costs ||= Hash[
+      ObjectSpace.each_object(Class).select do |s|
+        s < Terrain
+      end.map(&:new).map{|t| [t.identifier, t.standard_movement_cost]}
+    ]
   end
 
   def self.min_dist(_x,_y, list_of_destinations)

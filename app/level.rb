@@ -20,13 +20,6 @@ class Level
     @difficulty = d
   end
 
-  def self.evade_bonus_for_terrain
-    Hash.new(0).merge({
-      :forest => 20,
-      :fort => 20,
-    })
-  end
-
   GOALS = [:seize_throne, :kill_enemies]
   def goal= g
     raise "Already have a goal!" if @goal
