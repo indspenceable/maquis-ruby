@@ -2,7 +2,7 @@ require 'set'
 
 class Level
   attr_reader :units, :log, :difficulty, :army, :goal, :map_size_x, :map_size_y
-  attr_accessor :fog_of_war
+  attr_accessor :fog_of_war, :primary_objective, :secondary_objectives
   def initialize(w,h)
     @map_size_x,@map_size_y = w,h
     @units = []
@@ -130,11 +130,17 @@ class Level
     blk.call
   end
 
+  def secondary_objective_descriptions
+    @secondary_objectives.map do |objective, reward|
+      "#{objective.description} for #{reward.description}"
+    end
+  end
+
   # for the players turn
   def next_action(x,y)
     upkeep do
-      if computer_units.none?
-        finish_turn(PLAYER_TEAM)
+      if primary_objective.met?
+        win!
       elsif player_units.none?(&:action_available)
         finish_turn(PLAYER_TEAM)
       else
@@ -143,13 +149,21 @@ class Level
     end
   end
 
+  def win!
+
+    @secondary_objectives.each do |objective, reward|
+      if objective.met?
+        reward.apply!
+      end
+    end
+    army.next_level!(difficulty)
+    Planning.new(difficulty+1, army)
+  end
+
   # returns the action for whoever's turn is next.
   # also, do stuff that happens between turns.
   def finish_turn(team)
-    if computer_units.none?
-      army.next_level!(difficulty)
-      return Planning.new(difficulty, army)
-    end
+    return win! if primary_objective.met?
 
     units.each do |u|
       if u.team != team

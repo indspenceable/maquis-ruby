@@ -117,7 +117,7 @@ class PlayerUnit < Unit
     @pending_exp = 0
     if @exp >= 100
       @exp -= 100
-      return exp_level_up!
+      return puts exp_level_up!.inspect
     end
   end
 

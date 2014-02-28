@@ -51,6 +51,8 @@ class UnitSelect < MapAction
     draw_all_units(window)
     if current_unit
       unit_brief(window, current_unit)
+    else
+      window.draw_hud(@level)
     end
   end
 end

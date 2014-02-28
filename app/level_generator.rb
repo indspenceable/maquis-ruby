@@ -143,8 +143,28 @@ module LevelGenerator
       level.army = army
       level.difficulty = difficulty
       level.fog_of_war = fog_of_war
+      level.primary_objective = select_goal(level)
+      select_secondary_objectives(level, difficulty)
       level
     end
+
+    def select_goal(l)
+      [KillAllBaddies, KillAllBosses].shuffle.pop.new(l)
+    end
+
+    def select_reward(difficulty)
+      [GainAUnit, GainMoney].shuffle.pop.new(difficulty)
+    end
+
+    def select_secondary_objectives(l, difficulty)
+      possible_secondary_objectives = []
+      possible_secondary_objectives << WinInXTurns.new(7, l)
+      k = possible_secondary_objectives.shuffle.pop
+      l.secondary_objectives = {
+        k => select_reward(difficulty)
+      }
+    end
+
 
     def fog_fortune
       if fog_of_war

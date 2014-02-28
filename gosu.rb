@@ -632,10 +632,19 @@ class GosuDisplay < Gosu::Window
   end
 
   def draw_exp_meter(exp)
-    quad(50, 50, 200, 50, Gosu::Color::WHITE, 300)
-    quad(50, 50, (exp%100)*2, 50, Gosu::Color::RED, 301)
+    quad(50, 50, 500, 50, Gosu::Color::WHITE, 300)
+    quad(50, 50, (exp%100)*5, 50, Gosu::Color::RED, 301)
   end
   no_camera :draw_exp_meter
+
+  def draw_hud(level)
+    draw_menu([
+      level.primary_objective.description,
+      "$#{level.army.money}",
+      "",
+      *level.secondary_objective_descriptions
+    ], nil)
+  end
 
   private
 
