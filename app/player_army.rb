@@ -30,11 +30,6 @@ class PlayerArmy
     ready_all_units!
     @army.each{|u| u.current_level = nil}
     @army.each{|u| u.clear_buffs! }
-    select_reward(difficulty).apply(self)
-  end
-
-  def select_reward(difficulty)
-    GainAUnit.new(difficulty)
   end
 
   def units
