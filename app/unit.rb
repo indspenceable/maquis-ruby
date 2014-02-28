@@ -254,7 +254,7 @@ class Unit
     end
   end
   def skill_for_info_str
-    "SKILL: #{skill} #{strength_string(:skill)}"
+    "SKL: #{skill} #{strength_string(:skill)}"
   end
 
   # CRITICAL HITS

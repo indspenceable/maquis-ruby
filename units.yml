@@ -112,6 +112,7 @@ squire:
   tileset: Player
   growths:
     :armor: 1
+    :speed: -1
   con: 10
   skills:
     - lances
@@ -189,7 +190,7 @@ mage:
   tileset: Player
   growths:
     :power: 1
-    :def: -1
+    :armor: -1
     :resistance: 1
   con: 4
   skills:

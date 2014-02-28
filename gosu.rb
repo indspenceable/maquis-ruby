@@ -565,8 +565,8 @@ class GosuDisplay < Gosu::Window
       unit.armor_for_info_str,
       unit.speed_for_info_str,
       unit.resistance_for_info_str,
+      "CON: #{unit.constitution}",
       unit.weapon_name_str,
-      "#{unit.constitution}",
       unit.traits.map(&:to_s).join(', '),
       unit.skills.map(&:pretty).join(','),
     ],nil)

@@ -17,7 +17,7 @@ class PlayerUnit < Unit
 
   LEVEL_UPS_FOR_LEVEL_ONE = 0
 
-  AVERAGE_NUMBER_OF_POINTS = STATS.length+2
+  AVERAGE_NUMBER_OF_POINTS = STATS.length-1
   # GROWTH_RANGES = {
   #   :max_hp => [60, 90],
   #   :power => [15, 60],
@@ -30,6 +30,11 @@ class PlayerUnit < Unit
   GROWTH_HIGH = 60
   NUMBER_OF_RANGES = 3 # bad, med, good.
   SINGLE_RANGE = (GROWTH_HIGH-GROWTH_LOW)/NUMBER_OF_RANGES
+  HEALTH_BONUS_GROWTH = 30
+  # < 30 LOW
+  # < 45 MED
+  # < 60 HIGH
+  # >= 60
 
   def initialize klass, name, exp_level = 1, is_lord=false
     @klass = klass
@@ -54,21 +59,27 @@ class PlayerUnit < Unit
     # create this characters skill array
     general_aptitudes = Hash[STATS.map{ |s| [s, 0] }]
     points_for_me = AVERAGE_NUMBER_OF_POINTS + rand(3) - 1
+
     while general_aptitudes.values.reduce(&:+) < points_for_me
       current_stat = STATS.shuffle.pop
-      general_aptitudes[current_stat] += 1 if general_aptitudes[current_stat] < 2
+      if general_aptitudes[current_stat] < 2
+        general_aptitudes[current_stat] += 1
+      end
     end
-    puts "GENERAL APTITUDES ARE #{general_aptitudes.inspect}"
-    config[@klass]['growths'].each do |stats, val|
-      puts stats
-      general_aptitudes[stats] += val
+
+    config[@klass]['growths'].each do |stat, val|
+      if val >= 1
+      else
+      end
+      general_aptitudes[stat] += val
     end
-    puts "--- GENERAL APTITUDES ARE #{general_aptitudes.inspect}"
+
     general_aptitudes.each do |stat, val|
       val = 0 if val < 0
+      val = 3 if val > 3
       @growths[stat] = rand(SINGLE_RANGE/5)*5 + GROWTH_LOW + SINGLE_RANGE*val
     end
-    @growths[:max_hp] += 30
+    @growths[:max_hp] += HEALTH_BONUS_GROWTH
 
 
     # class_growths.each do |k, val|
@@ -103,6 +114,7 @@ class PlayerUnit < Unit
 
   def strength_string(stat)
     pct = @growths[stat]
+    pct -= HEALTH_BONUS_GROWTH if stat == :max_hp
     case
     when pct < GROWTH_LOW
       "VERY LOW"
@@ -110,8 +122,8 @@ class PlayerUnit < Unit
       "LOW"
     when pct < GROWTH_LOW+SINGLE_RANGE*2
       "MEDIUM"
-    else pct < GROWTH_LOW+SINGLE_RANGE*3
-      "HIGHT"
+    when pct < GROWTH_LOW+SINGLE_RANGE*3
+      "HIGH"
     else
       "!!!"
     end
