@@ -52,17 +52,30 @@ killing_edge:
   durability: 20
   rarity: 'special'
   price: 1300
+# axes
 iron_axe:
   name: Iron Axe
   type: axes
   range: 1
-  power: 6
+  power: 8
   to_hit: 75
   to_crit: 0
   weight: 8
   durability: 45
   rarity: 'basic'
   price: 270
+hand_axe:
+  name: Hand Axe
+  type: axes
+  range: [1, 2]
+  power: 7
+  to_hit: 60
+  to_crit: 0
+  weight: 12
+  durability: 20
+  rarity: 'special'
+  price: 300
+# lances
 iron_lance:
   name: Iron Lance
   type: lances

@@ -71,9 +71,9 @@ eyeball:
     - beam
 
 # Orcs
-basic_orc:
+orc_basic:
   pretty: Orc
-  description : A smelly orc.
+  description: A smelly orc.
   tile: [0, 10]
   tileset: Player
   stats:
@@ -89,3 +89,58 @@ basic_orc:
   skills: []
   weapons:
     - iron_axe
+orc_brave:
+  pretty: Orc Brave
+  description: An orc fighter
+  tile: [1, 10]
+  tileset: Player
+  stats:
+    :max_hp: 25
+    :power: 6
+    :skill: 3
+    :speed: 4
+    :armor: 4
+    :resistance: 1
+    :constitution: 12
+  value: 3
+  ais: []
+  skills: []
+  weapons:
+    - iron_axe
+orc_slasher:
+  pretty: Orc Slasher
+  description: A quick orc sword fighter
+  tile: [2, 10]
+  tileset: Player
+  stats:
+    :max_hp: 25
+    :power: 5
+    :skill: 8
+    :speed: 8
+    :armor: 3
+    :resistance: 3
+    :constitution: 12
+  value: 5
+  ais: []
+  skills: []
+  weapons:
+    - iron_sword
+orc_sensei:
+  pretty: Orc Sensei
+  description: Trains the other orcs in how to fight.
+  tile: [3, 10]
+  tileset: Player
+  stats:
+    :max_hp: 28
+    :power: 10
+    :skill: 5
+    :speed: 5
+    :armor: 2
+    :resistance: 6
+    :constitution: 12
+  value: 13
+  ais: []
+  skills: []
+  weapons:
+    - iron_axe
+    - hand_axe

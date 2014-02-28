@@ -105,6 +105,7 @@ fighter:
     - axes
   weapons:
     - iron_axe
+    - hand_axe
   weight: 3
   lord: true
 # --- Squire Tree
