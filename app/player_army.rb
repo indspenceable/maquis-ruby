@@ -12,7 +12,7 @@ class PlayerArmy
     # build an army of size units, plus the lord.
 
     # lord = lord_klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, 1, true)
-    lord = PlayerUnit.new(PlayerUnit.random_class, Names.generate, 1, true)
+    lord = PlayerUnit.new(PlayerUnit.random_lord_class, Names.generate, 1, true)
     @army = [ lord ]
     @army += STARTING_SIZE.times.map do |x|
       PlayerUnit.new(PlayerUnit.random_class, Names.generate, 1)

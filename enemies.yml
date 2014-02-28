@@ -48,8 +48,7 @@ farmer:
     :constitution: 8
   value: 4
   ais: []
-  skills:
-    - lances
+  skills: []
   weapons:
     - pitchfork
 eyeball:
@@ -70,3 +69,23 @@ eyeball:
   skills: []
   weapons:
     - beam
+
+# Orcs
+basic_orc:
+  pretty: Orc
+  description : A smelly orc.
+  tile: [0, 10]
+  tileset: Player
+  stats:
+    :max_hp: 20
+    :power: 5
+    :skill: 1
+    :speed: 2
+    :armor: 3
+    :resistance: 0
+    :constitution: 12
+  value: 1
+  ais: []
+  skills: []
+  weapons:
+    - iron_axe

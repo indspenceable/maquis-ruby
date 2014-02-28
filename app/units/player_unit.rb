@@ -1,6 +1,20 @@
 class PlayerUnit < Unit
   attr_reader :exp, :pending_exp
 
+  def self.random_class_weighted
+    classes = []
+    config.each do |klass, val|
+      val['weight'].times{ classes << klass } if val['basic']
+    end
+    return classes.shuffle.pop
+  end
+
+  def self.random_lord_class
+    config.keys.select do |k|
+      config[k]['basic'] && config[k]['lord']
+    end.shuffle.pop
+  end
+
   def self.random_class
     config.keys.select do |k|
       config[k]['basic']
@@ -15,7 +29,7 @@ class PlayerUnit < Unit
     end
   end
 
-  LEVEL_UPS_FOR_LEVEL_ONE = 0
+  LEVEL_UPS_FOR_LEVEL_ONE = 5
 
   AVERAGE_NUMBER_OF_POINTS = STATS.length-1
   # GROWTH_RANGES = {

@@ -78,6 +78,8 @@ soldier:
     - mercenary
   weapons:
     - iron_sword
+  weight: 3
+  lord: true
 hero:
   pretty: Hero
   description: A battle-hardended character. He leads the charge on the field of battle.
@@ -103,6 +105,8 @@ fighter:
     - axes
   weapons:
     - iron_axe
+  weight: 3
+  lord: true
 # --- Squire Tree
 squire:
   basic: true
@@ -121,6 +125,8 @@ squire:
     - knave
   weapons:
     - iron_lance
+  weight: 3
+  lord: true
 knight:
   pretty: Knight
   description: A full member of the order of knights, capable of supporting his allies.
@@ -181,6 +187,7 @@ entertainer:
   skills:
     - perform
   weapons: []
+  weight: 1
 # -- Mage Tree
 mage:
   pretty: Mage
@@ -197,6 +204,8 @@ mage:
     - anima
   weapons:
     - fire
+  weight: 2
+  lord: true
 # --- Cleric Tree
 cleric:
   pretty: Cleric
@@ -212,6 +221,7 @@ cleric:
     - healing
   weapons:
     - lightning
+  weight: 2
 # --- Dark mage tree
 pupil:
   pretty: Pupil
@@ -228,6 +238,7 @@ pupil:
     - dark
   weapons:
     - flux
+  weight: 2
 # --- Thief Tree
 scoundrel:
   pretty: Scoundrel
@@ -245,7 +256,7 @@ scoundrel:
     - swords
   weapons:
     - slim_sword
-
+  weight: 2
 archer:
   pretty: Archer
   description: has a familiarity with bows and arrows.
@@ -258,3 +269,4 @@ archer:
     - bows
   weapons:
     - iron_bow
+  weight: 2
