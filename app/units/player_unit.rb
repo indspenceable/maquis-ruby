@@ -145,7 +145,7 @@ class PlayerUnit < Unit
         [k, rand(5)]
       end
     ].merge({
-      :max_hp => 10 + 5*rand(3),
+      :max_hp => 15 + 5*rand(3),
     })
   end
 
