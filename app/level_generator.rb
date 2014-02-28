@@ -78,8 +78,8 @@ module LevelGenerator
       return [
         Enemy.new(
           theme.boss_klass(difficulty),
-          "Count #{Names.generate}"
-          # (difficulty+1)*5
+          Names.generate,
+          true
         )
       ] + enemy_levels.map do |lv|
         Enemy.new(theme.pop_klass(difficulty), theme.team)

@@ -7,6 +7,14 @@ class PlayerUnit < Unit
     end.shuffle.pop
   end
 
+  def name
+    if lord?
+      "Lord #{@name.capitalize}"
+    else
+      @name.capitalize
+    end
+  end
+
   LEVEL_UPS_FOR_LEVEL_ONE = 5
 
   BASE_STATS = {

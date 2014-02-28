@@ -1,12 +1,4 @@
 class Unit
-  def name
-    if lord?
-      "Lord #{@name.capitalize}"
-    else
-      @name.capitalize
-    end
-  end
-
   STATS = [
     :max_hp,
     :power,

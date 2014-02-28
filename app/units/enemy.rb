@@ -5,6 +5,18 @@ class Enemy < Unit
     false
   end
 
+  def name
+    if boss?
+      "Count #{@name.capitalize}"
+    else
+      @name.capitalize
+    end
+  end
+
+  def boss?
+    @boss
+  end
+
   def self.config
     @config ||= YAML.load(File.read('./enemies.yml'))
   end
@@ -38,9 +50,10 @@ class Enemy < Unit
     ""
   end
 
-  def initialize(klass, name)
+  def initialize(klass, name, boss=false)
     @klass = klass
     @name = name
+    @boss = boss
     @team = COMPUTER_TEAM
     @x, @y = 0, 0
     @buffs = []

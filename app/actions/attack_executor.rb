@@ -133,7 +133,10 @@ class AttackExecutor < Action
       if vs.alive?
         hit_experience(me, vs)
       else
-        [kill_experience(me, vs) + 20 + hit_experience(me, vs),1].max
+        [
+          kill_experience(me, vs) + 20 + (vs.boss? ? 40 : 0),
+          1
+        ].max + hit_experience(me, vs)
       end
     else
       no_hit_experience
