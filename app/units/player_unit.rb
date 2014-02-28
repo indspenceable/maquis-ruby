@@ -15,7 +15,7 @@ class PlayerUnit < Unit
     end
   end
 
-  LEVEL_UPS_FOR_LEVEL_ONE = 5
+  LEVEL_UPS_FOR_LEVEL_ONE = 0
 
   BASE_STATS = {
     :max_hp => 15,
@@ -96,8 +96,15 @@ class PlayerUnit < Unit
   end
 
   def starting_stats
-    BASE_STATS.merge({
-      :constitution => config[@klass]['con'] + rand(5)-2
+    # 20 max hp to start, con determined by class,
+    # and random base stats beyond that.
+    Hash[
+      BASE_STATS.keys.map do |k|
+        [k, rand(5)]
+      end
+    ].merge({
+      :max_hp => 20,
+      :constitution => config[@klass]['con'] + rand(5)-2,
     })
   end
 
