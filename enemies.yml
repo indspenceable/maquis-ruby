@@ -60,10 +60,10 @@ eyeball:
   stats:
     :max_hp: 20
     :power: 2
-    :skill: 6
+    :skill: 5
     :armor: 0
-    :speed: 7
-    :resistance: 7
+    :speed: 4
+    :resistance: 4
     :constitution: 4
   value: 6
   ais: []
