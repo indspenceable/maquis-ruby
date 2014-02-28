@@ -40,7 +40,7 @@ class Mountain < Terrain
   end
 
   def standard_movement_cost
-    3
+    5
   end
 
   def armor_bonus
