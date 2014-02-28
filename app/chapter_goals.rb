@@ -75,4 +75,8 @@ class WinInXTurns < ChapterGoal
   def description
     "Win in #{@turns} turns"
   end
+
+  def met?
+    @completed
+  end
 end
