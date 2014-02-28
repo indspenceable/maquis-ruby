@@ -2,8 +2,8 @@ class GainAUnit
   def initialize(difficulty)
     @level = difficulty
   end
-  def apply(player_army)
-    player_army.units << PlayerUnit.new(PlayerUnit.random_class, Names.generate, @level)
+  def apply!(player_army)
+    player_army.units << PlayerUnit.new(PlayerUnit.random_class_weighted, Names.generate, @level)
   end
   def description
     "a new unit"
@@ -14,7 +14,7 @@ class GainMoney
   def initialize(difficulty)
     @level = difficulty
   end
-  def apply(player_army)
+  def apply!(player_army)
     player_army.money += @level * 300 + rand(300)
   end
   def description

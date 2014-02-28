@@ -61,6 +61,7 @@ class WinInXTurns < ChapterGoal
 
   def initialize(turns, level)
     @turns = turns
+    @completed = true
     super(level)
   end
 

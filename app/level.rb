@@ -151,10 +151,11 @@ class Level
   end
 
   def win!
-
     @secondary_objectives.each do |objective, reward|
+      puts "Checking #{objective}"
       if objective.met?
-        reward.apply!
+        puts "met it!"
+        reward.apply!(army)
       end
     end
     army.next_level!(difficulty)
