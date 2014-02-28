@@ -6,9 +6,8 @@ class Unit
     :armor,
     :speed,
     :resistance,
-    :constitution,
   ]
-  attr_reader *STATS, :exp_level, :hp, :klass
+  attr_reader *STATS, :constitution, :exp_level, :hp, :klass
   attr_accessor :team, :x, :y, :action_available, :current_level
 
   def initialize *args
@@ -78,21 +77,6 @@ class Unit
     @hp/max_hp.to_f > 0.66 ? GREEN :
       @hp / max_hp.to_f > 0.33 ? BLUE : RED
   end
-
-  def strength_string(stat)
-    pct = @growths[stat]
-    case
-    when pct < 30
-      "LOW"
-    when pct < 50
-      "MED"
-    when pct < 80
-      "HIGH"
-    else
-      "!!!"
-    end
-  end
-
 
   def health_for_info_str
     "#{health_str} hp #{strength_string(:max_hp)}"
@@ -217,7 +201,6 @@ class Unit
   end
 
   def power_vs(vs)
-    # binding.pry
     [
       power +
       (weapon.power + weapon_triangle_bonus_power(vs)) * weapon_effectiveness(vs) -

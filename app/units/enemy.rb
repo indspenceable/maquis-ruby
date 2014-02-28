@@ -61,7 +61,7 @@ class Enemy < Unit
     #ensure everyone is exp_level 1 at least.
     @action_available = true
 
-    STATS.each do |stat|
+    (STATS+[:constitution]).each do |stat|
       self.instance_variable_set(:"@#{stat}", stat_for(stat) )
     end
     @hp = max_hp
