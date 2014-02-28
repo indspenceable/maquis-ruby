@@ -1,12 +1,13 @@
 require 'set'
 
 class Level
-  attr_reader :units, :log, :difficulty, :army, :goal, :map_size_x, :map_size_y
+  attr_reader :units, :log, :difficulty, :army, :goal, :map_size_x, :map_size_y, :turn_count
   attr_accessor :fog_of_war, :primary_objective, :secondary_objectives
   def initialize(w,h)
     @map_size_x,@map_size_y = w,h
     @units = []
     @log = []
+    @turn_count = 0
   end
 
   def army= a
@@ -178,6 +179,7 @@ class Level
     if team == PLAYER_TEAM
       EnemyTurn.new(self)
     else
+      @turn_count += 1
       next_action(lord.x, lord.y)
     end
   end
