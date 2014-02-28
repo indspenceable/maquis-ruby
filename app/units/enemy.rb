@@ -62,6 +62,7 @@ class Enemy < Unit
     @action_available = true
 
     (STATS+[:constitution]).each do |stat|
+      raise "No stat for #{stat} for enemy #{klass}" unless stat_for(stat)
       self.instance_variable_set(:"@#{stat}", stat_for(stat) )
     end
     @hp = max_hp
