@@ -192,7 +192,7 @@ module LevelGenerator
     end
 
     def number_of_enemy_units(difficulty)
-      [(difficulty+1), 7].min + rand([(difficulty+1)*3, 16].min)
+      7 + rand([(difficulty+1)*3, 16].min)
     end
 
 
