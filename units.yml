@@ -1,66 +1,3 @@
-# knight:
-#   growths:
-#     max_hp: ?
-#     power: ?
-#     skill: ?
-#     speed: ?
-#   promotes:
-#     - paladin # support based
-#     - darkknight    # combat based
-#   skills:
-#     - armor
-#     - attack
-# paladin:
-#   promotes:
-#     - angelica # defense + healing
-#     - crusader # offensive buffs
-#   skills:
-#     - attack
-#     - true-knight # heal all units nearby, but uses up turn.
-# angelica:
-#   promotes:
-#   skills:
-#     - attack
-#     - wings
-#     - healing_aura # passive nearby healing. Damn.
-# crusader:
-#   promotes:
-#   skills:
-#     - attack
-#     - war_chant # boost one stat for nearby units
-# darkknight:
-#   promotes:
-#     - deathknight # self damaging
-#     - duelist # debuff all neighbors
-#     # also, the darkknight gets some increased fighting stats
-# ---
-# soldier:
-#   promotes:
-#     - marshal # group combat
-#     - mercenary
-#   skills:
-# marshal:
-#   promotes:
-#     - samurai # gives bonuses to adjacent allies
-#     - myrmidon # ????
-# mercenary:
-#   promotes:
-#     - freelancer
-#     - assassin
-# ---
-# fighter:
-#   promotes:
-#     - warrior
-#     - barbarian
-
-# barbarian:
-#   promotes:
-#     - viking
-#     - berserker
-# warrior:
-#   promotes:
-#     - hero
-#     - champion/vanquishor
 # --- Soldier Tree
 soldier:
   basic: true
@@ -74,23 +11,67 @@ soldier:
   skills:
     - swords
   promotes:
-    - hero
-    - mercenary
+    - templar
+    - tactician
   weapons:
     - iron_sword
   weight: 3
   lord: true
-hero:
-  pretty: Hero
-  description: A battle-hardended character. He leads the charge on the field of battle.
+templar:
+  pretty: Templar
+  description: TODO templar
+  tile: [1, 7]
+  tileset: Player
   skills:
     - swords
   promotes:
-    - samurai
+    - paladin
+    - commander
+paladin:
+  pretty: Paladin
+  description: TODO A holy fighter who heals his bretheren in combat.
+  tile: [1, 7]
+  tileset: Player
+  skills:
+    - swords
+    - staves
+commander:
+  pretty: Commander
+  description: A great field soldier with the ability to inspire nearby units.
+  tile: [1, 7]
+  tileset: Player
+  skills:
+    - swords
+    - command_aura
+tactician:
+  pretty: Tactician
+  description: A fighter who uses the terrain to it's greatest advantage.
+  tile: [1, 7]
+  tileset: Player
+  skills:
+    - swords
+    - terrain
+  promotes:
+    - strategist
     - myrmidon
-# mercenary:
-#   pretty: Mercenary
-#   description: A professional sell-sword.
+strategist:
+  pretty: Strategist
+  description: A veteran soldier with a solid understanding of how unit formations can sway the tides of combat.
+  tile: [1, 7]
+  tileset: Player
+  skills:
+    - swords
+    - terrain
+    - strategist_aura
+myrmidon:
+  pretty: Myrmidon
+  description: An exteremely skilled sword fighter
+  tile: [1, 7]
+  tileset: Player
+  skills:
+    - swords
+    - critical_boost
+    - terrain
 # --- Fighter Tree
 fighter:
   basic: true
@@ -101,6 +82,7 @@ fighter:
   con: 8
   growths:
     :power: 1
+    :resistance: -1
   skills:
     - axes
   weapons:
@@ -108,7 +90,66 @@ fighter:
     - hand_axe
   weight: 3
   lord: true
-# --- Squire Tree
+  promotes:
+     - warrior
+     - barbarian
+warrior:
+  pretty: Warrior
+  description: WARRIORRRR
+  tile: [3, 3]
+  tileset: Player
+  promotes:
+    - protector
+    - hero
+  skills:
+    - axes
+    - defense_boost
+protector:
+  pretty: Protector
+  description: Gives bonuses to adjacent units
+  tile: [3, 3]
+  tileset: Player
+  skills:
+    - axes
+    - protection_aura
+hero:
+  pretty: Hero
+  description: A great hero!
+  tile: [3, 3]
+  tileset: Player
+  skills:
+    - axes
+    - swords
+barbarian:
+  pretty: Barbarian
+  description: Bloodluster!
+  tile: [3, 3]
+  tileset: Player
+  skills:
+    - axes
+    - rage
+  promotes:
+    - raider
+    - berserker
+raider:
+  pretty: Raider
+  description: Can use bows
+  tile: [3, 3]
+  tileset: Player
+  skills:
+    - rage
+    - axes
+    - bows
+berserker:
+  pretty: Berserker
+  description: Every kill gives you a stacking bonus!
+  tile: [3, 3]
+  tileset: Player
+  skills:
+    - axes
+    - rage
+    - berserking
+# --- Squire tree
 squire:
   basic: true
   pretty: Squire
@@ -121,7 +162,7 @@ squire:
   con: 10
   skills:
     - lances
-  promote:
+  promotes:
     - knight
     - knave
   weapons:
@@ -130,49 +171,58 @@ squire:
   lord: true
 knight:
   pretty: Knight
-  description: A full member of the order of knights, capable of supporting his allies.
+  description: A full member of the order of knights. Rides horseback.
+  tile: [1, 3]
+  tileset: Player
   skills:
     - lances
-    - support
-  promote:
-    - paladin
-    - crusader
-paladin:
-  pretty: Paladin
-  description: A holy warrior, who can heal and support his allies simply by being there.
+    - horseback
+  promotes:
+    - pegasus_knight
+    - heavy_knight
+pegasus_knight:
+  pretty: Pegasus Knight
+  description: A great knight who rides on the back of a pegasus.
+  tile: [1, 3]
+  tileset: Player
   skills:
     - lances
-    - healing
-    - aura
-crusader:
-  pretty: Crusader
-  description: A warrior leading the ranks on a noble quest. He empowers his allies in combat.
+    - pegasus_rider
+heavy_knight:
+  pretty: Great Knight
+  description: A horseback warrior wielding lances and axes
+  tile: [1, 3]
+  tileset: Player
   skills:
     - lances
-    - empower
+    - axes
 knave:
   pretty: Knave
-  description: A rogueish knight, who spurns the support of his comarades.
+  description: A rogueish knight, who is powerful in combat.
+  tile: [1, 3]
+  tileset: Player
   skills:
     - lances
-    - axes
-  promotes:
+    - knave_stats
+  promotess:
+    - general
     - dragoon
-    - darkshine
+general:
+  pretty: General
+  description: A combat grisled veteran, who is capable of shrugging off damage.
+  tile: [1, 3]
+  tileset: Player
+  skills:
+    - lances
+    - great_shield
 dragoon:
   pretty: Dragoon
-  description: An experienced member of the order of knights. Able to disempower enemies.
+  description: A knave who has taken to experiementing with darker forces.
+  tile: [1, 3]
+  tileset: Player
   skills:
     - lances
-    - axes
-    - swords
-darkshine:
-  pretty: Darkshine Knight
-  description: A knight in armor so dark it appears to shine. Attacks with any type of weapon.
-  skills:
-    - lances
-    - debuffs
-    - axes
+    - dark
 # --- Entertainer Tree
 entertainer:
   pretty: Entertainer
@@ -189,6 +239,63 @@ entertainer:
     - perform
   weapons: []
   weight: 1
+  promotes:
+    - bard
+    - jester
+bard:
+  pretty: Bard
+  description: A travelling player, with graceful music
+  tile: [0, 7]
+  tileset: Player
+  skills:
+    - play
+  promotes:
+    - troubadour
+    - dancer
+troubadour:
+  pretty: Troubadour
+  description: A veteran travelling player
+  tile: [0, 7]
+  tileset: Player
+  skills:
+    - play
+    - staves
+dancer:
+  pretty: Dancer
+  description: A performer who moves with liquid grace
+  tile: [0, 7]
+  tileset: Player
+  skills:
+    - dance
+jester:
+  pretty: Jester
+  description: A nasty court jester
+  tile: [0, 7]
+  tileset: Player
+  skills:
+    - perform
+    - wands
+  promotes:
+    - harlequin
+    - madcap
+harlequin:
+  pretty: Harlequin
+  description: An expert jester
+  tile: [0, 7]
+  tileset: Player
+  skills:
+    - perform
+    - wands
+    - multitarget_wands
+madcap:
+  pretty: Madcap
+  description: A jester who has driven himself insane. He no longer knows how to perform.
+  tile: [0, 7]
+  tileset: Player
+  skills:
+    - wands
+    - traps
+    - axes
 # -- Mage Tree
 mage:
   pretty: Mage
@@ -207,10 +314,71 @@ mage:
     - fire
   weight: 2
   lord: true
+  promotes:
+    - sage
+    - battlemage
+sage:
+  pretty: Sage
+  description: An extreemly old and wise mage.
+  tile: [6, 3]
+  tileset: Player
+  skills:
+    - anima
+    - blink
+  promotes:
+    - archmage
+    - summoner
+archmage:
+  pretty: Archmage
+  description: The highest tier of mages to be found
+  tile: [6, 3]
+  tileset: Player
+  skills:
+    - anima
+    - blink
+    - teleport
+summoner:
+  pretty: Summoner
+  description: A mage who has discovered how to create life out of nothing... temporarily
+  tile: [6, 3]
+  tileset: Player
+  skills:
+    - anima
+    - blink
+    - summon
+battlemage:
+  pretty: Battlemage
+  description: A mage who has turned his attention towards the battlefield, adept with both magic and close-quarters combat
+  tile: [6, 3]
+  tileset: Player
+  skills:
+    - anima
+    - swords
+  promotes:
+    - mageknight
+    - magekiller
+mageknight:
+  pretty: Mage Knight
+  description: A battle hardened magic soldier
+  tile: [6, 3]
+  tileset: Player
+  skills:
+    - anima
+    - swords
+    - horseback
+magekiller:
+  pretty: Magekiller
+  description: TODO
+  tile: [6, 3]
+  tileset: Player
+  skills:
+    - anima
+    - swords
+    - wands
 # --- Cleric Tree
 cleric:
   pretty: Cleric
-  description: Your basic healer
+  description: Your light mage.
   basic: true
   tile: [0, 4]
   tileset: Player
@@ -219,10 +387,70 @@ cleric:
   con: 8
   skills:
     - light
-    - healing
   weapons:
     - lightning
   weight: 2
+  promotes:
+    - shepard
+    - warpriest
+shepard:
+  pretty: Shepard
+  description: A holy man
+  tile: [0, 4]
+  tileset: Player
+  skills:
+    - light
+    - staves
+  promotes:
+    - high_priest
+    - monk
+high_priest:
+  pretty: High Priest
+  description: A very, very holy man
+  tile: [0, 4]
+  tileset: Player
+  skills:
+    - light
+    - staves
+    - staff_affinity
+monk:
+  pretty: Monk
+  description: A combat priest, with a variety of skills.
+  tile: [0, 4]
+  tileset: Player
+  skills:
+    - light
+    - staves
+    - axes
+warpriest:
+  pretty: War Priest
+  description: A priest who's turned to fighting
+  tile: [0, 4]
+  tileset: Player
+  skills:
+    - light
+    - anima
+  promotes:
+    - temple_knight
+    - dark_ritualist
+temple_knight:
+  pretty: Temple Knight
+  description: TODO
+  tile: [0, 4]
+  tileset: Player
+  skills:
+    - light
+    - anima
+    - lances
+dark_ritualist:
+  pretty: Dark Ritualist
+  description: ooooo TODO
+  tile: [0, 4]
+  tileset: Player
+  skills:
+    - light
+    - anima
+    - dark
 # --- Dark mage tree
 pupil:
   pretty: Pupil
@@ -233,6 +461,7 @@ pupil:
   growths:
     :power: 1
     :armor: -1
+    :speed: -1
     :resistance: 1
   con: 13
   skills:
@@ -240,10 +469,71 @@ pupil:
   weapons:
     - flux
   weight: 2
+  promotes:
+    - hermit
+    - accursed
+hermit:
+  pretty: Hermit
+  description: A solitary person who knows how to avoid fighting.
+  tile: [7, 3]
+  tileset: Player
+  skills:
+    - dark
+    - evade_boost
+  promotes:
+    - elder
+    - shadow
+elder:
+  pretty: Elder
+  description: A venerable elder
+  tile: [7, 3]
+  tileset: Player
+  skills:
+    - dark
+    - evade_boost
+    - light
+shadow:
+  pretty: Shadow
+  description: A man so far gone that all that remains is his shadow
+  tile: [7, 3]
+  tileset: Player
+  skills:
+    - dark
+    - evade_boost
+    - swords
+accursed:
+  pretty: Accursed
+  description: TODO
+  tile: [7, 3]
+  tileset: Player
+  skills:
+    - dark
+    - blood_magic
+  promotes:
+    - shaman
+    - necromancer
+shaman:
+  pretty: Shaman
+  description: TODO
+  tile: [7, 3]
+  tileset: Player
+  skills:
+    - dark
+    - blood_magic
+    - anima
+necromancer:
+  pretty: Necromancer
+  description: A ritualist who can enslave the spirits of those he kills
+  tile: [7, 3]
+  tileset: Player
+  skills:
+    - dark
+    - blood_magic
+    - necromancy
 # --- Thief Tree
-scoundrel:
-  pretty: Scoundrel
-  dscription: Someone new to annoying others, but already pretty skilled.
+thief:
+  pretty: Thief
+  description: A petty criminal.
   basic: true
   tile: [3, 8]
   tileset: Player
@@ -251,13 +541,76 @@ scoundrel:
     :max_hp: -1
     :power: -1
     :skill: 1
-    :speed: 2
+    :speed: 1
   con: 4
   skills:
     - swords
   weapons:
     - slim_sword
   weight: 2
+  promotes:
+    - treasure_hunter
+    - rogue
+treasure_hunter:
+  pretty: Treasure Hunter
+  description: A man in search of gold and glory!
+  tile: [3, 8]
+  tileset: Player
+  skills:
+    - swords
+    - parry
+  weight: 2
+  promotes:
+    - archaeologist
+    - looter
+archaeologist:
+  pretty: Archaeologist
+  description: Indy
+  tile: [3, 8]
+  tileset: Player
+  skills:
+    - swords
+    - parry
+    - scry
+    - navigate
+looter:
+  pretty: Looter
+  description: A treasure hunter who's turned to the dark practice of looting.
+  tile: [3, 8]
+  tileset: Player
+  skills:
+    - swords
+    - parry
+    - looter
+rogue:
+  pretty: Rogue
+  decription: A scoundrel
+  tile: [3, 8]
+  tileset: Player
+  skills:
+    - swords
+    - critical_boost
+  promotes:
+    - alchemist
+    - assassin
+alchemist:
+  pretty: Alchemist
+  description: Tired of having to aquire goods to sell, the alchemist creates his own for the black market.
+  tile: [3, 8]
+  tileset: Player
+  skills:
+    - swords
+    - critical_boost
+    - bombs
+assassin:
+  pretty: Assasin
+  description: ASSASSIN
+  tile: [3, 8]
+  tileset: Player
+  skills:
+    - swords
+    - critical_boost
+    - backstab
 archer:
   pretty: Archer
   description: has a familiarity with bows and arrows.
@@ -271,3 +624,64 @@ archer:
   weapons:
     - iron_bow
   weight: 2
+  promotes:
+    - ranger
+    - marksman
+ranger:
+  pretty: Ranger
+  description: la dee dah
+  tile: [2, 3]
+  tileset: Player
+  skills:
+    - bows
+    - swords
+  promotes:
+    - nomad
+    - warden
+nomad:
+  pretty: Nomad
+  description: Derp
+  tile: [2, 3]
+  tileset: Player
+  skills:
+    - bows
+    - swords
+    - horseback
+warden:
+  pretty: Warden
+  description: Warderern
+  tile: [2, 3]
+  tileset: Player
+  skills:
+    - bows
+    - swords
+    - entrap
+marksman:
+  pretty: Marksman
+  description: TODO
+  tile: [2, 3]
+  tileset: Player
+  skills:
+    - bows
+    - power_boost
+  promotes:
+    - sharpshooter
+    - sniper
+sharpshooter:
+  pretty: Sharpshooter
+  description: TODO
+  tile: [2, 3]
+  tileset: Player
+  skills:
+    - bows
+    - power_boost
+    - critical_boost
+sniper:
+  pretty: Sniper
+  description: TODO
+  tile: [2, 3]
+  tileset: Player
+  skills:
+    - bows
+    - power_boost
+    - long_range_shot

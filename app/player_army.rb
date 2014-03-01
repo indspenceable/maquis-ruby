@@ -15,7 +15,7 @@ class PlayerArmy
     lord = PlayerUnit.new(PlayerUnit.random_lord_class, Names.generate, 1, true)
     @army = [ lord ]
     @army += STARTING_SIZE.times.map do |x|
-      PlayerUnit.new(PlayerUnit.random_class, Names.generate, 1)
+      PlayerUnit.new(PlayerUnit.basic_classes.shuffle.pop, Names.generate, 1)
     end
     @army.each do |u|
       u.inventory << Vulnerary.new

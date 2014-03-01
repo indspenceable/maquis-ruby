@@ -36,6 +36,9 @@ class AttackExecutor < Action
     a,b = b,a if @target.team == PLAYER_TEAM
     gain_exp(a, b)
 
+    b.kill(a) unless a.alive?
+    a.kill(b) unless b.alive?
+
     if @level.units.none?{|u| u.team == COMPUTER_TEAM }
       @level.upkeep do
         @level.finish_turn(COMPUTER_TEAM)

@@ -103,11 +103,11 @@ class Unit
   end
 
   def terrain_armor_bonus
-    @current_level.map(x,y).armor_bonus
+    @current_level.map(x,y).armor_bonus * terrain_multiplier
   end
 
   def terrain_evade_bonus
-    @current_level.map(x,y).evade_bonus
+    @current_level.map(x,y).evade_bonus * terrain_multiplier
   end
 
   def adjusted_armor(weapon)
@@ -264,7 +264,7 @@ class Unit
   # CRITICAL HITS
   def crit_chance
     if weapon
-      [weapon.to_crit + skill/2].max
+      weapon.to_crit + (skill/2) + critical_bonus
     end
   end
 
@@ -353,6 +353,18 @@ class Unit
     []
   end
 
+  def terrain_multiplier
+    1
+  end
+
+  def critical_bonus
+    0
+  end
+
+  def kill
+    #nothing
+  end
+
   def self.modifiable_methods
     @@modifiable_methods ||= []
   end
@@ -385,7 +397,8 @@ class Unit
     :weapon_skills,
     :los_distance,
     :movement,
-    :hit
+    :hit,
+    :terrain_multiplier,
   ])
 end
 

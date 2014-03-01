@@ -15,10 +15,10 @@ class PlayerUnit < Unit
     end.shuffle.pop
   end
 
-  def self.random_class
+  def self.basic_classes
     config.keys.select do |k|
       config[k]['basic']
-    end.shuffle.pop
+    end
   end
 
   def name
