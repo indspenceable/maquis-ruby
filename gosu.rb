@@ -639,10 +639,11 @@ class GosuDisplay < Gosu::Window
 
   def draw_hud(level)
     draw_menu([
+      "Turn: #{level.turn_count}",
       level.primary_objective.description,
       "$#{level.army.money}",
-      "",
-      *level.secondary_objective_descriptions
+      # "",
+      # *level.secondary_objective_descriptions
     ], nil)
   end
 
