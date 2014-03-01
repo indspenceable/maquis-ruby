@@ -1,5 +1,13 @@
 class Enemy < Unit
-  attr_reader :ai
+  attr_reader :ai, :exp_level
+
+  def self.class_below_difficulty(ov)
+    rtn = []
+    config.each do |k, v|
+      rtn << k if v['value'] <= ov
+    end
+    return rtn.shuffle.pop
+  end
 
   def lord?
     false
@@ -42,15 +50,11 @@ class Enemy < Unit
     ''
   end
 
-  def exp_level
-    config[@klass]['value']
-  end
-
   def strength_string(stat)
     ""
   end
 
-  def initialize(klass, name, boss=false)
+  def initialize(klass, name, exp_level, boss)
     @klass = klass
     @name = name
     @boss = boss
@@ -58,12 +62,17 @@ class Enemy < Unit
     @x, @y = 0, 0
     @buffs = []
 
+    raise "no value for #{@klass}!" unless config[@klass]['value']
+    number_of_level_ups = exp_level - config[@klass]['value']
+    raise "exp_level (#{number_of_level_ups}) < 0!" if number_of_level_ups < 0
+
     #ensure everyone is exp_level 1 at least.
     @action_available = true
 
     (STATS+[:constitution]).each do |stat|
       raise "No stat for #{stat} for enemy #{klass}" unless stat_for(stat)
-      self.instance_variable_set(:"@#{stat}", stat_for(stat) )
+      target_value = stat_for(stat) + (number_of_level_ups * 0.35).to_i
+      self.instance_variable_set(:"@#{stat}", target_value )
     end
     @hp = max_hp
     @inventory = config[@klass]['weapons'].map do |w|

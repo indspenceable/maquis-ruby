@@ -49,6 +49,10 @@ class Unit
     @buffs = []
   end
 
+  def pretty
+    pretty_name + " (#{@exp_level})"
+  end
+
   def pretty_name
     config[@klass]['pretty']
   end

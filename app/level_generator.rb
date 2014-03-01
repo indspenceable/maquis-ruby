@@ -75,14 +75,17 @@ module LevelGenerator
         enemy_levels[e2] += 1
       end
 
+      boss_difficulty = 5 + difficulty * 2
+
       return [
         Enemy.new(
-          theme.boss_klass(difficulty),
+          Enemy.class_below_difficulty(boss_difficulty),
           Names.generate,
+          boss_difficulty,
           true
         )
       ] + enemy_levels.map do |lv|
-        Enemy.new(theme.pop_klass(difficulty), theme.team)
+        Enemy.new(Enemy.class_below_difficulty(lv), theme.team, lv, false)
       end
     end
 
@@ -192,7 +195,7 @@ module LevelGenerator
     end
 
     def number_of_enemy_units(difficulty)
-      7 + rand([(difficulty+1)*3, 16].min)
+      5 + rand([((difficulty+1)*4)/3, 16].min)
     end
 
 
