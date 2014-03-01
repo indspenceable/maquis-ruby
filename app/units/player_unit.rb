@@ -29,6 +29,20 @@ class PlayerUnit < Unit
     end
   end
 
+  def promote(new_klass)
+    if promotes.include?(new_klass)
+      @klass = new_klass
+      skills
+      self
+    else
+      raise "can't promote to that, dingbutt."
+    end
+  end
+
+  def promotes
+    config[@klass]['promotes']
+  end
+
   LEVEL_UPS_FOR_LEVEL_ONE = 5
 
   AVERAGE_NUMBER_OF_POINTS = STATS.length-1

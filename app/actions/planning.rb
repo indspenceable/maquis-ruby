@@ -67,7 +67,8 @@ class Planning < Action
       @army.units << current_item
       Planning.new(@difficulty, @army, false, @generator)
     else
-      Trade.new(current_item, @army, self) { self }
+      # Trade.new(current_item, @army, self) { self }
+      current_item.promotes ? PlanningMenu.new(current_item, self) : self
     end
   end
 
