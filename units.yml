@@ -22,6 +22,7 @@ templar:
   description: TODO templar
   tile: [1, 7]
   tileset: Player
+  affinity: light
   skills:
     - swords
   promotes:
@@ -32,6 +33,7 @@ paladin:
   description: TODO A holy fighter who heals his bretheren in combat.
   tile: [1, 7]
   tileset: Player
+  affinity: light_light
   skills:
     - swords
     - staves
@@ -40,6 +42,7 @@ commander:
   description: A great field soldier with the ability to inspire nearby units.
   tile: [1, 7]
   tileset: Player
+  affinity: light_dark
   skills:
     - swords
     - command_aura
@@ -48,6 +51,7 @@ tactician:
   description: A fighter who uses the terrain to it's greatest advantage.
   tile: [1, 7]
   tileset: Player
+  affinity: dark
   skills:
     - swords
     - terrain
@@ -59,6 +63,7 @@ strategist:
   description: A veteran soldier with a solid understanding of how unit formations can sway the tides of combat.
   tile: [1, 7]
   tileset: Player
+  affinity: dark_light
   skills:
     - swords
     - terrain
@@ -68,6 +73,7 @@ myrmidon:
   description: An exteremely skilled sword fighter
   tile: [1, 7]
   tileset: Player
+  affinity: dark_dark
   skills:
     - swords
     - critical_boost
@@ -98,6 +104,7 @@ warrior:
   description: WARRIORRRR
   tile: [3, 3]
   tileset: Player
+  affinity: light
   promotes:
     - protector
     - hero
@@ -109,6 +116,7 @@ protector:
   description: Gives bonuses to adjacent units
   tile: [3, 3]
   tileset: Player
+  affinity: light_light
   skills:
     - axes
     - protection_aura
@@ -117,6 +125,7 @@ hero:
   description: A great hero!
   tile: [3, 3]
   tileset: Player
+  affinity: light_dark
   skills:
     - axes
     - swords
@@ -125,6 +134,7 @@ barbarian:
   description: Bloodluster!
   tile: [3, 3]
   tileset: Player
+  affinity: dark
   skills:
     - axes
     - rage
@@ -136,6 +146,7 @@ raider:
   description: Can use bows
   tile: [3, 3]
   tileset: Player
+  affinity: dark_light
   skills:
     - rage
     - axes
@@ -145,6 +156,7 @@ berserker:
   description: Every kill gives you a stacking bonus!
   tile: [3, 3]
   tileset: Player
+  affinity: dark_dark
   skills:
     - axes
     - rage
@@ -174,6 +186,7 @@ knight:
   description: A full member of the order of knights. Rides horseback.
   tile: [1, 3]
   tileset: Player
+  affinity: light
   skills:
     - lances
     - horseback
@@ -185,6 +198,7 @@ pegasus_knight:
   description: A great knight who rides on the back of a pegasus.
   tile: [1, 3]
   tileset: Player
+  affinity: light_light
   skills:
     - lances
     - pegasus_rider
@@ -193,6 +207,7 @@ heavy_knight:
   description: A horseback warrior wielding lances and axes
   tile: [1, 3]
   tileset: Player
+  affinity: light_dark
   skills:
     - lances
     - axes
@@ -201,6 +216,7 @@ knave:
   description: A rogueish knight, who is powerful in combat.
   tile: [1, 3]
   tileset: Player
+  affinity: dark
   skills:
     - lances
     - knave_stats
@@ -212,6 +228,7 @@ general:
   description: A combat grisled veteran, who is capable of shrugging off damage.
   tile: [1, 3]
   tileset: Player
+  affinity: dark_light
   skills:
     - lances
     - great_shield
@@ -220,6 +237,7 @@ dragoon:
   description: A knave who has taken to experiementing with darker forces.
   tile: [1, 3]
   tileset: Player
+  affinity: dark_dark
   skills:
     - lances
     - dark
@@ -247,6 +265,7 @@ bard:
   description: A travelling player, with graceful music
   tile: [0, 7]
   tileset: Player
+  affinity: light
   skills:
     - play
   promotes:
@@ -257,6 +276,7 @@ troubadour:
   description: A veteran travelling player
   tile: [0, 7]
   tileset: Player
+  affinity: light_light
   skills:
     - play
     - staves
@@ -265,6 +285,7 @@ dancer:
   description: A performer who moves with liquid grace
   tile: [0, 7]
   tileset: Player
+  affinity: light_dark
   skills:
     - dance
 jester:
@@ -272,6 +293,7 @@ jester:
   description: A nasty court jester
   tile: [0, 7]
   tileset: Player
+  affinity: dark
   skills:
     - perform
     - wands
@@ -283,6 +305,7 @@ harlequin:
   description: An expert jester
   tile: [0, 7]
   tileset: Player
+  affinity: dark_light
   skills:
     - perform
     - wands
@@ -292,6 +315,7 @@ madcap:
   description: A jester who has driven himself insane. He no longer knows how to perform.
   tile: [0, 7]
   tileset: Player
+  affinity: dark_dark
   skills:
     - wands
     - traps
@@ -322,6 +346,7 @@ sage:
   description: An extreemly old and wise mage.
   tile: [6, 3]
   tileset: Player
+  affinity: light
   skills:
     - anima
     - blink
@@ -333,6 +358,7 @@ archmage:
   description: The highest tier of mages to be found
   tile: [6, 3]
   tileset: Player
+  affinity: light_light
   skills:
     - anima
     - blink
@@ -342,6 +368,7 @@ summoner:
   description: A mage who has discovered how to create life out of nothing... temporarily
   tile: [6, 3]
   tileset: Player
+  affinity: light_dark
   skills:
     - anima
     - blink
@@ -351,6 +378,7 @@ battlemage:
   description: A mage who has turned his attention towards the battlefield, adept with both magic and close-quarters combat
   tile: [6, 3]
   tileset: Player
+  affinity: dark
   skills:
     - anima
     - swords
@@ -362,6 +390,7 @@ mageknight:
   description: A battle hardened magic soldier
   tile: [6, 3]
   tileset: Player
+  affinity: dark_light
   skills:
     - anima
     - swords
@@ -371,6 +400,7 @@ magekiller:
   description: TODO
   tile: [6, 3]
   tileset: Player
+  affinity: dark_dark
   skills:
     - anima
     - swords
@@ -398,6 +428,7 @@ shepard:
   description: A holy man
   tile: [0, 4]
   tileset: Player
+  affinity: light
   skills:
     - light
     - staves
@@ -409,6 +440,7 @@ high_priest:
   description: A very, very holy man
   tile: [0, 4]
   tileset: Player
+  affinity: light_light
   skills:
     - light
     - staves
@@ -418,6 +450,7 @@ monk:
   description: A combat priest, with a variety of skills.
   tile: [0, 4]
   tileset: Player
+  affinity: light_dark
   skills:
     - light
     - staves
@@ -427,6 +460,7 @@ warpriest:
   description: A priest who's turned to fighting
   tile: [0, 4]
   tileset: Player
+  affinity: dark
   skills:
     - light
     - anima
@@ -438,6 +472,7 @@ temple_knight:
   description: TODO
   tile: [0, 4]
   tileset: Player
+  affinity: dark_light
   skills:
     - light
     - anima
@@ -447,6 +482,7 @@ dark_ritualist:
   description: ooooo TODO
   tile: [0, 4]
   tileset: Player
+  affinity: dark_dark
   skills:
     - light
     - anima
@@ -477,6 +513,7 @@ hermit:
   description: A solitary person who knows how to avoid fighting.
   tile: [7, 3]
   tileset: Player
+  affinity: light
   skills:
     - dark
     - evade_boost
@@ -488,6 +525,7 @@ elder:
   description: A venerable elder
   tile: [7, 3]
   tileset: Player
+  affinity: light_light
   skills:
     - dark
     - evade_boost
@@ -497,6 +535,7 @@ shadow:
   description: A man so far gone that all that remains is his shadow
   tile: [7, 3]
   tileset: Player
+  affinity: light_dark
   skills:
     - dark
     - evade_boost
@@ -506,6 +545,7 @@ accursed:
   description: TODO
   tile: [7, 3]
   tileset: Player
+  affinity: dark
   skills:
     - dark
     - blood_magic
@@ -517,6 +557,7 @@ shaman:
   description: TODO
   tile: [7, 3]
   tileset: Player
+  affinity: dark_light
   skills:
     - dark
     - blood_magic
@@ -526,6 +567,7 @@ necromancer:
   description: A ritualist who can enslave the spirits of those he kills
   tile: [7, 3]
   tileset: Player
+  affinity: dark_dark
   skills:
     - dark
     - blood_magic
@@ -545,6 +587,8 @@ thief:
   con: 4
   skills:
     - swords
+    - steal
+    - chests
   weapons:
     - slim_sword
   weight: 2
@@ -556,9 +600,12 @@ treasure_hunter:
   description: A man in search of gold and glory!
   tile: [3, 8]
   tileset: Player
+  affinity: light
   skills:
     - swords
     - parry
+    - steal
+    - chests
   weight: 2
   promotes:
     - archaeologist
@@ -568,28 +615,37 @@ archaeologist:
   description: Indy
   tile: [3, 8]
   tileset: Player
+  affinity: light_light
   skills:
     - swords
     - parry
     - scry
     - navigate
+    - steal
+    - chests
 looter:
   pretty: Looter
   description: A treasure hunter who's turned to the dark practice of looting.
   tile: [3, 8]
   tileset: Player
+  affinity: light_dark
   skills:
     - swords
     - parry
     - looter
+    - steal
+    - chests
 rogue:
   pretty: Rogue
   decription: A scoundrel
   tile: [3, 8]
   tileset: Player
+  affinity: dark
   skills:
     - swords
     - critical_boost
+    - steal
+    - chests
   promotes:
     - alchemist
     - assassin
@@ -598,19 +654,25 @@ alchemist:
   description: Tired of having to aquire goods to sell, the alchemist creates his own for the black market.
   tile: [3, 8]
   tileset: Player
+  affinity: dark_light
   skills:
     - swords
     - critical_boost
     - bombs
+    - steal
+    - chests
 assassin:
   pretty: Assasin
   description: ASSASSIN
   tile: [3, 8]
   tileset: Player
+  affinity: dark_dark
   skills:
     - swords
     - critical_boost
     - backstab
+    - steal
+    - chests
 archer:
   pretty: Archer
   description: has a familiarity with bows and arrows.
@@ -632,6 +694,7 @@ ranger:
   description: la dee dah
   tile: [2, 3]
   tileset: Player
+  affinity: light
   skills:
     - bows
     - swords
@@ -643,6 +706,7 @@ nomad:
   description: Derp
   tile: [2, 3]
   tileset: Player
+  affinity: light_light
   skills:
     - bows
     - swords
@@ -652,6 +716,7 @@ warden:
   description: Warderern
   tile: [2, 3]
   tileset: Player
+  affinity: light_dark
   skills:
     - bows
     - swords
@@ -661,6 +726,7 @@ marksman:
   description: TODO
   tile: [2, 3]
   tileset: Player
+  affinity: dark
   skills:
     - bows
     - power_boost
@@ -672,6 +738,7 @@ sharpshooter:
   description: TODO
   tile: [2, 3]
   tileset: Player
+  affinity: dark_light
   skills:
     - bows
     - power_boost
@@ -681,6 +748,7 @@ sniper:
   description: TODO
   tile: [2, 3]
   tileset: Player
+  affinity: dark_dark
   skills:
     - bows
     - power_boost

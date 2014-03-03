@@ -40,6 +40,30 @@ class Unit
     self.class.config
   end
 
+
+  def affinity_to_color
+    @@affinities ||= {}
+    @@affinities[@klass] ||= begin
+      p,m = 255, 125
+      case config[@klass]['affinity']
+      when nil
+        [255, p, p, p]
+      when 'light'
+        [255, m, m, p]
+      when 'light_light'
+        [255, m, p, m]
+      when 'light_dark'
+        [255, p, p, m]
+      when 'dark'
+        [255, p, m, m]
+      when 'dark_light'
+        [255, p, m, p]
+      when 'dark_dark'
+        [255, m, m, m]
+      end
+    end
+  end
+
   def countdown_buffs!
     @buffs.each(&:tick)
     @buffs.reject!(&:expired?)

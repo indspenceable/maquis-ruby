@@ -388,6 +388,16 @@ class TerrainMaster < Skill
   #TODO this should also make you not trigger harmful terrain.
 end
 
+class Steal < Skill
+  identifier 'steal'
+  # TODO
+end
+
+class Chests < Skill
+  identifier 'chests'
+  # TODO
+end
+
 class Farsight < Skill
   identifier 'farsight'
 

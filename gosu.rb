@@ -351,11 +351,13 @@ class GosuDisplay < Gosu::Window
 
     layer = current ? :current_char : :char
 
+    color = Gosu::Color.new(*unit.affinity_to_color)
+
     @all_units.fetch(unit.animation_for(animation), frame).draw_as_quad(
-      (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
-      (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, Gosu::Color::WHITE,
-      (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
-      (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, Gosu::Color::WHITE,
+      (x+0)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, color,
+      (x+1)*TILE_SIZE_X, (y+0)*TILE_SIZE_Y, color,
+      (x+1)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, color,
+      (x+0)*TILE_SIZE_X, (y+1)*TILE_SIZE_Y, color,
       Z_RANGE[layer])
 
     border_size = 2
