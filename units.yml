@@ -211,6 +211,7 @@ heavy_knight:
   skills:
     - lances
     - axes
+    - horseback
 knave:
   pretty: Knave
   description: A rogueish knight, who is powerful in combat.

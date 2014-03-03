@@ -421,9 +421,18 @@ class Perform < Skill
   end
 end
 
-class Play < Perform
+class Play < Skill
   identifier 'play'
   range 1..2
+  target :friends
+  activate do |me, target, level|
+    target.action_available = true
+    me.gain_experience(10)
+  end
+
+  def effect
+    :blue
+  end
 end
 
 class Dance < Perform

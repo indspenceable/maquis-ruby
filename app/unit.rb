@@ -385,7 +385,7 @@ class Unit
     0
   end
 
-  def kill
+  def kill(target)
     #nothing
   end
 
