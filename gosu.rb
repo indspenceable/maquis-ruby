@@ -687,4 +687,6 @@ def save_game(action)
   end
 end
 
-DISPLAY.show
+if __FILE__ == $0
+  DISPLAY.show
+end

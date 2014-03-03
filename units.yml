@@ -204,7 +204,7 @@ knave:
   skills:
     - lances
     - knave_stats
-  promotess:
+  promotes:
     - general
     - dragoon
 general:
