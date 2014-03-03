@@ -14,8 +14,14 @@ class PlayerArmy
     # lord = lord_klasses.shuffle.pop.new(PLAYER_TEAM, Names.generate, 1, true)
     lord = PlayerUnit.new(PlayerUnit.random_lord_class, Names.generate, 1, true)
     @army = [ lord ]
-    @army += STARTING_SIZE.times.map do |x|
-      PlayerUnit.new(PlayerUnit.basic_classes.shuffle.pop, Names.generate, 1)
+    if ARGV.include?('a')
+      @army += PlayerUnit.basic_classes.map do |k|
+        PlayerUnit.new(k, Names.generate, 1)
+      end
+    else
+      @army += STARTING_SIZE.times.map do |x|
+        PlayerUnit.new(PlayerUnit.basic_classes.shuffle.pop, Names.generate, 1)
+      end
     end
     @army.each do |u|
       u.inventory << Vulnerary.new

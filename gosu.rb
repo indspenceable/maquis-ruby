@@ -676,6 +676,7 @@ class GosuDisplay < Gosu::Window
 end
 
 Gosu::enable_undocumented_retrofication
+previous_save = nil if ARGV.include?('w')
 DISPLAY = GosuDisplay.new(previous_save)
 
 def save_game(action)
