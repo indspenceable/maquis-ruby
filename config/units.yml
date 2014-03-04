@@ -6,7 +6,7 @@ soldier:
   tile: [1, 7]
   tileset: Player
   growths:
-    :skill: 1
+    skill: 1
   con: 6
   skills:
     - swords
@@ -87,8 +87,8 @@ fighter:
   tileset: Player
   con: 8
   growths:
-    :power: 1
-    :resistance: -1
+    power: 1
+    resistance: -1
   skills:
     - axes
   weapons:
@@ -169,8 +169,8 @@ squire:
   tile: [1, 3]
   tileset: Player
   growths:
-    :armor: 1
-    :speed: -1
+    armor: 1
+    speed: -1
   con: 10
   skills:
     - lances
@@ -250,9 +250,9 @@ entertainer:
   tile: [0, 7]
   tileset: Player
   growths:
-    :power: -1
-    :speed: 1
-    :resistance: 1
+    power: -1
+    speed: 1
+    resistance: 1
   con: 4
   skills:
     - perform
@@ -329,9 +329,9 @@ mage:
   tile: [6, 3]
   tileset: Player
   growths:
-    :power: 1
-    :armor: -1
-    :resistance: 1
+    power: 1
+    armor: -1
+    resistance: 1
   con: 4
   skills:
     - anima
@@ -414,7 +414,7 @@ cleric:
   tile: [0, 4]
   tileset: Player
   growths:
-    :resistance: 1
+    resistance: 1
   con: 8
   skills:
     - light
@@ -496,10 +496,10 @@ pupil:
   tile: [7, 3]
   tileset: Player
   growths:
-    :power: 1
-    :armor: -1
-    :speed: -1
-    :resistance: 1
+    power: 1
+    armor: -1
+    speed: -1
+    resistance: 1
   con: 13
   skills:
     - dark
@@ -581,10 +581,10 @@ thief:
   tile: [3, 8]
   tileset: Player
   growths:
-    :max_hp: -1
-    :power: -1
-    :skill: 1
-    :speed: 1
+    max_hp: -1
+    power: -1
+    skill: 1
+    speed: 1
   con: 4
   skills:
     - swords

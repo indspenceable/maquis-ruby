@@ -76,8 +76,8 @@ class PlayerUnit < Unit
 
     @action_available = true
     STATS.each do |stat|
-      self.instance_variable_set(:"@#{stat}", starting_stats[stat])
       raise "#{stat} starting value undefined for #{@klass}!" unless starting_stats[stat]
+      self.instance_variable_set(:"@#{stat}", starting_stats[stat])
       # raise "#{stat} growth undefined for #{@klass}!" unless class_growths[stat] || stat==:constitution
     end
     @constitution = config[@klass]['con'] + rand(5)-2
@@ -96,10 +96,7 @@ class PlayerUnit < Unit
     end
 
     config[@klass]['growths'].each do |stat, val|
-      if val >= 1
-      else
-      end
-      general_aptitudes[stat] += val
+      general_aptitudes[stat.to_sym] += val
     end
 
     general_aptitudes.each do |stat, val|

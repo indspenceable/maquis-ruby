@@ -43,7 +43,7 @@ class Enemy < Unit
   end
 
   def stat_for(stat)
-    config[@klass]['stats'][stat]
+    config[@klass]['stats'][stat.to_s]
   end
 
   def exp_string
