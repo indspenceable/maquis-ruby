@@ -2,7 +2,6 @@
 require 'gosu'
 require 'yaml'
 require 'set'
-
 #constants go here too, cause yolo
 
 MAP_SIZE_X = 20
@@ -35,7 +34,7 @@ KEYS = {
 
 SAVE_FILE_PATH = File.expand_path(File.join('~', '.tarog'))
 previous_save = if File.exists?(SAVE_FILE_PATH)
-  YAML.load(File.read(SAVE_FILE_PATH))
+  YAML.load_file(SAVE_FILE_PATH)
 end
 
 class TileSetProxy
@@ -62,7 +61,7 @@ end
 class SingleImageTileSet
   def initialize(window, filename, tile_width, tile_height, tiles_per_row)
     @store = {}
-    @images = Gosu::Image.load_tiles(window, filename, tile_width, tile_height, true)
+    @images = Gosu::Image.load_tiles(window, filename, tile_width, tile_height, false)
     @tiles_per_row = tiles_per_row
   end
   def define!(name, xy, frames=1, ticks_per_frame=1, repeat=true)
@@ -91,7 +90,7 @@ class MultiImageTileSet < SingleImageTileSet
   def initialize(window, filenames, tile_width, tile_height, tiles_per_row)
     @store = {}
     images = filenames.map do |f|
-      Gosu::Image.load_tiles(window, f, tile_width, tile_height, true)
+      Gosu::Image.load_tiles(window, f, tile_width, tile_height, false)
     end
     @images = []
     images.first.length.times do |i|
@@ -173,6 +172,34 @@ class GosuDisplay < Gosu::Window
   end
 
   def define_tile_sets
+    basic_hash = {}
+    Enemy.config.merge(PlayerUnit.config).each do |k, v|
+      tileset = v['tileset']
+      tile = v['tile']
+      basic_hash[k] = [tileset, tile] if tile
+    end
+    better_hash = {}
+    basic_hash.each do |k,(ts, t)|
+      %w(idle attack hit death).each do |w|
+        better_hash[ts] ||= {}
+        better_hash[ts][:"#{k}_#{w}"] = t
+      end
+    end
+
+    tile_sets = []
+    better_hash.each do |ts_name, ts_hash|
+      actual_tile_set = MultiImageTileSet.new(self, [
+        "./DawnLike/Characters/#{ts_name}0.png",
+        "./DawnLike/Characters/#{ts_name}1.png",
+      ], 16, 16, 8)
+      actual_tile_set.mass_define(30, true, ts_hash)
+      tile_sets << actual_tile_set
+    end
+
+
+    @all_units = TileSetProxy.new(tile_sets)
+
+
     @menu = MultiImageTileSet.new(self, [
       './DawnLike/GUI/GUI0.png',
       './DawnLike/GUI/GUI1.png',
@@ -242,31 +269,6 @@ class GosuDisplay < Gosu::Window
     @effects = SingleImageTileSet.new(self, './effects.png', 32, 32, 10)
     @effects.define!(:cursor, [0,0], 4, 5)
     @effects.define!(:red_selector, [0,1], 1, 30)
-
-    basic_hash = {}
-    Enemy.config.merge(PlayerUnit.config).each do |k, v|
-      tileset = v['tileset']
-      tile = v['tile']
-      basic_hash[k] = [tileset, tile] if tile
-    end
-    better_hash = {}
-    basic_hash.each do |k,(ts, t)|
-      %w(idle attack hit death).each do |w|
-        better_hash[ts] ||= {}
-        better_hash[ts][:"#{k}_#{w}"] = t
-      end
-    end
-    tile_sets = []
-    better_hash.each do |ts_name, ts_hash|
-      actual_tile_set = MultiImageTileSet.new(self, [
-        "./DawnLike/Characters/#{ts_name}0.png",
-        "./DawnLike/Characters/#{ts_name}1.png",
-      ], 16, 16, 8)
-      actual_tile_set.mass_define(30, true, ts_hash)
-      tile_sets << actual_tile_set
-    end
-
-    @all_units = TileSetProxy.new(tile_sets)
   end
 
   def change_current_action!(action)
@@ -678,18 +680,18 @@ end
 Gosu::enable_undocumented_retrofication
 previous_save = nil if ARGV.include?('w')
 DISPLAY = GosuDisplay.new(previous_save)
-
 def save_game(action)
   dump = YAML.dump(action)
   begin
     YAML.load(dump)
     File.open(SAVE_FILE_PATH, 'w+', 0644) do |f|
-      f << YAML.dump(action)
+      f << dump
     end
-  rescue
+    return YAML.load(action)
+  rescue TypeError => e
+    puts e.class
+    return action
   end
 end
 
-if __FILE__ == $0
-  DISPLAY.show
-end
+DISPLAY.show

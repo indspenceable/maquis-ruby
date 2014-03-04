@@ -8,8 +8,8 @@ Releasy::Project.new do
   version "0.0.1"
   verbose # Can be removed if you don't want to see all build messages.
 
-  executable "gosu.rb"
-  files ["app/**/*.rb", 'gosu.rb', './data.txt', './*.png', 'Dawnlike/**/*.*', '*.yml']
+  executable "run.rb"
+  files ["app/**/*.rb", 'run.rb', './data.txt', './*.png', 'Dawnlike/**/*.*', 'config/*.yml']
   # exposed_files "README.html", "LICENSE.txt"
   add_link "http://my_application.github.com", "My Application website"
   exclude_encoding # Applications that don't use advanced encoding (e.g. Japanese characters) can save build size with this.
@@ -17,7 +17,7 @@ Releasy::Project.new do
   # Create a variety of releases, for all platforms.
   add_build :osx_app do
     url "com.github.my_application"
-    wrapper "wrappers/gosu-mac-wrapper-0.7.47.tar.gz" # Assuming this is where you downloaded this file.
+    wrapper "wrappers/gosu-mac-wrapper-0.7.48.tar.gz" # Assuming this is where you downloaded this file.
 #    icon "media/icon.icns"
     add_package :tar_gz
   end
