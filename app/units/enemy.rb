@@ -26,7 +26,7 @@ class Enemy < Unit
   end
 
   def self.config
-    @config ||= YAML.load(File.read('./config/enemies.yml'))
+    @config ||= JSON.load(File.read('./config/enemies.json'))
   end
 
   def self.random_class

@@ -1,0 +1,122 @@
+{
+  "spider": {
+    "pretty": "Spider",
+    "description": "Ew! An Arachnid",
+    "tile": [
+      0,
+      1
+    ],
+    "tileset": "Pests",
+    "stats": {
+      "max_hp": 10,
+      "power": 2,
+      "skill": 6,
+      "armor": 1,
+      "speed": 6,
+      "resistance": 0,
+      "constitution": 2
+    },
+    "value": 3,
+    "ais": [],
+    "skills": [],
+    "weapons": [
+      "bite"
+    ]
+  },
+  "farmer": {
+    "pretty": "Farmer",
+    "description": "A silly farmer.",
+    "tile": [
+      2,
+      8
+    ],
+    "tileset": "Humanoids",
+    "stats": {
+      "max_hp": 10,
+      "power": 3,
+      "skill": 2,
+      "armor": 4,
+      "speed": 0,
+      "resistance": 0,
+      "constitution": 8
+    },
+    "value": 4,
+    "ais": [],
+    "skills": [],
+    "weapons": [
+      "pitchfork"
+    ]
+  },
+  "eyeball": {
+    "pretty": "Floating Eye",
+    "description": "A floating eye!",
+    "tile": [
+      0,
+      5
+    ],
+    "tileset": "Elementals",
+    "stats": {
+      "max_hp": 20,
+      "power": 2,
+      "skill": 5,
+      "armor": 0,
+      "speed": 4,
+      "resistance": 4,
+      "constitution": 4
+    },
+    "value": 6,
+    "ais": [],
+    "skills": [],
+    "weapons": [
+      "beam"
+    ]
+  },
+  "orc_basic": {
+    "pretty": "Orc",
+    "description": "A smelly orc.",
+    "tile": [
+      0,
+      10
+    ],
+    "tileset": "Player",
+    "stats": {
+      "max_hp": 20,
+      "power": 5,
+      "skill": 1,
+      "speed": 2,
+      "armor": 3,
+      "resistance": 0,
+      "constitution": 12
+    },
+    "value": 1,
+    "ais": [],
+    "skills": [],
+    "weapons": [
+      "iron_axe"
+    ]
+  },
+  "orc_brave": {
+    "pretty": "Orc Brave",
+    "description": "An orc fighter",
+    "tile": [
+      1,
+      10
+    ],
+    "tileset": "Player",
+    "stats": {
+      "max_hp": 25,
+      "power": 6,
+      "skill": 1,
+      "speed": 2,
+      "armor": 4,
+      "resistance": 1,
+      "constitution": 12
+    },
+    "value": 3,
+    "ais": [],
+    "skills": [],
+    "weapons": [
+      "iron_axe"
+    ]
+  }
+}

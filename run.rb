@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'gosu'
-require 'yaml'
 require 'set'
+require 'json/pure'
 #constants go here too, cause yolo
 
 MAP_SIZE_X = 20
@@ -34,7 +34,7 @@ KEYS = {
 
 SAVE_FILE_PATH = File.expand_path(File.join('~', '.tarog'))
 previous_save = if File.exists?(SAVE_FILE_PATH)
-  YAML.load_file(SAVE_FILE_PATH)
+  Marshal.load(File.read(SAVE_FILE_PATH))
 end
 
 class TileSetProxy
@@ -681,13 +681,13 @@ Gosu::enable_undocumented_retrofication
 previous_save = nil if ARGV.include?('w')
 DISPLAY = GosuDisplay.new(previous_save)
 def save_game(action)
-  dump = YAML.dump(action)
   begin
-    YAML.load(dump)
+    dump = Marshal.dump(action)
+    Marshal.load(dump)
     File.open(SAVE_FILE_PATH, 'w+', 0644) do |f|
       f << dump
     end
-    return YAML.load(action)
+    return action
   rescue TypeError => e
     puts e.class
     return action

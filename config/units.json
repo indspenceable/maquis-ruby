@@ -1,0 +1,1108 @@
+{
+  "soldier": {
+    "basic": true,
+    "pretty": "Solider",
+    "description": "A professional fighter. Not particularly experienced.",
+    "tile": [
+      1,
+      7
+    ],
+    "tileset": "Player",
+    "growths": {
+      "skill": 1
+    },
+    "con": 6,
+    "skills": [
+      "swords"
+    ],
+    "promotes": [
+      "templar",
+      "tactician"
+    ],
+    "weapons": [
+      "iron_sword"
+    ],
+    "weight": 3,
+    "lord": true
+  },
+  "templar": {
+    "pretty": "Templar",
+    "description": "TODO templar",
+    "tile": [
+      1,
+      7
+    ],
+    "tileset": "Player",
+    "affinity": "light",
+    "skills": [
+      "swords"
+    ],
+    "promotes": [
+      "paladin",
+      "commander"
+    ]
+  },
+  "paladin": {
+    "pretty": "Paladin",
+    "description": "TODO A holy fighter who heals his bretheren in combat.",
+    "tile": [
+      1,
+      7
+    ],
+    "tileset": "Player",
+    "affinity": "light_light",
+    "skills": [
+      "swords",
+      "staves"
+    ]
+  },
+  "commander": {
+    "pretty": "Commander",
+    "description": "A great field soldier with the ability to inspire nearby units.",
+    "tile": [
+      1,
+      7
+    ],
+    "tileset": "Player",
+    "affinity": "light_dark",
+    "skills": [
+      "swords",
+      "command_aura"
+    ]
+  },
+  "tactician": {
+    "pretty": "Tactician",
+    "description": "A fighter who uses the terrain to it's greatest advantage.",
+    "tile": [
+      1,
+      7
+    ],
+    "tileset": "Player",
+    "affinity": "dark",
+    "skills": [
+      "swords",
+      "terrain"
+    ],
+    "promotes": [
+      "strategist",
+      "myrmidon"
+    ]
+  },
+  "strategist": {
+    "pretty": "Strategist",
+    "description": "A veteran soldier with a solid understanding of how unit formations can sway the tides of combat.",
+    "tile": [
+      1,
+      7
+    ],
+    "tileset": "Player",
+    "affinity": "dark_light",
+    "skills": [
+      "swords",
+      "terrain",
+      "strategist_aura"
+    ]
+  },
+  "myrmidon": {
+    "pretty": "Myrmidon",
+    "description": "An exteremely skilled sword fighter",
+    "tile": [
+      1,
+      7
+    ],
+    "tileset": "Player",
+    "affinity": "dark_dark",
+    "skills": [
+      "swords",
+      "critical_boost",
+      "terrain"
+    ]
+  },
+  "fighter": {
+    "basic": true,
+    "pretty": "Fighter",
+    "description": "A self taught fighter. Wields axes.",
+    "tile": [
+      3,
+      3
+    ],
+    "tileset": "Player",
+    "con": 8,
+    "growths": {
+      "power": 1,
+      "resistance": -1
+    },
+    "skills": [
+      "axes"
+    ],
+    "weapons": [
+      "iron_axe",
+      "hand_axe"
+    ],
+    "weight": 3,
+    "lord": true,
+    "promotes": [
+      "warrior",
+      "barbarian"
+    ]
+  },
+  "warrior": {
+    "pretty": "Warrior",
+    "description": "WARRIORRRR",
+    "tile": [
+      3,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light",
+    "promotes": [
+      "protector",
+      "hero"
+    ],
+    "skills": [
+      "axes",
+      "defense_boost"
+    ]
+  },
+  "protector": {
+    "pretty": "Protector",
+    "description": "Gives bonuses to adjacent units",
+    "tile": [
+      3,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light_light",
+    "skills": [
+      "axes",
+      "protection_aura"
+    ]
+  },
+  "hero": {
+    "pretty": "Hero",
+    "description": "A great hero!",
+    "tile": [
+      3,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light_dark",
+    "skills": [
+      "axes",
+      "swords"
+    ]
+  },
+  "barbarian": {
+    "pretty": "Barbarian",
+    "description": "Bloodluster!",
+    "tile": [
+      3,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark",
+    "skills": [
+      "axes",
+      "rage"
+    ],
+    "promotes": [
+      "raider",
+      "berserker"
+    ]
+  },
+  "raider": {
+    "pretty": "Raider",
+    "description": "Can use bows",
+    "tile": [
+      3,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark_light",
+    "skills": [
+      "rage",
+      "axes",
+      "bows"
+    ]
+  },
+  "berserker": {
+    "pretty": "Berserker",
+    "description": "Every kill gives you a stacking bonus!",
+    "tile": [
+      3,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark_dark",
+    "skills": [
+      "axes",
+      "rage",
+      "berserking"
+    ]
+  },
+  "squire": {
+    "basic": true,
+    "pretty": "Squire",
+    "description": "A trainee to the order of knights",
+    "tile": [
+      1,
+      3
+    ],
+    "tileset": "Player",
+    "growths": {
+      "armor": 1,
+      "speed": -1
+    },
+    "con": 10,
+    "skills": [
+      "lances"
+    ],
+    "promotes": [
+      "knight",
+      "knave"
+    ],
+    "weapons": [
+      "iron_lance"
+    ],
+    "weight": 3,
+    "lord": true
+  },
+  "knight": {
+    "pretty": "Knight",
+    "description": "A full member of the order of knights. Rides horseback.",
+    "tile": [
+      1,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light",
+    "skills": [
+      "lances",
+      "horseback"
+    ],
+    "promotes": [
+      "pegasus_knight",
+      "heavy_knight"
+    ]
+  },
+  "pegasus_knight": {
+    "pretty": "Pegasus Knight",
+    "description": "A great knight who rides on the back of a pegasus.",
+    "tile": [
+      1,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light_light",
+    "skills": [
+      "lances",
+      "pegasus_rider"
+    ]
+  },
+  "heavy_knight": {
+    "pretty": "Great Knight",
+    "description": "A horseback warrior wielding lances and axes",
+    "tile": [
+      1,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light_dark",
+    "skills": [
+      "lances",
+      "axes",
+      "horseback"
+    ]
+  },
+  "knave": {
+    "pretty": "Knave",
+    "description": "A rogueish knight, who is powerful in combat.",
+    "tile": [
+      1,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark",
+    "skills": [
+      "lances",
+      "knave_stats"
+    ],
+    "promotes": [
+      "general",
+      "dragoon"
+    ]
+  },
+  "general": {
+    "pretty": "General",
+    "description": "A combat grisled veteran, who is capable of shrugging off damage.",
+    "tile": [
+      1,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark_light",
+    "skills": [
+      "lances",
+      "great_shield"
+    ]
+  },
+  "dragoon": {
+    "pretty": "Dragoon",
+    "description": "A knave who has taken to experiementing with darker forces.",
+    "tile": [
+      1,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark_dark",
+    "skills": [
+      "lances",
+      "dark"
+    ]
+  },
+  "entertainer": {
+    "pretty": "Entertainer",
+    "description": "A travelling entertainer.",
+    "basic": true,
+    "tile": [
+      0,
+      7
+    ],
+    "tileset": "Player",
+    "growths": {
+      "power": -1,
+      "speed": 1,
+      "resistance": 1
+    },
+    "con": 4,
+    "skills": [
+      "perform"
+    ],
+    "weapons": [],
+    "weight": 1,
+    "promotes": [
+      "bard",
+      "jester"
+    ]
+  },
+  "bard": {
+    "pretty": "Bard",
+    "description": "A travelling player, with graceful music",
+    "tile": [
+      0,
+      7
+    ],
+    "tileset": "Player",
+    "affinity": "light",
+    "skills": [
+      "play"
+    ],
+    "promotes": [
+      "troubadour",
+      "dancer"
+    ]
+  },
+  "troubadour": {
+    "pretty": "Troubadour",
+    "description": "A veteran travelling player",
+    "tile": [
+      0,
+      7
+    ],
+    "tileset": "Player",
+    "affinity": "light_light",
+    "skills": [
+      "play",
+      "staves"
+    ]
+  },
+  "dancer": {
+    "pretty": "Dancer",
+    "description": "A performer who moves with liquid grace",
+    "tile": [
+      0,
+      7
+    ],
+    "tileset": "Player",
+    "affinity": "light_dark",
+    "skills": [
+      "dance"
+    ]
+  },
+  "jester": {
+    "pretty": "Jester",
+    "description": "A nasty court jester",
+    "tile": [
+      0,
+      7
+    ],
+    "tileset": "Player",
+    "affinity": "dark",
+    "skills": [
+      "perform",
+      "wands"
+    ],
+    "promotes": [
+      "harlequin",
+      "madcap"
+    ]
+  },
+  "harlequin": {
+    "pretty": "Harlequin",
+    "description": "An expert jester",
+    "tile": [
+      0,
+      7
+    ],
+    "tileset": "Player",
+    "affinity": "dark_light",
+    "skills": [
+      "perform",
+      "wands",
+      "multitarget_wands"
+    ]
+  },
+  "madcap": {
+    "pretty": "Madcap",
+    "description": "A jester who has driven himself insane. He no longer knows how to perform.",
+    "tile": [
+      0,
+      7
+    ],
+    "tileset": "Player",
+    "affinity": "dark_dark",
+    "skills": [
+      "wands",
+      "traps",
+      "axes"
+    ]
+  },
+  "mage": {
+    "pretty": "Mage",
+    "description": "Basic magician",
+    "basic": true,
+    "tile": [
+      6,
+      3
+    ],
+    "tileset": "Player",
+    "growths": {
+      "power": 1,
+      "armor": -1,
+      "resistance": 1
+    },
+    "con": 4,
+    "skills": [
+      "anima"
+    ],
+    "weapons": [
+      "fire"
+    ],
+    "weight": 2,
+    "lord": true,
+    "promotes": [
+      "sage",
+      "battlemage"
+    ]
+  },
+  "sage": {
+    "pretty": "Sage",
+    "description": "An extreemly old and wise mage.",
+    "tile": [
+      6,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light",
+    "skills": [
+      "anima",
+      "blink"
+    ],
+    "promotes": [
+      "archmage",
+      "summoner"
+    ]
+  },
+  "archmage": {
+    "pretty": "Archmage",
+    "description": "The highest tier of mages to be found",
+    "tile": [
+      6,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light_light",
+    "skills": [
+      "anima",
+      "blink",
+      "teleport"
+    ]
+  },
+  "summoner": {
+    "pretty": "Summoner",
+    "description": "A mage who has discovered how to create life out of nothing... temporarily",
+    "tile": [
+      6,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light_dark",
+    "skills": [
+      "anima",
+      "blink",
+      "summon"
+    ]
+  },
+  "battlemage": {
+    "pretty": "Battlemage",
+    "description": "A mage who has turned his attention towards the battlefield, adept with both magic and close-quarters combat",
+    "tile": [
+      6,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark",
+    "skills": [
+      "anima",
+      "swords"
+    ],
+    "promotes": [
+      "mageknight",
+      "magekiller"
+    ]
+  },
+  "mageknight": {
+    "pretty": "Mage Knight",
+    "description": "A battle hardened magic soldier",
+    "tile": [
+      6,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark_light",
+    "skills": [
+      "anima",
+      "swords",
+      "horseback"
+    ]
+  },
+  "magekiller": {
+    "pretty": "Magekiller",
+    "description": "TODO",
+    "tile": [
+      6,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark_dark",
+    "skills": [
+      "anima",
+      "swords",
+      "wands"
+    ]
+  },
+  "cleric": {
+    "pretty": "Cleric",
+    "description": "Your light mage.",
+    "basic": true,
+    "tile": [
+      0,
+      4
+    ],
+    "tileset": "Player",
+    "growths": {
+      "resistance": 1
+    },
+    "con": 8,
+    "skills": [
+      "light"
+    ],
+    "weapons": [
+      "lightning"
+    ],
+    "weight": 2,
+    "promotes": [
+      "shepard",
+      "warpriest"
+    ]
+  },
+  "shepard": {
+    "pretty": "Shepard",
+    "description": "A holy man",
+    "tile": [
+      0,
+      4
+    ],
+    "tileset": "Player",
+    "affinity": "light",
+    "skills": [
+      "light",
+      "staves"
+    ],
+    "promotes": [
+      "high_priest",
+      "monk"
+    ]
+  },
+  "high_priest": {
+    "pretty": "High Priest",
+    "description": "A very, very holy man",
+    "tile": [
+      0,
+      4
+    ],
+    "tileset": "Player",
+    "affinity": "light_light",
+    "skills": [
+      "light",
+      "staves",
+      "staff_affinity"
+    ]
+  },
+  "monk": {
+    "pretty": "Monk",
+    "description": "A combat priest, with a variety of skills.",
+    "tile": [
+      0,
+      4
+    ],
+    "tileset": "Player",
+    "affinity": "light_dark",
+    "skills": [
+      "light",
+      "staves",
+      "axes"
+    ]
+  },
+  "warpriest": {
+    "pretty": "War Priest",
+    "description": "A priest who's turned to fighting",
+    "tile": [
+      0,
+      4
+    ],
+    "tileset": "Player",
+    "affinity": "dark",
+    "skills": [
+      "light",
+      "anima"
+    ],
+    "promotes": [
+      "temple_knight",
+      "dark_ritualist"
+    ]
+  },
+  "temple_knight": {
+    "pretty": "Temple Knight",
+    "description": "TODO",
+    "tile": [
+      0,
+      4
+    ],
+    "tileset": "Player",
+    "affinity": "dark_light",
+    "skills": [
+      "light",
+      "anima",
+      "lances"
+    ]
+  },
+  "dark_ritualist": {
+    "pretty": "Dark Ritualist",
+    "description": "ooooo TODO",
+    "tile": [
+      0,
+      4
+    ],
+    "tileset": "Player",
+    "affinity": "dark_dark",
+    "skills": [
+      "light",
+      "anima",
+      "dark"
+    ]
+  },
+  "pupil": {
+    "pretty": "Pupil",
+    "description": "A child just beginning to learn the dark arts",
+    "basic": true,
+    "tile": [
+      7,
+      3
+    ],
+    "tileset": "Player",
+    "growths": {
+      "power": 1,
+      "armor": -1,
+      "speed": -1,
+      "resistance": 1
+    },
+    "con": 13,
+    "skills": [
+      "dark"
+    ],
+    "weapons": [
+      "flux"
+    ],
+    "weight": 2,
+    "promotes": [
+      "hermit",
+      "accursed"
+    ]
+  },
+  "hermit": {
+    "pretty": "Hermit",
+    "description": "A solitary person who knows how to avoid fighting.",
+    "tile": [
+      7,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light",
+    "skills": [
+      "dark",
+      "evade_boost"
+    ],
+    "promotes": [
+      "elder",
+      "shadow"
+    ]
+  },
+  "elder": {
+    "pretty": "Elder",
+    "description": "A venerable elder",
+    "tile": [
+      7,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light_light",
+    "skills": [
+      "dark",
+      "evade_boost",
+      "light"
+    ]
+  },
+  "shadow": {
+    "pretty": "Shadow",
+    "description": "A man so far gone that all that remains is his shadow",
+    "tile": [
+      7,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light_dark",
+    "skills": [
+      "dark",
+      "evade_boost",
+      "swords"
+    ]
+  },
+  "accursed": {
+    "pretty": "Accursed",
+    "description": "TODO",
+    "tile": [
+      7,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark",
+    "skills": [
+      "dark",
+      "blood_magic"
+    ],
+    "promotes": [
+      "shaman",
+      "necromancer"
+    ]
+  },
+  "shaman": {
+    "pretty": "Shaman",
+    "description": "TODO",
+    "tile": [
+      7,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark_light",
+    "skills": [
+      "dark",
+      "blood_magic",
+      "anima"
+    ]
+  },
+  "necromancer": {
+    "pretty": "Necromancer",
+    "description": "A ritualist who can enslave the spirits of those he kills",
+    "tile": [
+      7,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark_dark",
+    "skills": [
+      "dark",
+      "blood_magic",
+      "necromancy"
+    ]
+  },
+  "thief": {
+    "pretty": "Thief",
+    "description": "A petty criminal.",
+    "basic": true,
+    "tile": [
+      3,
+      8
+    ],
+    "tileset": "Player",
+    "growths": {
+      "max_hp": -1,
+      "power": -1,
+      "skill": 1,
+      "speed": 1
+    },
+    "con": 4,
+    "skills": [
+      "swords",
+      "steal",
+      "chests"
+    ],
+    "weapons": [
+      "slim_sword"
+    ],
+    "weight": 2,
+    "promotes": [
+      "treasure_hunter",
+      "rogue"
+    ]
+  },
+  "treasure_hunter": {
+    "pretty": "Treasure Hunter",
+    "description": "A man in search of gold and glory!",
+    "tile": [
+      3,
+      8
+    ],
+    "tileset": "Player",
+    "affinity": "light",
+    "skills": [
+      "swords",
+      "parry",
+      "steal",
+      "chests"
+    ],
+    "weight": 2,
+    "promotes": [
+      "archaeologist",
+      "looter"
+    ]
+  },
+  "archaeologist": {
+    "pretty": "Archaeologist",
+    "description": "Indy",
+    "tile": [
+      3,
+      8
+    ],
+    "tileset": "Player",
+    "affinity": "light_light",
+    "skills": [
+      "swords",
+      "parry",
+      "scry",
+      "navigate",
+      "steal",
+      "chests"
+    ]
+  },
+  "looter": {
+    "pretty": "Looter",
+    "description": "A treasure hunter who's turned to the dark practice of looting.",
+    "tile": [
+      3,
+      8
+    ],
+    "tileset": "Player",
+    "affinity": "light_dark",
+    "skills": [
+      "swords",
+      "parry",
+      "looter",
+      "steal",
+      "chests"
+    ]
+  },
+  "rogue": {
+    "pretty": "Rogue",
+    "decription": "A scoundrel",
+    "tile": [
+      3,
+      8
+    ],
+    "tileset": "Player",
+    "affinity": "dark",
+    "skills": [
+      "swords",
+      "critical_boost",
+      "steal",
+      "chests"
+    ],
+    "promotes": [
+      "alchemist",
+      "assassin"
+    ]
+  },
+  "alchemist": {
+    "pretty": "Alchemist",
+    "description": "Tired of having to aquire goods to sell, the alchemist creates his own for the black market.",
+    "tile": [
+      3,
+      8
+    ],
+    "tileset": "Player",
+    "affinity": "dark_light",
+    "skills": [
+      "swords",
+      "critical_boost",
+      "bombs",
+      "steal",
+      "chests"
+    ]
+  },
+  "assassin": {
+    "pretty": "Assasin",
+    "description": "ASSASSIN",
+    "tile": [
+      3,
+      8
+    ],
+    "tileset": "Player",
+    "affinity": "dark_dark",
+    "skills": [
+      "swords",
+      "critical_boost",
+      "backstab",
+      "steal",
+      "chests"
+    ]
+  },
+  "archer": {
+    "pretty": "Archer",
+    "description": "has a familiarity with bows and arrows.",
+    "basic": true,
+    "tile": [
+      2,
+      3
+    ],
+    "tileset": "Player",
+    "growths": {},
+    "con": 4,
+    "skills": [
+      "bows"
+    ],
+    "weapons": [
+      "iron_bow"
+    ],
+    "weight": 2,
+    "promotes": [
+      "ranger",
+      "marksman"
+    ]
+  },
+  "ranger": {
+    "pretty": "Ranger",
+    "description": "la dee dah",
+    "tile": [
+      2,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light",
+    "skills": [
+      "bows",
+      "swords"
+    ],
+    "promotes": [
+      "nomad",
+      "warden"
+    ]
+  },
+  "nomad": {
+    "pretty": "Nomad",
+    "description": "Derp",
+    "tile": [
+      2,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light_light",
+    "skills": [
+      "bows",
+      "swords",
+      "horseback"
+    ]
+  },
+  "warden": {
+    "pretty": "Warden",
+    "description": "Warderern",
+    "tile": [
+      2,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "light_dark",
+    "skills": [
+      "bows",
+      "swords",
+      "entrap"
+    ]
+  },
+  "marksman": {
+    "pretty": "Marksman",
+    "description": "TODO",
+    "tile": [
+      2,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark",
+    "skills": [
+      "bows",
+      "power_boost"
+    ],
+    "promotes": [
+      "sharpshooter",
+      "sniper"
+    ]
+  },
+  "sharpshooter": {
+    "pretty": "Sharpshooter",
+    "description": "TODO",
+    "tile": [
+      2,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark_light",
+    "skills": [
+      "bows",
+      "power_boost",
+      "critical_boost"
+    ]
+  },
+  "sniper": {
+    "pretty": "Sniper",
+    "description": "TODO",
+    "tile": [
+      2,
+      3
+    ],
+    "tileset": "Player",
+    "affinity": "dark_dark",
+    "skills": [
+      "bows",
+      "power_boost",
+      "long_range_shot"
+    ]
+  }
+}

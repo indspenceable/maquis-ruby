@@ -155,7 +155,7 @@ class PlayerUnit < Unit
   end
 
   def self.config
-    @config ||= YAML.load(File.read('./config/units.yml'))
+    @config ||= JSON.load(File.read('./config/units.json'))
   end
 
   def class_growths

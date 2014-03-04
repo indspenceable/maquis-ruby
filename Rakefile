@@ -9,7 +9,7 @@ Releasy::Project.new do
   verbose # Can be removed if you don't want to see all build messages.
 
   executable "run.rb"
-  files ["app/**/*.rb", 'run.rb', './data.txt', './*.png', 'Dawnlike/**/*.*', 'config/*.yml']
+  files ["app/**/*.rb", 'run.rb', './data.txt', './*.png', 'Dawnlike/**/*.*', 'config/*']
   # exposed_files "README.html", "LICENSE.txt"
   add_link "http://my_application.github.com", "My Application website"
   exclude_encoding # Applications that don't use advanced encoding (e.g. Japanese characters) can save build size with this.

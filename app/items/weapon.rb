@@ -23,7 +23,7 @@ class Weapon
   end
 
   def self.config
-    @config ||= YAML.load(File.read('./config/weapons.yml'))
+    @config ||= JSON.load(File.read('./config/weapons.json'))
   end
 
   def initialize identifier
