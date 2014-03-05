@@ -4,7 +4,7 @@ require 'releasy'
 
 #<<<
 Releasy::Project.new do
-  name "Frost"
+  name "Maquis"
   version "0.0.1"
   verbose # Can be removed if you don't want to see all build messages.
 
