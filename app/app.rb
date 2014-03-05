@@ -549,6 +549,21 @@ class GosuDisplay < Gosu::Window
   end
 
   def show_trade(u1, u2, highlighted_item)
+    item_list = if u1.inventory.length < u2.inventory.length
+      u2.inventory.zip(u1.inventory).map(&:reverse)
+    else
+      u1.inventory.zip(u2.inventory)
+    end
+    max_item_length = item_list.flatten.compact.map(&:pretty).map(&:length).max + 2
+    item_strings = item_list.map do |list|
+      list.map do |i|
+        highlighted = (i && i == highlighted_item) ? '*' : ''
+        current = i && i.pretty
+        ("#{highlighted}#{current}").ljust(max_item_length, ' ')
+      end
+    end
+    draw_menu(["#{u1.name.center(max_item_length, ' ')}#{u2.name.center(max_item_length, ' ')}"] +
+      item_strings.map(&:join), nil)
   end
 
   def extended_character_info(unit)
