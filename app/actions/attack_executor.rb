@@ -25,6 +25,10 @@ class AttackExecutor < Action
     draw_units(@level.units, window)
   end
 
+  def cancel
+    self
+  end
+
   def auto
     return @animation if @animation
     unless @current_state == :done

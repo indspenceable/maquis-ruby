@@ -13,6 +13,10 @@ class DeathAnimation < Action
     self
   end
 
+  def cancel
+    self
+  end
+
   def auto
     if @done
       @next_action.call

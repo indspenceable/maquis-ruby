@@ -29,4 +29,8 @@ class ExperienceGain < Action
   def key(x)
     self
   end
+
+  def cancel
+    self
+  end
 end

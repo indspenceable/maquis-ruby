@@ -26,6 +26,10 @@ class WalkPathAction < Action
     self
   end
 
+  def cancel
+    self
+  end
+
   def auto
     if @frame > @path.length*frames_per_tile - 1
       @next_action.call
