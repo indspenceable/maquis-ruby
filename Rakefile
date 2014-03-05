@@ -6,7 +6,7 @@ require 'releasy'
 Releasy::Project.new do
   name "Maquis"
   version "0.0.1"
-  verbose # Can be removed if you don't want to see all build messages.
+  # verbose # Can be removed if you don't want to see all build messages.
 
   executable "run.rb"
   files ["app/**/*.rb", 'run.rb', './data.txt', './*.png', 'Dawnlike/**/*.*', 'config/*']
