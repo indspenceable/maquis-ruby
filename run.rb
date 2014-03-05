@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), "app/app.rb")
+require File.join(File.dirname(__FILE__), "app", "app.rb")
 
 SAVE_FILE_PATH = File.expand_path(File.join('~', '.maquis_save'))
 previous_save = if File.exists?(SAVE_FILE_PATH)

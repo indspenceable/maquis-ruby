@@ -7,7 +7,7 @@ require 'json/pure'
 MAP_SIZE_X = 20
 MAP_SIZE_Y = 15
 
-Dir[File.join(File.dirname(__FILE__), "**/*.rb")].sort.each do |f|
+Dir.glob(File.join(File.dirname(__FILE__), "**", "*.rb")).sort.each do |f|
   require f
 end
 
