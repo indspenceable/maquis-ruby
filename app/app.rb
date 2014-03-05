@@ -661,6 +661,10 @@ class GosuDisplay < Gosu::Window
     ], nil)
   end
 
+  def draw_game_over
+    @font.draw("Your lord has died. Game Over....", 20,20, Z_RANGE[:menu_text], 1, 1, Gosu::Color::WHITE)
+  end
+
   private
 
   def draw_rising_text(tx, ty, text, frames, current_frame, speed)

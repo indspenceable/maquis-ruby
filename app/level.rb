@@ -103,14 +103,13 @@ class Level
     u = units.find{|u| !u.alive? }
     if u
       return DeathAnimation.new(u, self) do
-
         units.delete(u)
         if u.lord?
           # Kill our savegame.
-          `rm #{SAVE_FILE_PATH}`
-          raise "lord died!"
+          LordDied.new
+        else
+          upkeep(&blk)
         end
-        upkeep(&blk)
       end
     end
     u = player_units.find{|u| u.pending_exp > 0 }
