@@ -10,21 +10,21 @@ Releasy::Project.new do
 
   executable "run.rb"
   files ["app/**/*.rb", 'run.rb', './data.txt', './*.png', 'Dawnlike/**/*.*', 'config/*']
-  # exposed_files "README.html", "LICENSE.txt"
-  add_link "http://my_application.github.com", "My Application website"
+  exposed_files "README.txt"#, "LICENSE.txt"
+  #add_link "http://my_application.github.com", "My Application website"
   exclude_encoding # Applications that don't use advanced encoding (e.g. Japanese characters) can save build size with this.
 
   # Create a variety of releases, for all platforms.
   add_build :osx_app do
-    url "com.github.my_application"
+    url "com.github.indspenceable"
     wrapper "wrappers/gosu-mac-wrapper-0.7.48.tar.gz" # Assuming this is where you downloaded this file.
 #    icon "media/icon.icns"
     add_package :tar_gz
   end
 
-  add_build :source do
-    add_package :"7z"
-  end
+  #add_build :source do
+  #  add_package :"7z"
+  #end
 
   # If unable to build on a Windows machine, :windows_wrapped is the only choice.
   add_build :windows_wrapped do
@@ -34,6 +34,6 @@ Releasy::Project.new do
     add_package :zip
   end
 
-  add_deploy :local # Only deploy locally.
+  #add_deploy :local # Only deploy locally.
 end
 #>>>
