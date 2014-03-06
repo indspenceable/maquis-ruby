@@ -33,33 +33,30 @@ class Skill
       return rtn
     end
 
-    def action?
-      @activate
+    # define an action
+    def action(name, target_type, target_callback, &activate)
+      @actions ||= []
+      @actions << [name.to_s, target_type, target_callback, activate]
     end
 
-    def target(t=nil)
-      if t
-        raise unless VALID_TARGETS.include?(t)
-        @target = t
-      else
-        @target
+    def my_actions
+      @actions ||= []
+    end
+
+    # targetting helpers.
+    def friends_at_range range, &blk
+      lambda do |me, target, level|
+        (range==:all || Array(range).include?(Path.unit_dist(me, target))) &&
+        target.team == me.team &&
+        (blk.nil? || blk.call(me, target, level))
       end
     end
-
-    def range(r=nil)
-      if r
-        @range = r
-      else
-        @range
+    def enemies_at_range range, &blk
+      lambda do |me, target, level|
+        (range==:all || Array(range).include?(Path.unit_dist(me, target))) &&
+        target.team != me.team &&
+        (blk.nil? || blk.call(me, target, level))
       end
-    end
-
-    def activate &blk
-      @activate = blk
-    end
-
-    def activate!(*args)
-      @activate.call(*args)
     end
   end
 
@@ -79,23 +76,20 @@ class Skill
     caller.instance_exec(val, &self.class.modifier_for(sym))
   end
 
-  def target
-    self.class.target
+  def actions
+    self.class.my_actions
   end
 
-  def range
-    self.class.range
+  def action?(n)
+    self.class.my_actions.any?{|a| a.first == n}
   end
 
-  def activate!(*args)
-    self.class.activate!(*args)
-  end
-
-  def action?
-    self.class.action?
+  def action!(n)
+    actions.find{|a| a.first == n }
   end
 end
 
+# A buff is a temporary skill.
 class Buff < Skill
   attr_accessor :charges
   def pretty
@@ -409,11 +403,11 @@ end
 class Perform < Skill
   identifier 'perform'
 
-  target :friends
-  range 1
-  activate do |me, target, level|
+  action 'play', :units, friends_at_range(1){|m,t,l| !t.action_available } do |me, target, level|
     target.action_available = true
     me.gain_experience(10)
+    me.action_available = false
+    level.next_action(me.x, me.y)
   end
 
   def effect
@@ -423,11 +417,12 @@ end
 
 class Play < Skill
   identifier 'play'
-  range 1..2
-  target :friends
-  activate do |me, target, level|
+
+  action 'play', :units, friends_at_range(1..2){|m,t,l| !t.action_available } do |me, target, level|
     target.action_available = true
     me.gain_experience(10)
+    me.action_available = false
+    level.next_action(me.x, me.y)
   end
 
   def effect
@@ -438,7 +433,7 @@ end
 class Dance < Perform
   identifier 'dance'
   #TODO make this real.
-  range 1..5
+  # range 1..5
 end
 
 class MutlitargetWands < Skill
@@ -455,17 +450,17 @@ class Poison < Buff
   end
 end
 
-class Healing < Skill
-  identifier 'healing'
-  target :friends
-  range 1
+# class Healing < Skill
+#   identifier 'healing'
+#   target :friends
+#   range 1
 
-  activate do |me, target, level|
-    target.heal(me.power*4)
-    me.gain_experience(10)
-  end
+#   activate do |me, target, level|
+#     target.heal(me.power*4)
+#     me.gain_experience(10)
+#   end
 
-  def effect
-    :blue
-  end
-end
+#   def effect
+#     :blue
+#   end
+# end

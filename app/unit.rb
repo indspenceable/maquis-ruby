@@ -40,7 +40,6 @@ class Unit
     self.class.config
   end
 
-
   def affinity_to_color
     @@affinities ||= {}
     @@affinities[@klass] ||= begin

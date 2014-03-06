@@ -12,9 +12,11 @@ class ConfirmMove < MenuAction
     if valid_targets(:foes, unit.accessible_range).any?
       opts << :attack
     end
-    unit.skills.select(&:action?).each do |skill|
-      if valid_targets(skill.target, skill.range).any?
-        opts << skill.identifier
+    unit.skills.map(&:actions).each do |al|
+      al.each do |n, target_type, callback, _|
+        if targets(target_type, callback).any?
+          opts << n
+        end
       end
     end
     if valid_targets(:friends, 1).any?
@@ -26,6 +28,15 @@ class ConfirmMove < MenuAction
     opts << :items
     opts << :confirm
     super(opts)
+  end
+
+  def targets(target_type, callback)
+    case target_type
+    when :units
+      @level.units.select{|u| callback.call(@unit, u, @level) }
+    else
+      raise "Skill has invalid target #{target_type}"
+    end
   end
 
   def units_for_info_panel
@@ -97,17 +108,17 @@ class ConfirmMove < MenuAction
   def method_missing(sym, *args)
     # require 'pry'
     # binding.pry
+    # heh, not used yet.
     map_action = @level.map(@unit.x, @unit.y).actions[sym]
     if map_action
       return map_action.new(@unit, @level, @level.map(@unit.x, @unit.y), self)
     end
-    skill = @unit.skills.find{|s| s.identifier == sym.to_s }
+    action_name = sym.to_s
+    skill = @unit.skills.find{|s| s.action?(action_name) }
     if skill
-      TargetSelect.new(@unit, @level, valid_targets(skill.target, skill.range), @path, skill.effect, self) do |t|
-        # SkillActivator.new(skill, @unit, t, @level)
-        skill.activate!(@unit, t, @level)
-        @unit.action_available = false
-        @level.next_action(@unit.x, @unit.y)
+      name, target_type, target_callback, action = skill.action!(action_name)
+      TargetSelect.new(@unit, @level, targets(target_type, target_callback), @path, skill.effect, self) do |t|
+        action.call(@unit, t, @level)
       end
     else
       super(sym, *args)
