@@ -148,7 +148,6 @@ class PegasusRider < Skill
   end
 end
 
-class Staff; end
 class WieldStaves < Skill
   identifier 'staves'
   # TODO implement

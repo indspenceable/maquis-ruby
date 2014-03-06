@@ -12,10 +12,6 @@ class AttackWeaponSelect < MenuAction
     super((0...@available_weapons.size).to_a)
   end
 
-  def units_for_info_panel
-    [@unit, @target]
-  end
-
   def draw(window)
     draw_map(window)
     draw_all_units(window)
@@ -23,7 +19,7 @@ class AttackWeaponSelect < MenuAction
   end
 
   def key *args
-    rtn = super
+    rtn = super(*args)
     equip_selected_weapon!
     rtn
   end
