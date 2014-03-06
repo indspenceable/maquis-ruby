@@ -148,14 +148,36 @@ class PegasusRider < Skill
   end
 end
 
+class Staff; end
 class WieldStaves < Skill
   identifier 'staves'
   # TODO implement
+  action 'staff', :units, friends_at_range(:all){ |m,t,l|
+    current_range = Path.unit_dist(m,t)
+    # check that I have a staff that hits that range
+    # check that I have a staff that would hit them
+    m.inventory.any? do |i|
+      i.is_a?(Staff) &&
+      i.valid_target?(t) &&
+      m.staff_range.include?(current_range)
+    end
+  } do |me, target, level|
+    # # find the targets
+    # target.action_available = true
+    # me.gain_experience(10)
+    StaffSelect.new do |staff|
+      staff.activate!(me, target, level)
+      me.gain_experience(10)
+      me.action_available = false
+      level.next_action(me.x, me.y)
+    end
+  end
 end
 
 class WieldWands < Skill
   identifier 'wands'
-  # TODO implmeent
+  # TODO implement. Copy WieldStaves
+  # this is the same logic, only w/ 'wands' and 'enemies'
 end
 
 class WieldSwords < Skill
