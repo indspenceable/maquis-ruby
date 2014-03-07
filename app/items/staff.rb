@@ -6,7 +6,7 @@ class HealingStaff < Staff
     "healing staff"
   end
   def activate!(me, target, level)
-    puts "Activated the healing staff."
+    target.heal(me.power + 10)
   end
   def used_up?
     false
