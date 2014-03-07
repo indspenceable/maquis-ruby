@@ -1,14 +1,15 @@
 class AttackWeaponSelect < MenuAction
   attr_reader :level
 
-  def initialize unit, target, level, path, prev_action
+  def initialize unit, targets, level, prev_action
     @unit = unit
     @level = level
-    @target = target
+    @targets = targets
     @prev_action = prev_action
-    @path = path
 
-    @available_weapons = @unit.weapons_that_hit_at(Path.dist(@target.x, @target.y, *@path.last_point))
+    @available_weapons = @targets.map do |t|
+      @unit.weapons_that_hit_at(Path.unit_dist(unit, t))
+    end.flatten.uniq
     super((0...@available_weapons.size).to_a)
   end
 
@@ -19,6 +20,7 @@ class AttackWeaponSelect < MenuAction
   end
 
   def key *args
+    equip_selected_weapon!
     rtn = super(*args)
     equip_selected_weapon!
     rtn
@@ -29,9 +31,7 @@ class AttackWeaponSelect < MenuAction
   end
 
   def action!
-    AttackExecutor.new(@unit, @target, @level) do
-      @level.next_action(@unit.x, @unit.y)
-    end
+    AttackTargetSelect.new(@unit, @level, @targets.select{|t| @unit.can_hit?(t)}, self)
   end
 
   def cancel

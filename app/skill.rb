@@ -55,6 +55,7 @@ class Skill
       lambda do |me, target, level|
         (range==:all || Array(range).include?(Path.unit_dist(me, target))) &&
         target.team != me.team &&
+        level.see?(target.x, target.y) &&
         (blk.nil? || blk.call(me, target, level))
       end
     end
@@ -470,18 +471,3 @@ class Poison < Buff
     super
   end
 end
-
-# class Healing < Skill
-#   identifier 'healing'
-#   target :friends
-#   range 1
-
-#   activate do |me, target, level|
-#     target.heal(me.power*4)
-#     me.gain_experience(10)
-#   end
-
-#   def effect
-#     :blue
-#   end
-# end

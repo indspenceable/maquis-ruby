@@ -1,10 +1,9 @@
 class TargetSelect < MenuAction
-  def initialize unit, level, targets, path, effect, prev_action, &next_action
+  def initialize unit, level, targets, effect, prev_action, &next_action
     @unit = unit
     @level = level
     @targets = targets
     @prev_action = prev_action
-    @path = path
     @next_action = next_action
     @effect = effect
     super Array.new(@targets.length){:confirm}
@@ -47,9 +46,11 @@ class TargetSelect < MenuAction
 end
 
 class AttackTargetSelect < TargetSelect
-  def initialize unit, level, targets, path, prev_action
-    super(unit, level, targets, path, :red, prev_action) do |t|
-      AttackWeaponSelect.new(@unit, t, @level, @path, self)
+  def initialize unit, level, targets, prev_action
+    super(unit, level, targets, :red, prev_action) do |t|
+      AttackExecutor.new(unit, t, level) do
+        level.next_action(unit.x, unit.y)
+      end
     end
   end
 
@@ -60,8 +61,8 @@ class AttackTargetSelect < TargetSelect
 end
 
 class TradeTargetSelect < TargetSelect
-  def initialize unit, level, targets, path, prev_action
-    super(unit, level, targets, path, :blue, prev_action) do |t|
+  def initialize unit, level, targets, prev_action
+    super(unit, level, targets, :blue, prev_action) do |t|
       Trade.new(unit, t, self) do
         unit.action_available = false
         level.next_action(unit.x, unit.y)

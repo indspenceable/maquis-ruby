@@ -78,7 +78,8 @@ class ConfirmMove < MenuAction
   end
 
   def attack
-    AttackTargetSelect.new(@unit, @level, enemies_in_range, @path, self)
+    # AttackTargetSelect.new(@unit, @level, enemies_in_range, @path, self)
+    AttackWeaponSelect.new(@unit, enemies_in_range, @level, self)
   end
 
   def draw(window)
@@ -98,7 +99,7 @@ class ConfirmMove < MenuAction
   end
 
   def trade
-    TradeTargetSelect.new(@unit, @level, friends_adjacent, @path, self)
+    TradeTargetSelect.new(@unit, @level, friends_adjacent, self)
   end
 
   def items

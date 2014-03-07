@@ -148,6 +148,7 @@ class Unit
   def can_hit?(vs)
     can_hit_range?(Path.unit_dist(self, vs))
   end
+
   def can_hit_range?(n)
     weapon && weapon.in_range?(n)
   end
@@ -156,7 +157,7 @@ class Unit
     # find our longest range, then get all numbers from 0 up to that number
     # which we can hit.
     max_range = available_weapons.map(&:range).map(&:max).max || 0
-    max_range.times.map(&:succ).select{ |x| can_hit_range?(x) }
+    max_range.times.map(&:succ).select{ |x| available_weapons.any?{|w| w.range.include?(x) } }
   end
 
   # POWER
