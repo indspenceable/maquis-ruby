@@ -113,6 +113,12 @@ class Level
       end
     end
 
+    units.each do |u|
+      u.update_aura_list!
+      u.update_members_for_my_auras!(self)
+    end
+
+
     # draw animations
     u = units.find do |u|
       u.animation_queue.any?

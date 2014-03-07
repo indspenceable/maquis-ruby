@@ -230,7 +230,9 @@ end
 
 class CommandAura < Skill
   identifier 'command_aura'
-  #TODO implement.
+  modify :aura_names do |l|
+    l + ['power']
+  end
 end
 
 class StrategistAura < Skill
@@ -466,7 +468,7 @@ class Poison < Buff
   end
 end
 
-class ManaBurn
+class ManaBurn < Skill
   identifier 'manaburn'
   modify :hit do |damage|
     # buff them with reduced magic w/ damage charges.

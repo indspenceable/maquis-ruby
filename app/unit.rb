@@ -93,7 +93,7 @@ class Unit
   end
 
   def skills
-    class_skills + @buffs
+    class_skills + @buffs + aura_membership.map(&:skills).flatten
   end
 
   # HEALTH
@@ -358,6 +358,48 @@ class Unit
     @hp = max_hp if @hp > max_hp
   end
 
+  # Auras
+  def update_members_for_my_auras!(level)
+    level.units.each do |o|
+      auras.each do |a|
+        if Path.unit_dist(o,self) < a.range
+          a.add_member(o)
+        else
+          a.remove_member(o)
+        end
+      end
+    end
+  end
+
+  def update_aura_list!
+    @auras ||= []
+    names = aura_names
+    @auras.reject! do |a|
+      unless names.include?(a.class.identifier)
+        a.remove_all_members
+        true
+      end
+    end
+    names.each do |aura_name|
+      if @auras.none?{|a| a.class.identifier == aura_name }
+        @auras << Aura.by_name(aura_name).new
+      end
+    end
+  end
+
+  def auras
+    @auras ||= []
+  end
+
+  def aura_membership
+    @aura_membership ||= []
+  end
+
+  def aura_names
+    []
+  end
+
+
   def movement
     5
   end
@@ -432,6 +474,7 @@ class Unit
     :movement,
     :hit,
     :terrain_multiplier,
+    :aura_names,
   ])
 end
 

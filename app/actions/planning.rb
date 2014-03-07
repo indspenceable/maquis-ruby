@@ -62,7 +62,7 @@ class Planning < Action
     elsif current_item == "Next Level"
       l = @generator.generate(@army, @difficulty+1)
       @army.units.each{|x| x.current_level = l}
-      UnitSelect.new(l.lord.x, l.lord.y, l)
+      l.next_action(l.lord.x, l.lord.y)
     elsif !@army.units.include?(current_item)
       @army.units << current_item
       Planning.new(@difficulty, @army, false, @generator)
