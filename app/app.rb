@@ -699,7 +699,6 @@ class GosuDisplay < Gosu::Window
     end
     return action
   rescue TypeError => e
-    puts e.class
     return action
   end
 end

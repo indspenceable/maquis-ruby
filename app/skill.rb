@@ -460,7 +460,15 @@ end
 class Poison < Buff
   identifier 'poison'
   def tick
+    @target.animation_queue << 'poison'
     @target.lose_life(@charges)
     super
+  end
+end
+
+class ManaBurn
+  identifier 'manaburn'
+  modify :hit do |damage|
+    # buff them with reduced magic w/ damage charges.
   end
 end

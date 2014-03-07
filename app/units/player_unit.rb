@@ -70,6 +70,7 @@ class PlayerUnit < Unit
     @team = PLAYER_TEAM
     @x, @y = 0, 0
     @buffs = []
+    @animation_queue = []
 
     #ensure everyone is exp_level 1 at least.
     exp_level = 1 if exp_level < 1

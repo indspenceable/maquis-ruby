@@ -9,6 +9,7 @@ class Unit
   ]
   attr_reader *STATS, :constitution, :exp_level, :hp, :klass
   attr_accessor :team, :x, :y, :action_available, :current_level
+  attr_reader :animation_queue
 
   def initialize *args
     raise "Can't initialize a Unit. Create a PlayerUnit or an Enemy instead."

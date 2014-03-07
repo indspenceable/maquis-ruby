@@ -33,6 +33,7 @@ class Vulnerary < Consumable
 
   def consume(unit)
     unit.heal(10)
+    unit.animation_queue << "vulnerary"
     true
   end
 
@@ -52,6 +53,7 @@ class Antitoxin < Consumable
 
   def consume(unit)
     unit.debuff('poison')
+    unit.animation_queue << "heal status"
   end
 
   def price

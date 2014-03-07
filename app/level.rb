@@ -112,21 +112,33 @@ class Level
         end
       end
     end
+
+    # draw animations
+    u = units.find do |u|
+      u.animation_queue.any?
+    end
+    if u
+      animation = u.animation_queue.pop
+      puts "Animation: #{animation}"
+    end
+
     u = player_units.find{|u| u.pending_exp > 0 }
     if u
       return ExperienceGain.new(u, self) do
         upkeep(&blk)
       end
     end
+
     # did anyone's weapons break?
     u = player_units.find do |u|
       u.weapon && u.weapon.used_up?
     end
     if u
-      puts "#{u.name}'s weapon got used up."
       u.inventory.delete(u.weapon)
+      u.animation_queue << "weapon broke"
       return upkeep(&blk)
     end
+
     blk.call
   end
 

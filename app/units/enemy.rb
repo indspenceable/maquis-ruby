@@ -61,6 +61,7 @@ class Enemy < Unit
     @team = COMPUTER_TEAM
     @x, @y = 0, 0
     @buffs = []
+    @animation_queue = []
 
     raise "no value for #{@klass}!" unless config[@klass]['value']
     number_of_level_ups = exp_level - config[@klass]['value']

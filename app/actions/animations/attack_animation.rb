@@ -5,7 +5,6 @@ class AttackAnimation < Action
   end
 
   def draw(window)
-    print '.'
     draw_map(window)
     draw_units(@level.units - [@unit, @target], window)
     @done = window.draw_battle_animation(@unit, @target, @damage, self)

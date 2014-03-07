@@ -106,7 +106,6 @@ module LevelGenerator
         (px, py), (bx, by) = whole_map.select{|(x,y)| level.map(x,y).available_to_place_units?}.shuffle.first(2)
         player_area = Path.discover_paths(FakeUnit.new(px,py), level, 4).map(&:last_point)
         baddie_area = whole_map.select{|(x,y)| level.map(x,y).available_to_place_units?} - player_area
-        print 'x'
       end while player_area.count < player_units.size ||
                 baddie_area.count < baddie_units.size ||
                 !level.map(px, py).available_to_place_units? ||
@@ -138,7 +137,6 @@ module LevelGenerator
       tries = 0
 
       until place_units_with_baddies_scattered(level, baddie_units.dup, player_units)
-        print '.'
       end
 
       # set important level stats
