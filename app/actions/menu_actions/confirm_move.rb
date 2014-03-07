@@ -12,10 +12,10 @@ class ConfirmMove < MenuAction
     if valid_targets(:foes, unit.accessible_range).any?
       opts << :attack
     end
-    unit.skills.map(&:actions).each do |al|
-      al.each do |n, target_type, callback, _|
-        if targets(target_type, callback).any?
-          opts << n
+    unit.skills.each do |skill|
+      if skill.action?
+        if skill.act(@unit, @level.units - [@unit], @level, self).ok?
+          opts << skill.identifier
         end
       end
     end
@@ -115,12 +115,9 @@ class ConfirmMove < MenuAction
       return map_action.new(@unit, @level, @level.map(@unit.x, @unit.y), self)
     end
     action_name = sym.to_s
-    skill = @unit.skills.find{|s| s.action?(action_name) }
+    skill = @unit.skills.find{|s| s.identifier == action_name }
     if skill
-      name, target_type, target_callback, action = skill.action!(action_name)
-      TargetSelect.new(@unit, @level, targets(target_type, target_callback), @path, skill.effect, self) do |t|
-        action.call(@unit, t, @level)
-      end
+      skill.act(@unit, @level.units - [@unit], @level, self)
     else
       super(sym, *args)
     end

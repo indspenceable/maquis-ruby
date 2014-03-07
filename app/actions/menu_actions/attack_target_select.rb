@@ -43,6 +43,10 @@ class TargetSelect < MenuAction
     window.highlight([selected_target.x, selected_target.y] => :cursor)
     # window.draw_unit_fight_compare(@unit, selected_target)
   end
+
+  def ok?
+    @targets.length > 0
+  end
 end
 
 class AttackTargetSelect < TargetSelect

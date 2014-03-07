@@ -34,30 +34,12 @@ class Skill
     end
 
     # define an action
-    def action(name, target_type, target_callback, &activate)
-      @actions ||= []
-      @actions << [name.to_s, target_type, target_callback, activate]
+    def action(&activate)
+      @action = activate
     end
 
-    def my_actions
-      @actions ||= []
-    end
-
-    # targetting helpers.
-    def friends_at_range range, &blk
-      lambda do |me, target, level|
-        (range==:all || Array(range).include?(Path.unit_dist(me, target))) &&
-        target.team == me.team &&
-        (blk.nil? || blk.call(me, target, level))
-      end
-    end
-    def enemies_at_range range, &blk
-      lambda do |me, target, level|
-        (range==:all || Array(range).include?(Path.unit_dist(me, target))) &&
-        target.team != me.team &&
-        level.see?(target.x, target.y) &&
-        (blk.nil? || blk.call(me, target, level))
-      end
+    def my_action
+      @action
     end
   end
 
@@ -77,16 +59,12 @@ class Skill
     caller.instance_exec(val, &self.class.modifier_for(sym))
   end
 
-  def actions
-    self.class.my_actions
+  def action?
+    !!self.class.my_action
   end
 
-  def action?(n)
-    self.class.my_actions.any?{|a| a.first == n}
-  end
-
-  def action!(n)
-    actions.find{|a| a.first == n }
+  def act(*args)
+    self.class.my_action.call(*args)
   end
 end
 
@@ -425,30 +403,36 @@ end
 class Perform < Skill
   identifier 'perform'
 
-  action 'play', :units, friends_at_range(1){|m,t,l| !t.action_available } do |me, target, level|
-    target.action_available = true
-    me.gain_experience(10)
-    me.action_available = false
-    level.next_action(me.x, me.y)
-  end
-
-  def effect
-    :blue
+  action do |unit, others, level, old|
+    targets = others.select do |o|
+      o.team == unit.team &&
+      !o.action_available &&
+      Path.unit_dist(unit, o) == 1
+    end
+    TargetSelect.new(unit, level, targets, :blue, old) do |target|
+      target.action_available = true
+      unit.gain_experience(10)
+      unit.action_available = false
+      level.next_action(unit.x, unit.y)
+    end
   end
 end
 
 class Play < Skill
   identifier 'play'
 
-  action 'play', :units, friends_at_range(1..2){|m,t,l| !t.action_available } do |me, target, level|
-    target.action_available = true
-    me.gain_experience(10)
-    me.action_available = false
-    level.next_action(me.x, me.y)
-  end
-
-  def effect
-    :blue
+  action do |unit, others, level, old|
+    targets = others.select do |o|
+      o.team == unit.team &&
+      !o.action_available &&
+      (1..2).include?(Path.unit_dist(unit, o))
+    end
+    TargetSelect.new(unit, level, targets, :blue, old) do |target|
+      target.action_available = true
+      unit.gain_experience(10)
+      unit.action_available = false
+      level.next_action(unit.x, unit.y)
+    end
   end
 end
 
