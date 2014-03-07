@@ -49,7 +49,7 @@ class StaffSelect < MenuAction
     @prev_action = prev_action
     @next_action = next_action
 
-    # Select from staves
+    # Select only staves that hit some target.
     @staves = @unit.inventory.select{|s| s.is_a?(Staff) &&
       targets.any? do |t|
         unit.staff_range(s).include?(Path.unit_dist(unit, t))
@@ -74,5 +74,43 @@ class StaffSelect < MenuAction
 
   def ok?
     @staves.any?
+  end
+end
+
+class WandSelect < MenuAction
+  attr_reader :level
+
+  def initialize unit, targets, level, prev_action, &next_action
+    @unit = unit
+    @level = level
+    @targets = targets
+    @prev_action = prev_action
+    @next_action = next_action
+
+    # Select from wands that hit some target
+    @wands = @unit.inventory.select{|s| s.is_a?(Wand) &&
+      targets.any? do |t|
+        unit.wand_range(s).include?(Path.unit_dist(unit, t))
+      end
+    }
+    super((0...@wands.size).to_a)
+  end
+
+  def draw(window)
+    draw_map(window)
+    draw_all_units(window)
+    window.draw_menu(@wands.map(&:pretty), @index)
+  end
+
+  def action!
+    @next_action.call(@wands[@index])
+  end
+
+  def cancel
+    @prev_action
+  end
+
+  def ok?
+    @wands.any?
   end
 end

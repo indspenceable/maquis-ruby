@@ -140,7 +140,7 @@ class WieldStaves < Skill
   identifier 'staves'
 
   action do |unit, others, level, old|
-    StaffSelect.new(unit, others, level, old) do |staff|
+    StaffSelect.new(unit, others.select{|o| o.team == unit.team}, level, old) do |staff|
       targets = others.select do |o|
         o.team == unit.team &&
         unit.staff_range(staff).include?(Path.unit_dist(unit, o)) &&
@@ -158,8 +158,22 @@ end
 
 class WieldWands < Skill
   identifier 'wands'
-  # TODO implement. Copy WieldStaves
-  # this is the same logic, only w/ 'wands' and 'enemies'
+  action do |unit, others, level, old|
+    WandSelect.new(unit, others.select{|o| o.team != unit.team}, level, old) do |wand|
+      targets = others.select do |o|
+        o.team != unit.team &&
+        unit.wand_range(wand).include?(Path.unit_dist(unit, o)) &&
+        level.see?(o.x, o.y) &&
+        wand.valid_target?(o)
+      end
+      TargetSelect.new(unit, level, targets, :red, old) do |target|
+        wand.activate!(unit, target, level)
+        unit.gain_experience(10)
+        unit.action_available = false
+        level.next_action(unit.x, unit.y)
+      end
+    end
+  end
 end
 
 class WieldSwords < Skill

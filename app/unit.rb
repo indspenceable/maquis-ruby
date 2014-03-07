@@ -393,6 +393,10 @@ class Unit
     [1]
   end
 
+  def wand_range(wand)
+    [1]
+  end
+
   def self.modifiable_methods
     @@modifiable_methods ||= []
   end
