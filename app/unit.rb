@@ -389,6 +389,10 @@ class Unit
     #nothing
   end
 
+  def staff_range(staff)
+    [1]
+  end
+
   def self.modifiable_methods
     @@modifiable_methods ||= []
   end

@@ -126,7 +126,7 @@ class PlayerUnit < Unit
     if config[@klass]['weapons'].any?
       @inventory << Weapon.new(config[@klass]['weapons'].shuffle.pop)
     end
-    @inventory << Vulnerary.new
+    @inventory << Vulnerary.new << HealingStaff.new
 
     @exp_level = 0
     (exp_level + LEVEL_UPS_FOR_LEVEL_ONE - 1).times { exp_level_up! }

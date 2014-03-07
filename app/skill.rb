@@ -126,28 +126,32 @@ class PegasusRider < Skill
     0
   end
 end
+    # on my team, and I have a staff that can target them
+    # targets = others.select do |o|
+    #   o.team == unit.team &&
+    #   u.inventory.any? do |i|
+    #     i.is_a?(Staff) &&
+    #     u.staff_range(i).include?(Path.unit_dist(unit, o)) &&
+    #     i.valid_target?(o)
+    #   end
+    # end
 
 class WieldStaves < Skill
   identifier 'staves'
-  # TODO implement
-  action 'staff', :units, friends_at_range(:all){ |m,t,l|
-    current_range = Path.unit_dist(m,t)
-    # check that I have a staff that hits that range
-    # check that I have a staff that would hit them
-    m.inventory.any? do |i|
-      i.is_a?(Staff) &&
-      i.valid_target?(t) &&
-      m.staff_range.include?(current_range)
-    end
-  } do |me, target, level|
-    # # find the targets
-    # target.action_available = true
-    # me.gain_experience(10)
-    StaffSelect.new do |staff|
-      staff.activate!(me, target, level)
-      me.gain_experience(10)
-      me.action_available = false
-      level.next_action(me.x, me.y)
+
+  action do |unit, others, level, old|
+    StaffSelect.new(unit, others, level, old) do |staff|
+      targets = others.select do |o|
+        o.team == unit.team &&
+        unit.staff_range(staff).include?(Path.unit_dist(unit, o)) &&
+        staff.valid_target?(o)
+      end
+      TargetSelect.new(unit, level, targets, :blue, old) do |target|
+        staff.activate!(unit, target, level)
+        unit.gain_experience(10)
+        unit.action_available = false
+        level.next_action(unit.x, unit.y)
+      end
     end
   end
 end

@@ -38,3 +38,41 @@ class AttackWeaponSelect < MenuAction
     @prev_action
   end
 end
+
+class StaffSelect < MenuAction
+  attr_reader :level
+
+  def initialize unit, targets, level, prev_action, &next_action
+    @unit = unit
+    @level = level
+    @targets = targets
+    @prev_action = prev_action
+    @next_action = next_action
+
+    # Select from staves
+    @staves = @unit.inventory.select{|s| s.is_a?(Staff) &&
+      targets.any? do |t|
+        unit.staff_range(s).include?(Path.unit_dist(unit, t))
+      end
+    }
+    super((0...@staves.size).to_a)
+  end
+
+  def draw(window)
+    draw_map(window)
+    draw_all_units(window)
+    window.draw_menu(@staves.map(&:pretty), @index)
+  end
+
+  def action!
+    @next_action.call(@staves[@index])
+  end
+
+  def cancel
+    @prev_action
+  end
+
+  def ok?
+    @staves.any?
+  end
+end
