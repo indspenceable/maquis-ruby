@@ -126,15 +126,6 @@ class PegasusRider < Skill
     0
   end
 end
-    # on my team, and I have a staff that can target them
-    # targets = others.select do |o|
-    #   o.team == unit.team &&
-    #   u.inventory.any? do |i|
-    #     i.is_a?(Staff) &&
-    #     u.staff_range(i).include?(Path.unit_dist(unit, o)) &&
-    #     i.valid_target?(o)
-    #   end
-    # end
 
 class WieldStaves < Skill
   identifier 'staves'
