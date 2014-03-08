@@ -7,6 +7,14 @@ class Aura
     return rtn
   end
 
+  def should_add?(unit)
+    Path.unit_dist(unit,@host) <= self.range && (unit.team == @host.team) == same_team?
+  end
+
+  def same_team?
+    true
+  end
+
   def add_member(unit)
     unless unit.aura_membership.include?(self)
       unit.aura_membership << self
@@ -19,6 +27,10 @@ class Aura
       unit.aura_membership.delete(self)
       on_exit(unit)
     end
+  end
+
+  def initialize(host)
+    @host = host
   end
 
   def range
@@ -50,10 +62,10 @@ class PowerAura < Aura
   end
 
   def on_enter(unit)
-    puts "#{unit.name} entered the poweraura"
+    unit.animation_queue << "Enter power aura!"
   end
 
   def on_exit(unit)
-    puts "#{unit.name} left the poweraura"
+    unit.animation_queue << "Leave power aura!"
   end
 end

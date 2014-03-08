@@ -76,12 +76,11 @@ class Move < MapAction
         @unit.action_available = false
         return @level.next_action(*ee.last_point)
       else
+        old_x, old_y = @unit.x, @unit.y
         return WalkPathAction.new(@unit, @path, @level) do
-          old_x, old_y = @unit.x, @unit.y
-          @unit.x, @unit.y = @path.last_point
           ConfirmMove.new(@unit, @path, @level) do
             @unit.x, @unit.y = old_x, old_y
-            self
+            @level.upkeep{ self }
           end
         end
       end

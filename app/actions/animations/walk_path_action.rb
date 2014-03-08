@@ -18,7 +18,9 @@ class WalkPathAction < Action
       window.draw_char_at(*@path.at(@frame/frames_per_tile), @unit, true, :idle)
     else
       window.move_camera(*@path.last_point,@level.map_size_x, @level.map_size_y)
-      @unit.at(*@path.last_point) { draw_units(@level.units, window) }
+      # @unit.at(*@path.last_point) { draw_units(@level.units, window) }
+      @unit.x, @unit.y = @path.last_point
+      draw_units(@level.units, window)
     end
   end
 
@@ -32,7 +34,7 @@ class WalkPathAction < Action
 
   def auto
     if @frame > @path.length*frames_per_tile - 1
-      @next_action.call
+      @level.upkeep{ @next_action.call }
     else
       self
     end

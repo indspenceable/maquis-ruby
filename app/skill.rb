@@ -422,6 +422,7 @@ class Perform < Skill
     end
     TargetSelect.new(unit, level, targets, :blue, old) do |target|
       target.action_available = true
+      target.animation_queue << "restored!"
       unit.gain_experience(10)
       unit.action_available = false
       level.next_action(unit.x, unit.y)
@@ -440,6 +441,7 @@ class Play < Skill
     end
     TargetSelect.new(unit, level, targets, :blue, old) do |target|
       target.action_available = true
+      target.animation_queue << "restored!"
       unit.gain_experience(10)
       unit.action_available = false
       level.next_action(unit.x, unit.y)

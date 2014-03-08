@@ -98,6 +98,13 @@ class Level
     units.select{ |u| u.team == COMPUTER_TEAM }
   end
 
+  def check_for_aura_changes!
+    units.each do |u|
+      u.update_aura_list!
+      u.update_members_for_my_auras!(self)
+    end
+  end
+
   def upkeep &blk
     # did anyone die?
     u = units.find{|u| !u.alive? }
@@ -113,19 +120,15 @@ class Level
       end
     end
 
-    units.each do |u|
-      u.update_aura_list!
-      u.update_members_for_my_auras!(self)
-    end
-
+    check_for_aura_changes!
 
     # draw animations
     u = units.find do |u|
       u.animation_queue.any?
     end
     if u
-      animation = u.animation_queue.pop
-      puts "Animation: #{animation}"
+      animation = u.animation_queue.shift
+      return ArbitraryAnimation.new(u, animation, self) { upkeep(&blk) }
     end
 
     u = player_units.find{|u| u.pending_exp > 0 }
@@ -187,9 +190,10 @@ class Level
     units.each do |u|
       if u.team != team
         u.action_available = true
-        if map(u.x, u.y) == :fort
-          u.heal(u.max_hp / 10)
-        end
+        # if map(u.x, u.y) == :fort
+        #   u.heal(u.max_hp / 10)
+        # end
+        map(u.x, u.y).act!(u)
         u.countdown_buffs!
       end
     end

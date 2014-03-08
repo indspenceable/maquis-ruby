@@ -362,7 +362,7 @@ class Unit
   def update_members_for_my_auras!(level)
     level.units.each do |o|
       auras.each do |a|
-        if Path.unit_dist(o,self) < a.range
+        if a.should_add?(o)
           a.add_member(o)
         else
           a.remove_member(o)
@@ -382,7 +382,7 @@ class Unit
     end
     names.each do |aura_name|
       if @auras.none?{|a| a.class.identifier == aura_name }
-        @auras << Aura.by_name(aura_name).new
+        @auras << Aura.by_name(aura_name).new(self)
       end
     end
   end

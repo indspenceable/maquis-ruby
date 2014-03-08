@@ -184,7 +184,11 @@ class PlayerUnit < Unit
     @pending_exp = 0
     if @exp >= 100
       @exp -= 100
-      return puts exp_level_up!.inspect
+      # return puts exp_level_up!.inspect
+      animation_queue << "level up!"
+      exp_level_up!.each do |stat|
+        animation_queue << "+1 #{stat}"
+      end
     end
   end
 

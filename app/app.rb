@@ -666,8 +666,6 @@ class GosuDisplay < Gosu::Window
   end
   no_camera :draw_game_over
 
-  private
-
   def draw_rising_text(tx, ty, text, frames, current_frame, speed)
     return true if current_frame >= frames
     color = Gosu::Color.rgba(255, 255, 255, 255-((128.0/frames)*current_frame).to_i)
@@ -681,6 +679,8 @@ class GosuDisplay < Gosu::Window
     )
     false
   end
+
+  private
 
   def quad(x,y,w,h,c,z)
     draw_quad(

@@ -18,6 +18,9 @@ class Terrain
   def actions
     {}
   end
+
+  def act!(unit)
+  end
 end
 
 class Plains < Terrain
@@ -103,6 +106,15 @@ class Fort < Terrain
   def evade_bonus
     20
   end
+
+  def act!(unit)
+    amt = unit.max_hp/10
+    amt = [unit.max_hp - unit.hp, amt].min
+    if amt > 0
+      unit.heal(amt)
+      unit.animation_queue << "+#{amt} hp"
+    end
+  end
 end
 
 class Shop < Terrain
@@ -146,7 +158,6 @@ class Shop < Terrain
       {}
     end
   end
-
 
   def standard_movement_cost
     2
