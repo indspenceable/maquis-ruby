@@ -120,7 +120,7 @@ class Level
       end
     end
 
-    check_for_aura_changes!
+    # check_for_aura_changes!
 
     # draw animations
     u = units.find do |u|
