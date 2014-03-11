@@ -23,14 +23,14 @@
     * shows side objectives
     * shows rewards for side objectives.
 * "Indoors" map generation
-* reverse Weapon choice + target choice when attacking / staffing / wanding
+* reverse Weapon choice + target choice when attacking / staffing / wanding √
 * balancing! :(
-* unit#enqueue_effect - 
+* unit#enqueue_effect √
 * figure out an endgame plan
     * final boss
     * you win
     * save battle records?
         * this should have a per fight account
 * fill in items
-  * staves
-  * wands
+  * staves √
+  * wands √
