@@ -124,16 +124,23 @@ class Shop < Terrain
     @items = starting_inventory
   end
 
+  def config
+    self.class.config
+  end
+
+  def self.config
+    @config ||= JSON.load(File.read('./config/shops.json'))
+  end
+
   def starting_inventory
-    (
-      Weapon.basic_names +
-      Weapon.advanced_names.shuffle.first([rand(5)-3,0].max)
-    ).sort.map do |w|
-      Weapon.new(w)
-    end + [
-      Vulnerary.new,
-      Antitoxin.new,
-    ]
+    _,hsh = config.to_a.shuffle.pop
+    standard_items = hsh['normal']
+    rare_items = hsh['special']
+    number_of_rare_items = 1#[rand(5)-3,0].max
+
+    (standard_items + rare_items.shuffle.first(number_of_rare_items)).map do |item_name|
+      Item.create(item_name)
+    end
   end
 
   def identifier

@@ -1,0 +1,16 @@
+{
+  "weapon_store": {
+    "normal": [
+      "iron_sword",
+      "iron_axe",
+      "iron_lance",
+      "iron_bow",
+      "vulnerary"
+    ],
+    "special": [
+      "steel_sword",
+      "killing_edge",
+      "silver_sword"
+    ]
+  }
+}
