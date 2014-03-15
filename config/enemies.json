@@ -19,7 +19,7 @@
     "value": 3,
     "ais": [],
     "skills": [],
-    "weapons": [
+    "inventory": [
       "bite"
     ]
   },
@@ -43,7 +43,7 @@
     "value": 4,
     "ais": [],
     "skills": [],
-    "weapons": [
+    "inventory": [
       "pitchfork"
     ]
   },
@@ -69,7 +69,7 @@
     "skills": [
       "pegasus_rider"
     ],
-    "weapons": [
+    "inventory": [
       "beam"
     ]
   },
@@ -93,7 +93,7 @@
     "value": 1,
     "ais": [],
     "skills": [],
-    "weapons": [
+    "inventory": [
       "iron_axe"
     ]
   },
@@ -117,7 +117,7 @@
     "value": 3,
     "ais": [],
     "skills": [],
-    "weapons": [
+    "inventory": [
       "iron_axe"
     ]
   }

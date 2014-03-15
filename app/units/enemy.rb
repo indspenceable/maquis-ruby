@@ -76,7 +76,7 @@ class Enemy < Unit
       self.instance_variable_set(:"@#{stat}", target_value )
     end
     @hp = max_hp
-    @inventory = config[@klass]['weapons'].map do |w|
+    @inventory = config[@klass]['inventory'].map do |w|
       Weapon.new(w)
     end
     @exp_level = exp_level
