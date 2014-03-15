@@ -15,3 +15,5 @@ class PoisonWand < Wand
     true
   end
 end
+
+Item.register('poison_wand' => PoisonWand)

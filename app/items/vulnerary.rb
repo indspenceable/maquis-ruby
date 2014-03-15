@@ -1,27 +1,3 @@
-class Consumable
-  def initialize(charges)
-    @charges = charges
-  end
-
-  def trigger!(unit)
-    @charges -= 1
-    unit.action_available = false
-    consume(unit)
-  end
-
-  def consume
-    raise "no implementation of #consume for #{self.class.name}"
-  end
-
-  def used_up?
-    @charges <= 0
-  end
-
-  def pretty
-    name
-  end
-end
-
 class Vulnerary < Consumable
   def initialize
     super(3)
@@ -60,3 +36,6 @@ class Antitoxin < Consumable
     150
   end
 end
+
+Item.register('vulnerary' => Vulnerary)
+Item.register('antitoxin' => Antitoxin)

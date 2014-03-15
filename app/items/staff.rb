@@ -16,6 +16,8 @@ class HealingStaff < Staff
   end
 end
 
+Item.register('healing' => HealingStaff)
+
 # Planned Staves / Wands
 =begin
   Warp
