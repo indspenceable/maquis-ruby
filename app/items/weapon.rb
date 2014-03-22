@@ -80,6 +80,7 @@ class Weapon
   def unlimited_uses?
     @durability.is_a?(String)
   end
+  private :unlimited_uses?
 
   def used_up?
     #TODO weapon durabilities

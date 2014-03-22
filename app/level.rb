@@ -6,7 +6,6 @@ class Level
   def initialize(w,h)
     @map_size_x,@map_size_y = w,h
     @units = []
-    @log = []
     @turn_count = 0
   end
 
@@ -41,13 +40,9 @@ class Level
     @lit
   end
 
-  def lit_spaces
-    @lit
-  end
-
   def see?(x,y)
     return true unless fog_of_war
-    lit_spaces.include?([x,y])
+    @lit.include?([x,y])
   end
 
   def see_path?(p)
@@ -64,10 +59,6 @@ class Level
 
   def set_map(x,y,v)
     @map[x][y] = v
-  end
-
-  def map_to_str(x,y)
-    self.class.terrain_sym_to_str[map(x,y)] || (raise "Oops #{map(x,y)}")
   end
 
   def raw_map
@@ -93,10 +84,12 @@ class Level
   def player_units
     units.select{ |u| u.team == PLAYER_TEAM }
   end
+  private :player_units
 
   def computer_units
     units.select{ |u| u.team == COMPUTER_TEAM }
   end
+  private :computer_units
 
   def check_for_aura_changes!
     units.each do |u|
