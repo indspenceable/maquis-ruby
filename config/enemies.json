@@ -9,7 +9,8 @@
     "tileset": "Pests",
     "stats": {
       "max_hp": 10,
-      "power": 2,
+      "strength": 2,
+      "magic": 0,
       "skill": 6,
       "armor": 1,
       "speed": 6,
@@ -33,7 +34,8 @@
     "tileset": "Humanoids",
     "stats": {
       "max_hp": 10,
-      "power": 3,
+      "strength": 3,
+      "magic": 0,
       "skill": 2,
       "armor": 4,
       "speed": 0,
@@ -57,7 +59,8 @@
     "tileset": "Elementals",
     "stats": {
       "max_hp": 20,
-      "power": 2,
+      "strength": 2,
+      "magic": 0,
       "skill": 5,
       "armor": 0,
       "speed": 4,
@@ -83,7 +86,8 @@
     "tileset": "Player",
     "stats": {
       "max_hp": 20,
-      "power": 5,
+      "strength": 5,
+      "magic": 0,
       "skill": 1,
       "speed": 2,
       "armor": 3,
@@ -107,7 +111,8 @@
     "tileset": "Player",
     "stats": {
       "max_hp": 25,
-      "power": 6,
+      "strength": 6,
+      "magic": 0,
       "skill": 1,
       "speed": 2,
       "armor": 4,

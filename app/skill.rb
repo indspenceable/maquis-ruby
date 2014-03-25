@@ -260,7 +260,7 @@ end
 class Bloodlust < Buff
   identifier 'bloodlust'
 
-  modify :power do |p|
+  modify :strength do |p|
     p+5
   end
 end
@@ -306,7 +306,7 @@ end
 
 class PowerBoost < Skill
   identifier 'power_boost'
-  modify :power do |a|
+  modify :strength do |a|
     a + 5
   end
 end

@@ -101,6 +101,7 @@ class PlayerUnit < Unit
     end
 
     config[@klass]['growths'].each do |stat, val|
+      raise "Growth given for bad stat #{stat}!" unless general_aptitudes.key?(stat.to_sym)
       general_aptitudes[stat.to_sym] += val
     end
 

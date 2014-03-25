@@ -1,7 +1,8 @@
 class Unit
   STATS = [
     :max_hp,
-    :power,
+    :strength,
+    :magic,
     :skill,
     :armor,
     :speed,
@@ -96,32 +97,6 @@ class Unit
     class_skills + @buffs + aura_membership.map(&:skills).flatten
   end
 
-  # HEALTH
-  def health_str
-    "#{@hp}/#{max_hp}"
-  end
-
-  def health_color
-    @hp/max_hp.to_f > 0.66 ? GREEN :
-      @hp / max_hp.to_f > 0.33 ? BLUE : RED
-  end
-
-  def health_for_info_str
-    "#{health_str} hp #{strength_string(:max_hp)}"
-  end
-
-  def armor_for_info_str
-    "ARM: #{armor} #{strength_string(:armor)}"
-  end
-
-  def resistance_for_info_str
-    "RES: #{resistance} #{strength_string(:resistance)}"
-  end
-
-  def speed_for_info_str
-    "SPE: #{speed} #{strength_string(:speed)}"
-  end
-
   def terrain
     @current_level.map(x,y) if @current_level
   end
@@ -161,11 +136,6 @@ class Unit
     max_range.times.map(&:succ).select{ |x| available_weapons.any?{|w| w.range.include?(x) } }
   end
 
-  # POWER
-  def power_for_info_str
-    "POW: #{power} #{strength_string(:power)}"
-  end
-
   def weapon_triangle(my_type, their_type)
     {
       'swords' => {
@@ -201,14 +171,6 @@ class Unit
     weapon_triangle(weapon_type, vs.weapon_type)
   end
 
-  def weapon_triangle_bonus_string(vs)
-    if weapon_triangle(weapon_type, vs.weapon_type) > 0
-      "+"
-    elsif weapon_triangle(weapon_type, vs.weapon_type) < 0
-      "-"
-    end
-  end
-
   def weapon_effectiveness(vs)
     # this accounts for things like:
     # Bows are good against fliers
@@ -231,17 +193,10 @@ class Unit
 
   def power_vs(vs)
     [
-      power +
+      weapon.magic?? magic : strength +
       (weapon.power + weapon_triangle_bonus_power(vs)) * weapon_effectiveness(vs) -
       vs.adjusted_armor(weapon),
     0].max if weapon
-  end
-  def power_str(vs, at_range)
-    if (at_range ? can_hit_range?(at_range) : can_hit?(vs))
-      power_vs(vs).to_s
-    else
-      "NA"
-    end
   end
 
   def hit(vs, multiplier)
@@ -275,26 +230,11 @@ class Unit
     to_hit + weapon_triangle_bonus_accuracy(vs) - vs.adjusted_evade if weapon
   end
 
-  def accuracy_str(vs, at_range)
-    if (at_range ? can_hit_range?(at_range) : can_hit?(vs))
-      "#{accuracy(vs)}%"
-    else
-      "NA"
-    end
-  end
-  def skill_for_info_str
-    "SKL: #{skill} #{strength_string(:skill)}"
-  end
-
   # CRITICAL HITS
   def crit_chance
     if weapon
       weapon.to_crit + (skill/2) + critical_bonus
     end
-  end
-
-  def crit_str
-    weapon ? "#{crit_chance}%" : "NA"
   end
 
   def weapon_slow
@@ -305,14 +245,6 @@ class Unit
   end
   def double_attack?(vs)
     effective_speed >= vs.effective_speed + 4 if weapon && !weapon.used_up?
-  end
-
-  def double_attack_str(vs)
-    if double_attack?(vs)
-      "x2"
-    else
-      ""
-    end
   end
 
   def weapon
@@ -343,10 +275,6 @@ class Unit
   def inventory
     @inventory.reject!(&:used_up?)
     @inventory
-  end
-
-  def weapon_name_str
-    weapon ? weapon.name : "Unequipped"
   end
 
   def alive?
@@ -463,6 +391,80 @@ class Unit
         end
       end
     end
+  end
+
+  # pretty print helper methods  
+  def weapon_name_str
+    weapon ? weapon.name : "Unequipped"
+  end
+
+  # HEALTH
+  def health_str
+    "#{@hp}/#{max_hp}"
+  end
+
+  def health_for_info_str
+    "#{health_str} hp #{strength_string(:max_hp)}"
+  end
+
+  def armor_for_info_str
+    "ARM: #{armor} #{strength_string(:armor)}"
+  end
+
+  def resistance_for_info_str
+    "RES: #{resistance} #{strength_string(:resistance)}"
+  end
+
+  def speed_for_info_str
+    "SPE: #{speed} #{strength_string(:speed)}"
+  end
+
+  def strength_for_info_str
+    "STR: #{strength} #{strength_string(:strength)}"
+  end
+
+  def magic_for_info_str
+    "MAG: #{magic} #{strength_string(:magic)}"
+  end
+
+  def power_str(vs, at_range)
+    if (at_range ? can_hit_range?(at_range) : can_hit?(vs))
+      power_vs(vs).to_s
+    else
+      "NA"
+    end
+  end
+
+  def accuracy_str(vs, at_range)
+    if (at_range ? can_hit_range?(at_range) : can_hit?(vs))
+      "#{accuracy(vs)}%"
+    else
+      "NA"
+    end
+  end
+
+  def skill_for_info_str
+    "SKL: #{skill} #{strength_string(:skill)}"
+  end
+
+  def weapon_triangle_bonus_string(vs)
+    if weapon_triangle(weapon_type, vs.weapon_type) > 0
+      "+"
+    elsif weapon_triangle(weapon_type, vs.weapon_type) < 0
+      "-"
+    end
+  end
+
+  def double_attack_str(vs)
+    if double_attack?(vs)
+      "x2"
+    else
+      ""
+    end
+  end
+
+  def crit_str
+    weapon ? "#{crit_chance}%" : "NA"
   end
 
   # stats are adjusted by skills
