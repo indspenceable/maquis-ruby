@@ -2,6 +2,17 @@ require 'rubygems'
 require 'bundler/setup' # Releasy requires require that your application uses bundler.
 require 'releasy'
 
+task :generate_readme do
+  require './app/app.rb'
+
+  puts [
+    File.read('README.md'),
+    Unit.generate_docs,
+    # Skill.generate_docs,
+    # File.read('README_FOOTER.md'),
+  ].join("\n")
+end
+
 #<<<
 Releasy::Project.new do
   name "Maquis"

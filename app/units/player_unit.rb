@@ -21,6 +21,10 @@ class PlayerUnit < Unit
     end
   end
 
+  def self.nonbasic_classes
+    config.keys - basic_classes
+  end
+
   def name
     if lord?
       "Lord #{@name.capitalize}"
@@ -217,5 +221,23 @@ class PlayerUnit < Unit
 
   def summary
     "#{name} (#{pretty_name}: #{exp_level})"
+  end
+
+  def self.generate_docs
+
+    (basic_classes+nonbasic_classes).map do |klass|
+      strengths = weaknesses = (config[klass]['growths']||{}).select{|k,v| v > 0}.keys
+      weaknesses = (config[klass]['growths']||{}).select{|k,v| v < 0}.keys
+      promotions = config[klass]['promotes']||[]
+      [
+        "#{config[klass]['pretty']}:",
+        "#{config[klass]['description']}",
+        strengths.any?? "Strengths: #{strengths.map(&:capitalize).join(', ')}" : nil ,
+        weaknesses.any?? "Weaknesses: #{weaknesses.map(&:capitalize).join(', ')}" : nil,
+        "Skills: #{config[klass]['skills'].map(&:capitalize).join(', ')}",
+        promotions.any?? "Promotes to: #{config[klass]['promotes'].map(&:capitalize).join(', ')}" : nil,
+        ""
+      ].compact.join("\n")
+    end.join("\n")
   end
 end

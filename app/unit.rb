@@ -476,5 +476,10 @@ class Unit
     :terrain_multiplier,
     :aura_names,
   ])
+
+  def self.generate_docs
+    # "#{PlayerUnit.generate_docs}\n#{Enemy.generate_docs}"
+    PlayerUnit.generate_docs
+  end
 end
 
